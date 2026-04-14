@@ -1,26 +1,126 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Base surfaces */
+  --bg: #0D0E11;
+  --surface: #161820;
+  --surface-raised: #1C1F2A;
+  --border: #252932;
+  --border-subtle: #1B1E27;
+  --border-bright: #353B4E;
+
+  /* Text hierarchy */
+  --text: #EBE8E2;
+  --text-muted: #7C8196;
+  --text-faint: #444B5C;
+
+  /* Primary accent: warm terracotta */
+  --accent: #D47843;
+  --accent-light: rgba(212, 120, 67, 0.12);
+  --accent-glow: 0 0 0 3px rgba(212, 120, 67, 0.18);
+
+  /* Meal type tokens — calibrated for dark backgrounds */
+  --breakfast-color: #F59E0B;
+  --breakfast-bg: rgba(245, 158, 11, 0.07);
+  --breakfast-border: rgba(245, 158, 11, 0.18);
+
+  --lunch-color: #2DD4BF;
+  --lunch-bg: rgba(45, 212, 191, 0.07);
+  --lunch-border: rgba(45, 212, 191, 0.18);
+
+  --dinner-color: #A78BFA;
+  --dinner-bg: rgba(167, 139, 250, 0.07);
+  --dinner-border: rgba(167, 139, 250, 0.18);
+
+  --snack-color: #F472B6;
+  --snack-bg: rgba(244, 114, 182, 0.07);
+  --snack-border: rgba(244, 114, 182, 0.18);
+
+  /* Today column highlight */
+  --today-bg: rgba(212, 120, 67, 0.055);
+  --today-border: rgba(212, 120, 67, 0.38);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --font-display: var(--font-dm-serif);
+  --font-sans: var(--font-dm-sans);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+}
+
+/* Thin custom scrollbar */
+.scroll-x {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-bright) transparent;
+}
+.scroll-x::-webkit-scrollbar {
+  height: 4px;
+}
+.scroll-x::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-x::-webkit-scrollbar-thumb {
+  background: var(--border-bright);
+  border-radius: 2px;
+}
+
+/* Meal card entrance */
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.meal-card-animate {
+  animation: card-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Day column staggered entrance */
+@keyframes col-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.day-col-animate {
+  animation: col-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--col-delay, 0ms);
+}
+
+/* Ingredient row flash on add */
+@keyframes ingredient-flash {
+  0%, 30% { background-color: rgba(212, 120, 67, 0.14); }
+  100%    { background-color: transparent; }
+}
+
+.ingredient-flash {
+  border-radius: 0.5rem;
+  animation: ingredient-flash 1.2s ease forwards;
 }

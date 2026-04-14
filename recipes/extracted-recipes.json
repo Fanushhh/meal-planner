@@ -1,0 +1,1467 @@
+[
+  {
+    "name": "Oua fierte cu avocado si paine cu maia",
+    "description": "Mic dejun simplu si satios cu oua fierte, avocado proaspat si paine cu maia, servit cu masline si rosii.",
+    "mealType": "breakfast",
+    "servings": 1,
+    "prepTimeMin": 5,
+    "cookTimeMin": 10,
+    "ingredients": [
+      { "quantity": 1, "unit": "felie", "name": "paine cu maia" },
+      { "quantity": 2, "unit": null, "name": "oua fierte" },
+      { "quantity": 0.5, "unit": null, "name": "avocado" },
+      { "quantity": null, "unit": "cateva", "name": "masline" },
+      { "quantity": 1, "unit": null, "name": "rosie" }
+    ],
+    "instructions": [
+      "Fierbe ouale tari (10 minute).",
+      "Taie avocado in jumatate si scoop din coaja.",
+      "Serveste ouale fierte cu avocado, masline si rosii pe langa felie de paine cu maia."
+    ]
+  },
+  {
+    "name": "Somon la gratar cu sos tzatziki si quinoa",
+    "description": "File de somon la gratar servit cu sos tzatziki proaspat si quinoa fiarta, un pranz bogat in proteine.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 15,
+    "cookTimeMin": 15,
+    "ingredients": [
+      { "quantity": 1, "unit": "file", "name": "somon" },
+      { "quantity": 1, "unit": null, "name": "castravete" },
+      { "quantity": 1, "unit": "mic", "name": "iaurt 4.5% grasime" },
+      { "quantity": 1, "unit": "catel", "name": "usturoi" },
+      { "quantity": null, "unit": "optional", "name": "marar proaspat" },
+      { "quantity": 2, "unit": "linguri", "name": "quinoa fiarta" },
+      { "quantity": 10, "unit": "g", "name": "unt" }
+    ],
+    "instructions": [
+      "Pregateste sosul tzatziki: razi castravetele, scurge apa, amesteca cu iaurtul, usturoiul pisat si mararalul.",
+      "Fa somonul la gratar sau la cuptor pana se gateste (10-12 minute).",
+      "Fierbe quinoa conform instructiunilor, la final adauga untul.",
+      "Serveste somonul cu sosul tzatziki si quinoa."
+    ]
+  },
+  {
+    "name": "Cotlet de porc cu conopida la gratar si sos de iaurt",
+    "description": "Cotlet de porc la gratar cu conopida preparata la grill si un sos cremos de iaurt cu mustar.",
+    "mealType": "dinner",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 25,
+    "ingredients": [
+      { "quantity": 150, "unit": "g", "name": "cotlet de porc" },
+      { "quantity": 200, "unit": "g", "name": "conopida" },
+      { "quantity": 2, "unit": "linguri", "name": "iaurt" },
+      { "quantity": 0.25, "unit": "lingurita", "name": "mustar Dijon fara zahar" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" }
+    ],
+    "instructions": [
+      "Condimenteaza cotletul de porc si fa-l la gratar sau la cuptor (20-25 minute).",
+      "Pregateste conopida la grill sau la abur pana se inmoaie usor.",
+      "Prepara sosul: amesteca iaurtul cu mustarul Dijon si uleiul de masline.",
+      "Serveste cotletul cu conopida si sos de iaurt deasupra."
+    ]
+  },
+  {
+    "name": "Iaurt cu seminte de chia si fructe",
+    "description": "Bol de mic dejun cu iaurt gras, fructe de padure, seminte de chia si nuci.",
+    "mealType": "breakfast",
+    "servings": 1,
+    "prepTimeMin": 5,
+    "cookTimeMin": null,
+    "ingredients": [
+      { "quantity": 150, "unit": "g", "name": "iaurt 10% grasime" },
+      { "quantity": 1, "unit": "ceasca", "name": "afine sau alte fructe" },
+      { "quantity": 2, "unit": "linguri", "name": "seminte de chia" },
+      { "quantity": 2, "unit": null, "name": "nuci (miezul)" }
+    ],
+    "instructions": [
+      "Pune iaurtul intr-un bol.",
+      "Adauga semintele de chia si lasa 5 minute sa se hidrateze.",
+      "Adauga fructele si miezul de nuci.",
+      "Serveste imediat."
+    ]
+  },
+  {
+    "name": "Salata de spanac cu naut si branza feta",
+    "description": "Salata proaspata cu frunze de baby spanac, naut fiert, avocado si branza feta, dresata cu ulei de masline si lamaie.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": null,
+    "ingredients": [
+      { "quantity": null, "unit": "pumn", "name": "frunze de baby spanac" },
+      { "quantity": 0.5, "unit": null, "name": "avocado, taiat cuburi" },
+      { "quantity": 150, "unit": "g", "name": "naut fiert" },
+      { "quantity": 40, "unit": "g", "name": "branza feta sau telemea" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": null, "unit": "dupa gust", "name": "lamaie, sare, piper" }
+    ],
+    "instructions": [
+      "Pune frunzele de spanac in bol.",
+      "Adauga avocado taiat cuburi, nautul fiert si branza faramitata.",
+      "Dresesaza cu ulei de masline, suc de lamaie, sare si piper.",
+      "Amesteca usor si serveste."
+    ]
+  },
+  {
+    "name": "Mancare de fasole verde cu pulpe de pui",
+    "description": "Mancare traditionala cu fasole verde proaspata si pulpe de pui, preparata inabusit cu pasta de rosii si condimente.",
+    "mealType": "dinner",
+    "servings": 2,
+    "prepTimeMin": 15,
+    "cookTimeMin": 40,
+    "ingredients": [
+      { "quantity": 300, "unit": "g", "name": "pulpe de pui fara piele" },
+      { "quantity": 500, "unit": "g", "name": "fasole verde" },
+      { "quantity": 2, "unit": "linguri", "name": "pasta de tomate" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": 1, "unit": null, "name": "ceapa" },
+      { "quantity": null, "unit": "dupa gust", "name": "sare, piper, condimente" }
+    ],
+    "instructions": [
+      "Inabusa ceapa in ulei cu putina apa pana se inmoaie.",
+      "Adauga pulpele de pui si lasa sa se prajeasca usor.",
+      "In ultimele 20 de minute adauga fasolea verde si pasta de rosii.",
+      "Adauga condimentele preferate si lasa sa fiarba la foc mic pana fasolea este moale."
+    ]
+  },
+  {
+    "name": "Antricot de vita cu broccoli si rucola",
+    "description": "Antricot de vita la gratar, gatit in unt, servit cu broccoli la abur si salata de rucola cu lamaie.",
+    "mealType": "dinner",
+    "servings": 1,
+    "prepTimeMin": 5,
+    "cookTimeMin": 15,
+    "ingredients": [
+      { "quantity": 130, "unit": "g", "name": "antricot de vita" },
+      { "quantity": 10, "unit": "g", "name": "unt" },
+      { "quantity": null, "unit": "portie", "name": "broccoli" },
+      { "quantity": null, "unit": "pumn", "name": "rucola" },
+      { "quantity": 0.5, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": null, "unit": "dupa gust", "name": "lamaie" }
+    ],
+    "instructions": [
+      "Incalzeste tigaia si adauga untul.",
+      "Fa antricotul la gratar in unt, 3-4 minute pe fiecare parte.",
+      "Fa broccoliul la abur 5-7 minute.",
+      "Pregateste salata de rucola cu ulei de masline si lamaie.",
+      "Serveste antricotul cu broccoliul si salata."
+    ]
+  },
+  {
+    "name": "Chiftele de curcan cu salata de varza",
+    "description": "Chiftele de carne tocata de curcan cu verdeata si usturoi, facute la cuptor, servite cu salata de varza cu morcov.",
+    "mealType": "dinner",
+    "servings": 2,
+    "prepTimeMin": 20,
+    "cookTimeMin": 25,
+    "ingredients": [
+      { "quantity": 300, "unit": "g", "name": "carne tocata de curcan" },
+      { "quantity": 1, "unit": null, "name": "ou" },
+      { "quantity": null, "unit": "din belsug", "name": "verdeata (patrunjel, marar)" },
+      { "quantity": 2, "unit": "catei", "name": "usturoi" },
+      { "quantity": null, "unit": "dupa gust", "name": "condimente (sare, piper)" },
+      { "quantity": 0.5, "unit": null, "name": "varza (pentru salata)" },
+      { "quantity": 1, "unit": null, "name": "morcov (pentru salata)" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline (pentru salata)" },
+      { "quantity": null, "unit": "dupa gust", "name": "lamaie sau otet (pentru salata)" }
+    ],
+    "instructions": [
+      "Amesteca carnea tocata cu ou, verdeata tocata, usturoi pisat si condimente.",
+      "Formeaza chiftele si pune-le intr-o tava.",
+      "Da la cuptor la 180 grade sau la air fryer pana se rumenesc pe ambele parti (20-25 minute).",
+      "Pregateste salata de varza: taie varza subtire, rade morcovul, amesteca cu ulei de masline si lamaie sau otet.",
+      "Serveste chiftelele cu salata de varza."
+    ]
+  },
+  {
+    "name": "Supa crema de rosii coapte cu quinoa",
+    "description": "Supa crema din rosii coapte cu telina, morcov si usturoi, mixata si servita cu quinoa fiarta si busuioc proaspat.",
+    "mealType": "dinner",
+    "servings": 2,
+    "prepTimeMin": 10,
+    "cookTimeMin": 40,
+    "ingredients": [
+      { "quantity": 3, "unit": "mari", "name": "rosii" },
+      { "quantity": 1, "unit": "tulpina", "name": "telina" },
+      { "quantity": 1, "unit": "mic", "name": "morcov" },
+      { "quantity": 3, "unit": "catei", "name": "usturoi" },
+      { "quantity": 2, "unit": "linguri", "name": "ulei de masline" },
+      { "quantity": null, "unit": "proaspat", "name": "busuioc" },
+      { "quantity": 2, "unit": "linguri", "name": "quinoa fiarta (pentru servire)" }
+    ],
+    "instructions": [
+      "Pune rosiile, telina, morcovul si usturoiul intr-o tava.",
+      "Stropeste cu ulei de masline si adauga busuioc.",
+      "Coace la 180-200 grade pana legumele se inmoaie si se caramelizeaza (30-35 minute).",
+      "Blendizeaza toate legumele, adaugand apa dupa consistenta dorita.",
+      "Serveste cu quinoa fiarta si eventual busuioc proaspat."
+    ]
+  },
+  {
+    "name": "Ficat de pasare cu salata tzatziki",
+    "description": "Ficatei de pasare la gratar serviti cu o salata tzatziki proaspata din castraveti, iaurt, usturoi si marar.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 15,
+    "ingredients": [
+      { "quantity": 150, "unit": "g", "name": "ficat de pasare" },
+      { "quantity": 2, "unit": null, "name": "castraveti, taiati cuburi mici" },
+      { "quantity": 2, "unit": "linguri", "name": "iaurt" },
+      { "quantity": 1, "unit": "catel", "name": "usturoi pisat" },
+      { "quantity": null, "unit": "optional", "name": "marar" },
+      { "quantity": null, "unit": "dupa gust", "name": "lamaie" }
+    ],
+    "instructions": [
+      "Curata ficateii si condimenteaza.",
+      "Fa ficateii la gratar cu putina ulei pana sunt bine patrunsi (10-12 minute).",
+      "Prepara tzatziki: amesteca iaurtul cu castravetii taiati cuburi, usturoiul pisat, mararalul si sucul de lamaie.",
+      "Serveste ficateii cu salata tzatziki."
+    ]
+  },
+  {
+    "name": "Paste integrale cu mazare, pui si avocado",
+    "description": "Salata calda de paste integrale cu mazare trasa in unt, piept de pui la gratar, avocado si frunze verzi.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 20,
+    "ingredients": [
+      { "quantity": 40, "unit": "g", "name": "paste integrale (cantarite crude)" },
+      { "quantity": 2, "unit": "linguri", "name": "mazare fiarta" },
+      { "quantity": 10, "unit": "g", "name": "unt" },
+      { "quantity": null, "unit": "pumn", "name": "frunze verzi" },
+      { "quantity": null, "unit": "cateva", "name": "rosii cherry" },
+      { "quantity": 0.5, "unit": null, "name": "avocado" },
+      { "quantity": null, "unit": "cateva", "name": "ridichi" },
+      { "quantity": 65, "unit": "g", "name": "piept de pui la gratar" },
+      { "quantity": 0.5, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": null, "unit": "dupa gust", "name": "lamaie sau otet" }
+    ],
+    "instructions": [
+      "Fierbe pastele conform instructiunilor.",
+      "Incalzeste untul si trece mazarea prin el 2-3 minute.",
+      "Fa pieptul de pui la gratar si taie cubulete.",
+      "Amesteca pastele scurse cu mazarea, frunzele verzi, rosiile cherry, avocadoul, ridichile si puiul.",
+      "Dresesaza cu ulei de masline si lamaie sau otet."
+    ]
+  },
+  {
+    "name": "Conopida gratinata cu branza",
+    "description": "Conopida pregatita la abur si gratinata cu un amestec de cottage cheese, parmezan si mozzarella.",
+    "mealType": "dinner",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 25,
+    "ingredients": [
+      { "quantity": null, "unit": "cateva buchete", "name": "conopida" },
+      { "quantity": 0.5, "unit": "cutie", "name": "cottage cheese 2% grasime" },
+      { "quantity": 1, "unit": "lingura", "name": "parmezan ras" },
+      { "quantity": 0.5, "unit": "bila", "name": "mozzarella light" },
+      { "quantity": 2, "unit": "linguri", "name": "pasta de rosii" }
+    ],
+    "instructions": [
+      "Fa buchetele de conopida la abur 5 minute.",
+      "Pregateste amestecul de branza: cottage cheese, parmezan si mozzarella sfarimat.",
+      "Amesteca conopida cu branza.",
+      "Adauga pasta de rosii deasupra.",
+      "Da la cuptor la 180 grade pentru 20-25 de minute pana se rumeneste."
+    ]
+  },
+  {
+    "name": "Pulpa de curcan cu orez basmati si salata verde",
+    "description": "Pulpa de curcan la cuptor cu orez basmati fiert si racit, servita cu salata verde cu marar si castravete.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 45,
+    "ingredients": [
+      { "quantity": 150, "unit": "g", "name": "pulpa de curcan" },
+      { "quantity": 2, "unit": "linguri", "name": "orez basmati" },
+      { "quantity": 5, "unit": "g", "name": "unt" },
+      { "quantity": null, "unit": "pumn", "name": "frunze de salata verde" },
+      { "quantity": null, "unit": "optional", "name": "marar proaspat" },
+      { "quantity": 1, "unit": null, "name": "castravete" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": null, "unit": "dupa gust", "name": "lamaie sau otet" }
+    ],
+    "instructions": [
+      "Condimenteaza pulpa de curcan si pune la cuptor la 180-190 grade (40-45 minute).",
+      "Fierbe orezul basmati, la final adauga untul si lasa sa se raceasca.",
+      "Pregateste salata verde: frunze, castravete felii, marar, ulei de masline si lamaie.",
+      "Serveste pulpa cu orezul racit si salata verde."
+    ]
+  },
+  {
+    "name": "Omleta cu paine cu maia si salata",
+    "description": "Omleta simpla din doua oua, facuta in unt sau ulei de masline, servita cu paine cu maia si legume proaspete.",
+    "mealType": "breakfast",
+    "servings": 1,
+    "prepTimeMin": 5,
+    "cookTimeMin": 5,
+    "ingredients": [
+      { "quantity": 2, "unit": null, "name": "oua" },
+      { "quantity": 10, "unit": "g", "name": "unt sau 1 lingura ulei de masline" },
+      { "quantity": 1, "unit": "felie", "name": "paine cu maia" },
+      { "quantity": null, "unit": "optional", "name": "ceapa verde" },
+      { "quantity": null, "unit": "optional", "name": "castravete, ardei, rosii" }
+    ],
+    "instructions": [
+      "Bate ouale cu un varf de sare si piper.",
+      "Incalzeste untul sau uleiul intr-o tigaie la foc mediu.",
+      "Toarna ouale si gateste 2-3 minute pana se intaresc.",
+      "Serveste cu paine cu maia si legume proaspete."
+    ]
+  },
+  {
+    "name": "Salata de ton cu fasole alba",
+    "description": "Salata consistenta cu ton in suc propriu, fasole alba, legume proaspete si dressing de lamaie.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": null,
+    "ingredients": [
+      { "quantity": 1, "unit": "conserva", "name": "ton in suc propriu" },
+      { "quantity": 0.5, "unit": "conserva", "name": "fasole alba (fara zahar)" },
+      { "quantity": 1, "unit": null, "name": "ardei gras" },
+      { "quantity": null, "unit": "cateva", "name": "masline" },
+      { "quantity": 1, "unit": null, "name": "ceapa verde" },
+      { "quantity": 1, "unit": null, "name": "castravete" },
+      { "quantity": null, "unit": "optional", "name": "iaurt si mustar pentru dressing" },
+      { "quantity": null, "unit": "dupa gust", "name": "lamaie" }
+    ],
+    "instructions": [
+      "Scurge tonul de suc si pune-l in bol.",
+      "Adauga fasolea alba scursa, ardeiul tocat, ceapa verde, castravetele si maslinele.",
+      "Prepara dressingul: amesteca iaurtul cu mustarul si lamaie.",
+      "Toarna dressingul peste salata si amesteca."
+    ]
+  },
+  {
+    "name": "Supa crema de dovleac cu unt",
+    "description": "Supa crema catifelata din dovleac, cartofi, ceapa si telina, blendizata si servita cu unt si parmezan.",
+    "mealType": "dinner",
+    "servings": 2,
+    "prepTimeMin": 15,
+    "cookTimeMin": 30,
+    "ingredients": [
+      { "quantity": null, "unit": "portie mare", "name": "dovleac" },
+      { "quantity": 1, "unit": null, "name": "cartof (cu tot cu coaja)" },
+      { "quantity": 1, "unit": null, "name": "ceapa" },
+      { "quantity": 1, "unit": "tulpina", "name": "telina" },
+      { "quantity": null, "unit": "optional", "name": "patrunjel" },
+      { "quantity": 10, "unit": "g", "name": "unt" },
+      { "quantity": 1, "unit": "lingura", "name": "parmezan ras (pentru servire)" }
+    ],
+    "instructions": [
+      "Taie legumele cubulete si pune-le la fiert in apa cu sare.",
+      "Fierbe pana sunt moi (25-30 minute).",
+      "Blendizeaza totul pana obtii o crema fina.",
+      "La final adauga untul in bol cand servesti.",
+      "Serveste cu parmezan ras deasupra."
+    ]
+  },
+  {
+    "name": "Pate de ton pe paine cu avocado",
+    "description": "Mic dejun rapid cu pasta din ton, ou fiert si crema de branza, pusa pe paine cu maia si servita cu avocado.",
+    "mealType": "breakfast",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 10,
+    "ingredients": [
+      { "quantity": 1, "unit": null, "name": "ou fiert tare" },
+      { "quantity": 30, "unit": "g", "name": "ton in suc propriu" },
+      { "quantity": 1, "unit": "lingura rasa", "name": "crema de branza" },
+      { "quantity": 1, "unit": "felie", "name": "paine cu maia" },
+      { "quantity": 0.5, "unit": null, "name": "avocado" }
+    ],
+    "instructions": [
+      "Fierbe oul tare (10 minute), raceste si curata.",
+      "Zdrobeste oul cu furculita si amesteca cu tonul scurs si crema de branza.",
+      "Intinde pasta pe felie de paine cu maia.",
+      "Serveste cu avocado in felii sau pasta alaturi."
+    ]
+  },
+  {
+    "name": "Salata de pui cu mix de frunze si dressing de mustar",
+    "description": "Salata consistenta cu piept de pui la gratar, mix de frunze verzi, rosii cherry, castravete si dressing de mustar cu lamaie.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 15,
+    "ingredients": [
+      { "quantity": 150, "unit": "g", "name": "piept de pui la gratar, taiat cubulete" },
+      { "quantity": null, "unit": "pumn", "name": "mix frunze verzi" },
+      { "quantity": null, "unit": "cateva", "name": "rosii cherry" },
+      { "quantity": 1, "unit": null, "name": "castravete" },
+      { "quantity": null, "unit": "cateva", "name": "masline" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": 0.5, "unit": "lingurita", "name": "mustar" },
+      { "quantity": null, "unit": "dupa gust", "name": "lamaie" }
+    ],
+    "instructions": [
+      "Fa pieptul de pui la gratar, condimenteaza si taie cubulete.",
+      "Pregateste dressingul: amesteca uleiul de masline, mustarul si sucul de lamaie.",
+      "Pune frunzele in bol, adauga rosiile, castravetele, maslinele si puiul.",
+      "Toarna dressingul si amesteca."
+    ]
+  },
+  {
+    "name": "Fasole verde cu rosii si usturoi",
+    "description": "Mancare clasica de fasole verde gatita cu rosii, ceapa si usturoi, servita cu pulpe de pui la cuptor.",
+    "mealType": "dinner",
+    "servings": 2,
+    "prepTimeMin": 10,
+    "cookTimeMin": 35,
+    "ingredients": [
+      { "quantity": 200, "unit": "g", "name": "fasole verde" },
+      { "quantity": 2, "unit": null, "name": "rosii sau 1 conserva de rosii" },
+      { "quantity": 2, "unit": "catei", "name": "usturoi" },
+      { "quantity": 1, "unit": null, "name": "ceapa" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": 2, "unit": null, "name": "pulpe superioare de pui" }
+    ],
+    "instructions": [
+      "Inabusa ceapa in ulei cu putina apa.",
+      "Adauga pulpele de pui si fasolea verde.",
+      "Pune rosiile si usturoiul, condimenteaza.",
+      "Acopera si lasa la foc mic 25-30 minute pana fasolea este moale si carnea gatita."
+    ]
+  },
+  {
+    "name": "Salata greceasca cu telemea",
+    "description": "Salata greceasca clasica cu rosii, castravete, ceapa, masline si branza telemea de capra sau oaie.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": null,
+    "ingredients": [
+      { "quantity": 2, "unit": null, "name": "rosii" },
+      { "quantity": 1, "unit": null, "name": "castravete" },
+      { "quantity": 1, "unit": null, "name": "ceapa rosie" },
+      { "quantity": 50, "unit": "g", "name": "branza telemea de capra sau oaie" },
+      { "quantity": null, "unit": "cateva", "name": "masline" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" }
+    ],
+    "instructions": [
+      "Taie rosiile, castravetele si ceapa in bucati mari.",
+      "Adauga maslinele si branza taiata sau faramitata.",
+      "Dresesaza cu ulei de masline si optional otet sau lamaie.",
+      "Serveste imediat."
+    ]
+  },
+  {
+    "name": "Somon la cuptor cu broccoli si conopida in unt",
+    "description": "File de somon la cuptor cu broccoli si conopida trase la tigaie in unt cu usturoi, o cina simpla si sanatoasa.",
+    "mealType": "dinner",
+    "servings": 1,
+    "prepTimeMin": 5,
+    "cookTimeMin": 20,
+    "ingredients": [
+      { "quantity": 1, "unit": "file", "name": "somon" },
+      { "quantity": null, "unit": "portie", "name": "broccoli" },
+      { "quantity": null, "unit": "portie", "name": "conopida" },
+      { "quantity": 10, "unit": "g", "name": "unt" },
+      { "quantity": 2, "unit": "catei", "name": "usturoi" }
+    ],
+    "instructions": [
+      "Condimenteaza somonul si pune la cuptor la 180 grade (15-20 minute).",
+      "Fa broccoliul si conopida la abur 5 minute.",
+      "Incalzeste untul in tigaie, adauga usturoiul si trece legumele la tigaie 3-4 minute.",
+      "Serveste somonul cu legumele."
+    ]
+  },
+  {
+    "name": "Frittata cu legume la cuptor",
+    "description": "Frittata cu cartofi rasi, oua si ceapa verde, preparata la cuptor sau tigaie acoperita, servita cu rosii si castravete.",
+    "mealType": "breakfast",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 15,
+    "ingredients": [
+      { "quantity": 1, "unit": null, "name": "cartof mediu, ras" },
+      { "quantity": 2, "unit": null, "name": "oua" },
+      { "quantity": 1, "unit": null, "name": "ceapa verde, tocata" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": null, "unit": "pentru servit", "name": "rosii, castravete" }
+    ],
+    "instructions": [
+      "Rade cartoful si amesteca cu ouale batute si ceapa verde tocata.",
+      "Toarna amestecul intr-o tigaie cu ulei de masline incalzit.",
+      "Pune capacul si lasa la foc mic 4-5 minute.",
+      "Intoarce si lasa cu capac pana se rumeneste pe cealalta parte.",
+      "Serveste cu rosii si castravete proaspete."
+    ]
+  },
+  {
+    "name": "Burger cu chifla si castravete murat",
+    "description": "Burger semi-naked cu pastila de carne, o jumatate de chifla, branza cheddar si castravete murat, precedat de o salata verde.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 5,
+    "cookTimeMin": 15,
+    "ingredients": [
+      { "quantity": 1, "unit": null, "name": "pastila de burger" },
+      { "quantity": 0.5, "unit": null, "name": "chifla de burger" },
+      { "quantity": 1, "unit": "felie", "name": "branza cheddar" },
+      { "quantity": null, "unit": "cateva felii", "name": "castravete murat fara zahar" },
+      { "quantity": 0.5, "unit": "lingura", "name": "mayo light" },
+      { "quantity": null, "unit": "pumn", "name": "frunze de salata verde" },
+      { "quantity": 0.5, "unit": "lingura", "name": "ulei de masline" }
+    ],
+    "instructions": [
+      "Fa pastila de burger la gratar sau tigaie.",
+      "Pregateste o salata mica de frunze verzi cu ulei de masline si lamaie.",
+      "Asambleaza burgerul: chifla, mayo, pastila, cheddar, castravete murat.",
+      "Serveste cu salata verde inainte."
+    ]
+  },
+  {
+    "name": "Omleta cu ciuperci si wasa",
+    "description": "Omleta savuroasa cu ciuperci, facuta in unt, servita cu felii wasa si castravete murat.",
+    "mealType": "breakfast",
+    "servings": 1,
+    "prepTimeMin": 5,
+    "cookTimeMin": 10,
+    "ingredients": [
+      { "quantity": 2, "unit": null, "name": "oua" },
+      { "quantity": null, "unit": "pumn", "name": "ciuperci, feliate" },
+      { "quantity": 10, "unit": "g", "name": "unt" },
+      { "quantity": 2, "unit": "felii", "name": "wasa" },
+      { "quantity": 1, "unit": null, "name": "castravete murat fara zahar" }
+    ],
+    "instructions": [
+      "Caleste ciupercile in unt 3-4 minute.",
+      "Bate ouale si toarna-le peste ciuperci.",
+      "Gateste omleta la foc mediu-mic pana se intareste.",
+      "Serveste cu felii wasa si castravete murat."
+    ]
+  },
+  {
+    "name": "Muschi de porc cu mazare si cartofi la cuptor",
+    "description": "Muschi de porc gatit la cuptor intr-un vas termozistent cu mazare, cartofi si rosii cherry, totul aromat si suculent.",
+    "mealType": "dinner",
+    "servings": 2,
+    "prepTimeMin": 10,
+    "cookTimeMin": 45,
+    "ingredients": [
+      { "quantity": 300, "unit": "g", "name": "muschi sau cotlet de porc" },
+      { "quantity": 400, "unit": "g", "name": "mazare" },
+      { "quantity": 2, "unit": null, "name": "cartofi (in coaja)" },
+      { "quantity": null, "unit": "cateva", "name": "rosii cherry" },
+      { "quantity": 2, "unit": "linguri", "name": "ulei de masline" },
+      { "quantity": null, "unit": "dupa gust", "name": "sare, piper, condimente" }
+    ],
+    "instructions": [
+      "Pune muschiul de porc, mazarea, cartofii taiati cubulete si rosiile cherry intr-un vas termozistent.",
+      "Stropeste cu ulei de masline si condimenteaza.",
+      "Da la cuptor la 180-190 grade pana carnea este bine gatita (40-45 minute).",
+      "Serveste jumatate din cantitate."
+    ]
+  },
+  {
+    "name": "Creveti cu broccoli si usturoi",
+    "description": "Creveti trasi la tigaie in unt sau ulei de masline cu usturoi, serviti cu broccoli la abur.",
+    "mealType": "dinner",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 15,
+    "ingredients": [
+      { "quantity": 8, "unit": null, "name": "creveti mari" },
+      { "quantity": 10, "unit": "g", "name": "unt sau 1 lingura ulei de masline" },
+      { "quantity": 2, "unit": "catei", "name": "usturoi" },
+      { "quantity": null, "unit": "portie", "name": "broccoli" }
+    ],
+    "instructions": [
+      "Fa broccoliul la abur sau la gratar.",
+      "Incalzeste untul sau uleiul in tigaie.",
+      "Adauga usturoiul si crevetii.",
+      "Trage crevetii la tigaie 2-3 minute pe fiecare parte pana se rumenesc.",
+      "Serveste cu broccoliul. Poti combina broccoliul cu crevetii in tigaie la final."
+    ]
+  },
+  {
+    "name": "Salata orientala cu cartofi fierti",
+    "description": "Salata traditionala orientala cu cartofi fierti in coaja si raciti, oua fierte, castraveti murati si masline.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 15,
+    "cookTimeMin": 25,
+    "ingredients": [
+      { "quantity": 2, "unit": "medii", "name": "cartofi fierti in coaja si raciti" },
+      { "quantity": 2, "unit": null, "name": "oua fierte" },
+      { "quantity": null, "unit": "cateva", "name": "castraveti murati fara zahar" },
+      { "quantity": null, "unit": "5-6", "name": "masline" },
+      { "quantity": 1, "unit": null, "name": "ceapa" },
+      { "quantity": null, "unit": "optional", "name": "patrunjel sau verdeata" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": null, "unit": "dupa gust", "name": "otet" }
+    ],
+    "instructions": [
+      "Fierbe cartofii in coaja si lasa sa se raceasca complet.",
+      "Fierbe ouale tari.",
+      "Taie cartofii si ouale in cuburi.",
+      "Amesteca cu castraveti murati, masline, ceapa si verdeata.",
+      "Dresesaza cu ulei de masline si otet dupa gust."
+    ]
+  },
+  {
+    "name": "Ciorba de vacuta cu legume",
+    "description": "Ciorba consistenta de carne de vita cu legume multe si bors sau lamaie, un pranz reconfortant.",
+    "mealType": "lunch",
+    "servings": 2,
+    "prepTimeMin": 20,
+    "cookTimeMin": 90,
+    "ingredients": [
+      { "quantity": 300, "unit": "g", "name": "carne de vita" },
+      { "quantity": 2, "unit": null, "name": "morcovi" },
+      { "quantity": 1, "unit": null, "name": "telina (radacina)" },
+      { "quantity": 1, "unit": null, "name": "ceapa" },
+      { "quantity": 2, "unit": null, "name": "cartofi" },
+      { "quantity": null, "unit": "dupa gust", "name": "sare, piper, condimente" },
+      { "quantity": 1, "unit": "mic", "name": "iaurt 3.5% grasime (pentru servire)" }
+    ],
+    "instructions": [
+      "Pune carnea la fiert in apa rece cu sare.",
+      "Cand incepe sa fiarba, spumuieste si adauga legumele curatate.",
+      "Lasa sa fiarba la foc mic 1.5 ore pana carnea este frageda.",
+      "Condimenteaza si serveste cald, cu iaurt alaturi."
+    ]
+  },
+  {
+    "name": "Pulpa de pui la cuptor cu legume",
+    "description": "Pulpe de pui superioare gatite la cuptor intr-un vas termozistent cu morcov, ceapa, usturoi, rosii si conopida.",
+    "mealType": "dinner",
+    "servings": 2,
+    "prepTimeMin": 10,
+    "cookTimeMin": 45,
+    "ingredients": [
+      { "quantity": 2, "unit": null, "name": "pulpe de pui superioare" },
+      { "quantity": 1, "unit": null, "name": "morcov" },
+      { "quantity": 1, "unit": null, "name": "ceapa" },
+      { "quantity": 3, "unit": "catei", "name": "usturoi" },
+      { "quantity": null, "unit": "cateva", "name": "rosii cherry" },
+      { "quantity": null, "unit": "portie", "name": "conopida sau broccoli" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": 0.5, "unit": null, "name": "lamaie stoarsa" }
+    ],
+    "instructions": [
+      "Pune pulpele de pui intr-un vas termozistent.",
+      "Adauga morcovul, ceapa, usturoiul, rosiile si conopida in jurul carnii.",
+      "Stropeste cu ulei de masline si sucul de lamaie, condimenteaza.",
+      "Da la cuptor la 190 grade pana carnea se rumeneste frumos (40-45 minute)."
+    ]
+  },
+  {
+    "name": "Broccoli si conopida cu ton si dressing de branza",
+    "description": "Legume la abur cu ton din conserva si un dressing cremos din crema de branza, mustar si marar.",
+    "mealType": "dinner",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 10,
+    "ingredients": [
+      { "quantity": null, "unit": "portie", "name": "broccoli" },
+      { "quantity": null, "unit": "portie", "name": "conopida" },
+      { "quantity": 1, "unit": "conserva", "name": "ton in suc propriu" },
+      { "quantity": 2, "unit": "linguri", "name": "crema de branza" },
+      { "quantity": 0.5, "unit": "lingurita", "name": "mustar" },
+      { "quantity": null, "unit": "optional", "name": "marar proaspat" },
+      { "quantity": null, "unit": "dupa gust", "name": "lamaie, sare, piper" }
+    ],
+    "instructions": [
+      "Fa broccoliul si conopida la abur 5-7 minute.",
+      "Prepara dressingul: amesteca crema de branza cu mustarul, mararalul si sucul de lamaie.",
+      "Scurge tonul.",
+      "Pune legumele in bol, adauga tonul si toarna dressingul deasupra."
+    ]
+  },
+  {
+    "name": "Salata cu quinoa, linte verde si frunze",
+    "description": "Salata sanatoasa cu quinoa fiarta, linte verde, frunze verzi, rosii cherry si castravete, dresata cu ulei de masline.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 20,
+    "ingredients": [
+      { "quantity": 3, "unit": "linguri", "name": "quinoa fiarta" },
+      { "quantity": 4, "unit": "linguri", "name": "linte verde fiarta" },
+      { "quantity": null, "unit": "pumn", "name": "mix frunze verzi" },
+      { "quantity": null, "unit": "cateva", "name": "rosii cherry" },
+      { "quantity": 1, "unit": null, "name": "castravete" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": null, "unit": "dupa gust", "name": "lamaie sau otet" }
+    ],
+    "instructions": [
+      "Fierbe quinoa si lintea separat conform instructiunilor.",
+      "Lasa sa se raceasca.",
+      "Combina cu frunzele verzi, rosiile cherry si castravetele.",
+      "Dresesaza cu ulei de masline si lamaie sau otet."
+    ]
+  },
+  {
+    "name": "Lipie libaneza cu pui, avocado si legume",
+    "description": "Wrap in lipie libaneza umplut cu piept de pui la gratar, avocado, morcov crud, sfecla si frunze de salata.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 15,
+    "ingredients": [
+      { "quantity": 0.5, "unit": null, "name": "lipie libaneza" },
+      { "quantity": 0.5, "unit": null, "name": "avocado" },
+      { "quantity": 65, "unit": "g", "name": "piept de pui la gratar" },
+      { "quantity": 1, "unit": null, "name": "morcov crud" },
+      { "quantity": null, "unit": "optional", "name": "sfecla fiarta" },
+      { "quantity": null, "unit": "cateva", "name": "frunze de salata verde" }
+    ],
+    "instructions": [
+      "Fa pieptul de pui la gratar si lasa sa se raceasca putin.",
+      "Intinde lipie pe un tocator.",
+      "Aseaza frunzele de salata, avocadoul feliat, puiul, morcovul crud ras si sfecla.",
+      "Ruleaza lipie strans si serveste."
+    ]
+  },
+  {
+    "name": "Supa crema de conopida cu branza telemea",
+    "description": "Supa crema delicata din conopida, telina, usturoi si cartof dulce, blendizata cu unt si servita cu telemea de capra.",
+    "mealType": "dinner",
+    "servings": 2,
+    "prepTimeMin": 10,
+    "cookTimeMin": 25,
+    "ingredients": [
+      { "quantity": null, "unit": "portie", "name": "conopida" },
+      { "quantity": 1, "unit": "tulpina", "name": "telina apio" },
+      { "quantity": 2, "unit": "catei", "name": "usturoi" },
+      { "quantity": 0.25, "unit": null, "name": "cartof dulce" },
+      { "quantity": 20, "unit": "g", "name": "unt" },
+      { "quantity": 30, "unit": "g", "name": "branza telemea de capra (pentru servire)" }
+    ],
+    "instructions": [
+      "Fierbe conopida, telina, usturoiul si cartoful dulce in apa cu sare pana sunt moi.",
+      "Blendizeaza pana obtii o crema fina.",
+      "Adauga untul si amesteca.",
+      "Serveste cu branza telemea de capra sfarimat deasupra."
+    ]
+  },
+  {
+    "name": "Salata de paste reci cu naut si dressing de tahini",
+    "description": "Salata rece cu paste integrale, naut, legume proaspete si un dressing aromat de pasta de susan cu lamaie si usturoi.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 15,
+    "cookTimeMin": 15,
+    "ingredients": [
+      { "quantity": 60, "unit": "g", "name": "paste integrale (cantarite crude)" },
+      { "quantity": 100, "unit": "g", "name": "naut fiert" },
+      { "quantity": 1, "unit": null, "name": "castravete" },
+      { "quantity": 1, "unit": null, "name": "ceapa verde" },
+      { "quantity": null, "unit": "cateva", "name": "rosii coapte sau crude" },
+      { "quantity": 1, "unit": "lingura", "name": "pasta de susan (tahini)" },
+      { "quantity": 0.5, "unit": null, "name": "lamaie (sucul)" },
+      { "quantity": 1, "unit": "catel", "name": "usturoi" }
+    ],
+    "instructions": [
+      "Fierbe pastele conform instructiunilor si lasa sa se raceasca.",
+      "Prepara dressingul de tahini: amesteca pasta de susan cu sucul de lamaie, usturoiul pisat si putina apa pana obtii consistenta de aluat de clatite.",
+      "Combina pastele cu nautul, castravetele, ceapa si rosiile.",
+      "Toarna dressingul si amesteca bine."
+    ]
+  },
+  {
+    "name": "Varza cu muschi de porc la cuptor",
+    "description": "Mancare de varza alba gatita la cuptor sau clasic pe foc cu sos de rosii, servita cu muschi de porc.",
+    "mealType": "dinner",
+    "servings": 2,
+    "prepTimeMin": 15,
+    "cookTimeMin": 50,
+    "ingredients": [
+      { "quantity": null, "unit": "cantitate generosa", "name": "varza alba, taiata marunt" },
+      { "quantity": 0.5, "unit": "conserva", "name": "rosii (fara zahar)" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": null, "unit": "dupa gust", "name": "condimente (sare, piper, cimbru)" },
+      { "quantity": 140, "unit": "g", "name": "muschi de porc" }
+    ],
+    "instructions": [
+      "Taie varza marunt si pune-o intr-un vas de cuptor.",
+      "Adauga rosiile din conserva, uleiul de masline, condimentele si putina apa.",
+      "Fa muschiul de porc la gratar sau pune-l in vasul cu varza.",
+      "Da la cuptor la 180 grade pana varza este moale si carnea gatita (45-50 minute)."
+    ]
+  },
+  {
+    "name": "Supa crema de mazare",
+    "description": "Supa crema de mazare cu telina, cartof si ceapa, blendizata cu unt sau smantana.",
+    "mealType": "dinner",
+    "servings": 2,
+    "prepTimeMin": 10,
+    "cookTimeMin": 25,
+    "ingredients": [
+      { "quantity": null, "unit": "portie mare", "name": "mazare" },
+      { "quantity": 1, "unit": "tulpina", "name": "telina" },
+      { "quantity": 1, "unit": null, "name": "cartof (cu tot cu coaja)" },
+      { "quantity": 1, "unit": null, "name": "ceapa" },
+      { "quantity": 20, "unit": "g", "name": "unt sau 2 linguri rase smantana" },
+      { "quantity": null, "unit": "dupa gust", "name": "condimente" }
+    ],
+    "instructions": [
+      "Pune mazarea, telina, cartoful si ceapa la fiert in apa cu sare.",
+      "Fierbe pana sunt moi (20-25 minute).",
+      "Blendizeaza totul.",
+      "Adauga untul sau smantana, amesteca si serveste."
+    ]
+  },
+  {
+    "name": "Burrito bowl cu pui si fasole rosie",
+    "description": "Bol inspirat de bucataria mexicana cu piept de pui la gratar, fasole rosie, porumb dulce, rosii si dressing de tahini.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 15,
+    "ingredients": [
+      { "quantity": 120, "unit": "g", "name": "piept de pui la gratar" },
+      { "quantity": null, "unit": "pumn", "name": "frunze de salata verde" },
+      { "quantity": null, "unit": "cateva", "name": "rosii" },
+      { "quantity": 2, "unit": "linguri", "name": "porumb dulce" },
+      { "quantity": 3, "unit": "linguri", "name": "fasole rosie fiarta" },
+      { "quantity": 1, "unit": "lingura", "name": "pasta de susan (tahini)" },
+      { "quantity": 0.5, "unit": null, "name": "lamaie (sucul)" }
+    ],
+    "instructions": [
+      "Fa pieptul de pui la gratar si taie in fasii sau cubulete.",
+      "Prepara dressingul: amesteca pasta de susan cu sucul de lamaie si putina apa.",
+      "Aranjeaza in bol: frunzele de salata, rosiile, porumbul, fasolea rosie si puiul.",
+      "Toarna dressingul deasupra."
+    ]
+  },
+  {
+    "name": "Fulgi de ovaz cu lapte si fructe (overnight oats)",
+    "description": "Fulgi de ovaz cu lapte vegetal si fructe, pregatiti de seara si serviti dimineata cu seminte si nuci.",
+    "mealType": "breakfast",
+    "servings": 1,
+    "prepTimeMin": 5,
+    "cookTimeMin": null,
+    "ingredients": [
+      { "quantity": 3, "unit": "linguri", "name": "fulgi de ovaz" },
+      { "quantity": 200, "unit": "g", "name": "iaurt grecesc 10% grasime sau lapte vegetal" },
+      { "quantity": null, "unit": "cateva", "name": "cubulete de mar sau fructe de padure" },
+      { "quantity": 1, "unit": "lingura", "name": "seminte de chia" },
+      { "quantity": 1, "unit": "lingurita", "name": "seminte sau nuci la alegere" }
+    ],
+    "instructions": [
+      "Seara, pune fulgii de ovaz in iaurt sau lapte vegetal.",
+      "Adauga semintele de chia si fructele.",
+      "Acopera si pune la frigider pana dimineata.",
+      "Dimineata serveste adaugand seminte sau nuci deasupra."
+    ]
+  },
+  {
+    "name": "Salata cu linte verde, vanata coapta si telemea",
+    "description": "Salata consistenta cu linte verde, vanata coapta cuburi, patrunjel proaspat, rosii cherry si telemea de capra.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 25,
+    "ingredients": [
+      { "quantity": 150, "unit": "g", "name": "linte verde fiarta" },
+      { "quantity": 0.25, "unit": null, "name": "vanata, taiata cuburi" },
+      { "quantity": null, "unit": "pumn", "name": "patrunjel proaspat" },
+      { "quantity": null, "unit": "cateva", "name": "rosii cherry" },
+      { "quantity": 25, "unit": "g", "name": "branza telemea de capra" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": null, "unit": "dupa gust", "name": "otet" }
+    ],
+    "instructions": [
+      "Taie vanata cuburi si da la cuptor sau la air fryer cu putina sare.",
+      "Fierbe lintea verde conform instructiunilor.",
+      "Combina lintea, vanata coapta, patrunjelul, rosiile si telemea.",
+      "Dresesaza cu ulei de masline si otet."
+    ]
+  },
+  {
+    "name": "Somon la cuptor cu legume coapte",
+    "description": "File de somon copt la cuptor cu ceapa, usturoi, sfecla si morcov, legumele stropite cu ulei de masline.",
+    "mealType": "dinner",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 25,
+    "ingredients": [
+      { "quantity": 1, "unit": "file", "name": "somon" },
+      { "quantity": 1, "unit": null, "name": "ceapa" },
+      { "quantity": 2, "unit": "catei", "name": "usturoi" },
+      { "quantity": 1, "unit": null, "name": "sfecla rosie" },
+      { "quantity": 1, "unit": null, "name": "morcov" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" }
+    ],
+    "instructions": [
+      "Taie legumele in bucati si pune-le intr-o tava.",
+      "Stropeste cu ulei de masline si condimenteaza.",
+      "Pune somonul deasupra sau langa legume.",
+      "Da la cuptor la 190 grade 20-25 minute pana somonul este gatit si legumele moi."
+    ]
+  },
+  {
+    "name": "Mancare de fasole boabe cu carnat",
+    "description": "Mancare de fasole boabe gatita clasic cu rosii, bors si condimente, fara prajire, servita cu carnat sau cotlet.",
+    "mealType": "dinner",
+    "servings": 2,
+    "prepTimeMin": 10,
+    "cookTimeMin": 40,
+    "ingredients": [
+      { "quantity": 400, "unit": "g", "name": "fasole boabe (conserva sau uscata fiarta)" },
+      { "quantity": 1, "unit": "conserva", "name": "rosii (fara zahar)" },
+      { "quantity": null, "unit": "dupa gust", "name": "bulion" },
+      { "quantity": null, "unit": "dupa gust", "name": "condimente (sare, piper, dafin)" },
+      { "quantity": 1.5, "unit": null, "name": "carnat Maestro sau cotlet de porc" }
+    ],
+    "instructions": [
+      "Pune fasolea intr-o oala cu apa si lasa sa fiarba.",
+      "Adauga rosiile din conserva, bulionul si condimentele.",
+      "Nu praji nimic - totul se face inabusit.",
+      "Lasa sa fiarba 30-35 minute pana fasolea este moale.",
+      "Serveste cu carnatul sau cotletul alaturat."
+    ]
+  },
+  {
+    "name": "Cartof copt cu somon si sos de crema de branza",
+    "description": "Cartof copt in coaja umplut cu un sos de crema de branza, iaurt, capere si marar, servit cu file de somon.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 5,
+    "cookTimeMin": 50,
+    "ingredients": [
+      { "quantity": 1, "unit": "mediu", "name": "cartof" },
+      { "quantity": 1, "unit": "lingura", "name": "crema de branza" },
+      { "quantity": 1, "unit": "lingura", "name": "iaurt grecesc 10% grasime" },
+      { "quantity": 1, "unit": "lingura", "name": "capere" },
+      { "quantity": null, "unit": "optional", "name": "marar proaspat" },
+      { "quantity": 0.5, "unit": "file", "name": "somon la gratar" }
+    ],
+    "instructions": [
+      "Da cartoful la cuptor la 200 grade in coaja 45-50 minute.",
+      "Fa somonul la gratar.",
+      "Pregateste sosul: amesteca crema de branza cu iaurtul, caperele si mararalul.",
+      "Taie cartoful pe jumatate si umple cu sosul.",
+      "Serveste cu somonul alaturi."
+    ]
+  },
+  {
+    "name": "Ghiveci de legume cu piept de curcan",
+    "description": "Ghiveci de legume clasic cu morcov, telina, cartofi, rosii si ceapa, copt la cuptor si servit cu piept de curcan la gratar.",
+    "mealType": "lunch",
+    "servings": 2,
+    "prepTimeMin": 15,
+    "cookTimeMin": 45,
+    "ingredients": [
+      { "quantity": 1, "unit": null, "name": "morcov" },
+      { "quantity": 1, "unit": "tulpina", "name": "telina" },
+      { "quantity": 1, "unit": null, "name": "ceapa" },
+      { "quantity": 2, "unit": "medii", "name": "cartofi (cu tot cu coaja)" },
+      { "quantity": 2, "unit": null, "name": "rosii" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": null, "unit": "dupa gust", "name": "condimente" },
+      { "quantity": 125, "unit": "g", "name": "piept de curcan la gratar" }
+    ],
+    "instructions": [
+      "Taie legumele in bucati mai mari si pune-le intr-un vas de cuptor.",
+      "Adauga uleiul de masline si condimentele, amesteca.",
+      "Da la cuptor la 180-190 grade 40-45 minute.",
+      "Fa pieptul de curcan la gratar, condimentat cu lamaie.",
+      "Serveste ghiveciul cald cu pieptul de curcan alaturi."
+    ]
+  },
+  {
+    "name": "Pasta de fasole batuta pe paine",
+    "description": "Mic dejun simplu cu pasta de fasole batuta cu ulei de masline si usturoi, pusa pe paine cu maia si garnisita cu masline.",
+    "mealType": "breakfast",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": null,
+    "ingredients": [
+      { "quantity": 1, "unit": "conserva", "name": "fasole boabe (fara zahar)" },
+      { "quantity": 1, "unit": "lingura", "name": "pasta de susan (tahini)" },
+      { "quantity": 1, "unit": "catel", "name": "usturoi" },
+      { "quantity": null, "unit": "dupa gust", "name": "sare, piper" },
+      { "quantity": 1, "unit": "felie", "name": "paine cu maia" },
+      { "quantity": null, "unit": "5-6", "name": "masline" },
+      { "quantity": null, "unit": "optional", "name": "marar proaspat, ridichi" }
+    ],
+    "instructions": [
+      "Scurge fasolea si zdrobeste cu furculita.",
+      "Adauga pasta de susan, usturoiul pisat, sare si piper.",
+      "Amesteca pana obtii o pasta cremoasa.",
+      "Intinde pe felie de paine si garniseste cu masline, marar si ridichi."
+    ]
+  },
+  {
+    "name": "Piept de pui cu salata de varza si morcov",
+    "description": "Piept de curcan la gratar condimentat si servit cu salata proaspata de varza, morcov crud si patrunjel.",
+    "mealType": "dinner",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 20,
+    "ingredients": [
+      { "quantity": 150, "unit": "g", "name": "piept de curcan" },
+      { "quantity": 0.5, "unit": null, "name": "varza alba sau rosie" },
+      { "quantity": 1, "unit": null, "name": "morcov crud, ras" },
+      { "quantity": null, "unit": "optional", "name": "patrunjel proaspat" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": null, "unit": "dupa gust", "name": "lamaie sau otet" }
+    ],
+    "instructions": [
+      "Condimenteaza pieptul de curcan si fa-l la gratar 15-20 minute.",
+      "Taie varza subtire si rade morcovul.",
+      "Amesteca varza cu morcovul, patrunjelul, uleiul de masline si lamaie sau otet.",
+      "Serveste pieptul cald cu salata de varza alaturi."
+    ]
+  },
+  {
+    "name": "Pulpa de pui cu piure de telina si cartof",
+    "description": "Pulpa de pui la cuptor in sos de rosii si usturoi, servita cu piure cremos de telina si cartof cu iaurt si unt.",
+    "mealType": "dinner",
+    "servings": 2,
+    "prepTimeMin": 15,
+    "cookTimeMin": 50,
+    "ingredients": [
+      { "quantity": 2, "unit": null, "name": "pulpe de pui" },
+      { "quantity": 2, "unit": "linguri", "name": "sos de rosii" },
+      { "quantity": 3, "unit": "catei", "name": "usturoi" },
+      { "quantity": 1, "unit": null, "name": "radacina de telina (mica)" },
+      { "quantity": 1, "unit": null, "name": "cartof" },
+      { "quantity": 1, "unit": "lingura", "name": "iaurt 10% grasime" },
+      { "quantity": 10, "unit": "g", "name": "unt" },
+      { "quantity": null, "unit": "dupa gust", "name": "condimente" }
+    ],
+    "instructions": [
+      "Pune pulpele de pui intr-un vas de cuptor, adauga sosul de rosii si usturoiul.",
+      "Da la cuptor la 190 grade pana sunt bine gatite (40-45 minute).",
+      "Fierbe telina si cartoful, zdrobeste si adauga iaurtul si untul (ca la piure).",
+      "Condimenteaza piureul si serveste cu pulpele de pui."
+    ]
+  },
+  {
+    "name": "Salata cu quinoa si edamame",
+    "description": "Salata energizanta cu quinoa fiarta, edamame, cartof dulce copt, castravete si dressing de lamaie.",
+    "mealType": "dinner",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 30,
+    "ingredients": [
+      { "quantity": 3, "unit": "linguri", "name": "quinoa fiarta" },
+      { "quantity": 100, "unit": "g", "name": "edamame" },
+      { "quantity": 0.5, "unit": null, "name": "cartof dulce (copt, cubulete)" },
+      { "quantity": 1, "unit": null, "name": "castravete" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": null, "unit": "dupa gust", "name": "lamaie" }
+    ],
+    "instructions": [
+      "Taie cartoful dulce cuburi si da la cuptor cu putina sare 25-30 minute.",
+      "Fierbe quinoa conform instructiunilor.",
+      "Combina quinoa, edamame, cartoful dulce si castravetele in bol.",
+      "Dresesaza cu ulei de masline si lamaie."
+    ]
+  },
+  {
+    "name": "Omleta cu spanac si telemea de capra",
+    "description": "Omleta pufoasa cu spanac proaspat si ceapa, preparata in ulei de masline, servita cu telemea de capra.",
+    "mealType": "breakfast",
+    "servings": 1,
+    "prepTimeMin": 5,
+    "cookTimeMin": 10,
+    "ingredients": [
+      { "quantity": 2, "unit": null, "name": "oua" },
+      { "quantity": null, "unit": "pumn", "name": "spanac proaspat" },
+      { "quantity": 1, "unit": null, "name": "ceapa, tocata" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": 30, "unit": "g", "name": "branza telemea de capra" }
+    ],
+    "instructions": [
+      "Caleste ceapa in ulei 2-3 minute.",
+      "Adauga spanacul si lasa sa se ofileasca.",
+      "Bate ouale si toarna-le in tigaie.",
+      "Gateste omleta la foc mediu-mic.",
+      "Serveste cu telemea de capra sfarimat deasupra."
+    ]
+  },
+  {
+    "name": "Ficatei de pui la cuptor cu castraveti murati si cartof copt",
+    "description": "Ficatei de pui gatiti la gratar in ulei de masline, serviti cu castraveti murati si cartof copt in coaja.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 20,
+    "ingredients": [
+      { "quantity": 150, "unit": "g", "name": "ficatei de pui" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": null, "unit": "cateva", "name": "castraveti murati fara zahar" },
+      { "quantity": 1, "unit": "mediu", "name": "cartof copt in coaja si racit" }
+    ],
+    "instructions": [
+      "Da cartoful la cuptor in coaja si lasa sa se raceasca.",
+      "Curata ficateii de membrane.",
+      "Fa ficateii la gratar in ulei de masline pana sunt bine patrunsi.",
+      "Serveste cu castraveti murati si cartoful copt."
+    ]
+  },
+  {
+    "name": "Paste integrale cu sos de rosii si mozzarella",
+    "description": "Paste integrale cu un sos simplu de rosii cherry si usturoi, completat cu jumatate de bila de mozzarella.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 5,
+    "cookTimeMin": 20,
+    "ingredients": [
+      { "quantity": 60, "unit": "g", "name": "paste integrale (cantarite crude)" },
+      { "quantity": 10, "unit": "g", "name": "ulei de masline" },
+      { "quantity": null, "unit": "cateva", "name": "rosii cherry" },
+      { "quantity": 1, "unit": "catel", "name": "usturoi" },
+      { "quantity": 0.5, "unit": "bila", "name": "mozzarella" }
+    ],
+    "instructions": [
+      "Fierbe pastele conform instructiunilor.",
+      "Separat, caleste in ulei usturoiul si rosiile cherry pana se inmoaie.",
+      "Adauga un polonic din apa in care au fiert pastele.",
+      "Amesteca pastele scurse cu sosul.",
+      "Adauga mozzarella sfarimat si serveste."
+    ]
+  },
+  {
+    "name": "Ciorba de perisoare",
+    "description": "Ciorba clasica de perisoare din carne tocata cu legume, servita cu iaurt alaturi.",
+    "mealType": "lunch",
+    "servings": 2,
+    "prepTimeMin": 20,
+    "cookTimeMin": 45,
+    "ingredients": [
+      { "quantity": 300, "unit": "g", "name": "carne tocata de pui sau vita" },
+      { "quantity": 2, "unit": null, "name": "morcovi" },
+      { "quantity": 1, "unit": null, "name": "telina" },
+      { "quantity": 1, "unit": null, "name": "ceapa" },
+      { "quantity": 2, "unit": null, "name": "cartofi" },
+      { "quantity": null, "unit": "dupa gust", "name": "orez pentru perisoare" },
+      { "quantity": null, "unit": "dupa gust", "name": "sare, piper, condimente" },
+      { "quantity": 1, "unit": "mic", "name": "iaurt 3.5% (pentru servire)" }
+    ],
+    "instructions": [
+      "Pregateste perisoarele: amesteca carnea tocata cu orez, sare si piper.",
+      "Formeaza perisoare mici.",
+      "Fierbe legumele in apa cu sare 15 minute.",
+      "Adauga perisoarele si lasa sa fiarba inca 20-25 minute.",
+      "Serveste cald cu iaurt alaturi."
+    ]
+  },
+  {
+    "name": "Burger din ton la cuptor",
+    "description": "Chiftea din ton cu ou si pesmet, coapta la cuptor, servita langa o salata de rucola cu ulei de masline.",
+    "mealType": "dinner",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 25,
+    "ingredients": [
+      { "quantity": 1, "unit": "conserva", "name": "ton in suc propriu" },
+      { "quantity": 1, "unit": null, "name": "ou crud" },
+      { "quantity": 1, "unit": "lingura", "name": "pesmet sau fulgi de ovaz" },
+      { "quantity": null, "unit": "pumn", "name": "rucola" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": null, "unit": "dupa gust", "name": "lamaie" }
+    ],
+    "instructions": [
+      "Scurge bine tonul.",
+      "Amesteca tonul cu oul crud si pesmetul sau fulgii de ovaz.",
+      "Formeaza o chiftea rotunda.",
+      "Da la cuptor la 180 grade 20-25 minute.",
+      "Serveste cu salata de rucola dresata cu ulei de masline si lamaie."
+    ]
+  },
+  {
+    "name": "Mancare de mazare cu pui la cuptor",
+    "description": "Mazare gatita la cuptor sau clasic, cu pulpe de pui, rosii la conserva si ceapa inabusita.",
+    "mealType": "dinner",
+    "servings": 2,
+    "prepTimeMin": 15,
+    "cookTimeMin": 45,
+    "ingredients": [
+      { "quantity": 400, "unit": "g", "name": "mazare" },
+      { "quantity": 2, "unit": null, "name": "pulpe de pui sau 150g cotlet de porc" },
+      { "quantity": 1, "unit": null, "name": "ceapa" },
+      { "quantity": 1, "unit": "conserva", "name": "rosii (fara zahar) sau 2-3 linguri bulion" },
+      { "quantity": null, "unit": "dupa gust", "name": "condimente" }
+    ],
+    "instructions": [
+      "Pune carnea intr-un vas cu mazarea, ceapa si rosiile.",
+      "Nu praji ceapa - totul se face inabusit sau la cuptor.",
+      "Adauga condimentele si putina apa.",
+      "Da la cuptor sau lasa sa fiarba la foc mic pana carnea este gatita."
+    ]
+  },
+  {
+    "name": "Bautura functionala cu lamaie si miere",
+    "description": "Bautura functionala calda cu lamaie, miere, turmeric, polen si piper negru pentru beneficii antiinflamatorii.",
+    "mealType": "snack",
+    "servings": 1,
+    "prepTimeMin": 5,
+    "cookTimeMin": null,
+    "ingredients": [
+      { "quantity": 1, "unit": "pahar", "name": "apa calduta (40 grade)" },
+      { "quantity": 1, "unit": null, "name": "lamaie (zeama)" },
+      { "quantity": 1, "unit": "lingurita", "name": "miere" },
+      { "quantity": null, "unit": "un varf", "name": "turmeric" },
+      { "quantity": 1, "unit": "lingurita", "name": "polen" },
+      { "quantity": null, "unit": "putin", "name": "piper negru" },
+      { "quantity": null, "unit": "optional", "name": "colagen" }
+    ],
+    "instructions": [
+      "Incalzeste apa la 40 grade (nu fierbinte).",
+      "Stoarce lamaie in apa.",
+      "Adauga mierea, turmericul, polenul si un varf de piper negru.",
+      "Amesteca bine si consuma dimineata pe stomacul gol sau intre mese."
+    ]
+  },
+  {
+    "name": "Biscuiti proteici cu unt de arahide si faina de migdale",
+    "description": "Biscuiti proteici din unt de arahide cremos, faina de migdale, pudra proteica si extract de vanilie.",
+    "mealType": "snack",
+    "servings": 12,
+    "prepTimeMin": 15,
+    "cookTimeMin": 15,
+    "ingredients": [
+      { "quantity": 240, "unit": "g", "name": "unt de arahide cremos" },
+      { "quantity": 40, "unit": "g", "name": "stevia sau zahar de cocos" },
+      { "quantity": 96, "unit": "g", "name": "faina de migdale" },
+      { "quantity": 5, "unit": "ml", "name": "extract de vanilie" },
+      { "quantity": 30, "unit": "g", "name": "pudra proteica (vanilie sau ciocolata)" }
+    ],
+    "instructions": [
+      "Preincalzeste cuptorul la 175 grade.",
+      "Amesteca toate ingredientele pana obtii un aluat.",
+      "Formeaza bile mici si apasa-le pe o tava tapetata cu hartie de copt.",
+      "Coace 12-15 minute pana se rumenesc usor.",
+      "Lasa sa se raceasca inainte de a servi."
+    ]
+  },
+  {
+    "name": "Biscuiti proteici din fulgi de ovaz si unt de arahide",
+    "description": "Biscuiti proteici simpli cu fulgi de ovaz, unt de arahide natural, zahar de cocos si pudra proteica.",
+    "mealType": "snack",
+    "servings": 10,
+    "prepTimeMin": 15,
+    "cookTimeMin": 15,
+    "ingredients": [
+      { "quantity": 260, "unit": "g", "name": "unt de arahide natural" },
+      { "quantity": 80, "unit": "g", "name": "fulgi de ovaz" },
+      { "quantity": 40, "unit": "g", "name": "zahar de cocos" },
+      { "quantity": 30, "unit": "g", "name": "pudra proteica" }
+    ],
+    "instructions": [
+      "Preincalzeste cuptorul la 175 grade.",
+      "Amesteca toate ingredientele bine.",
+      "Formeaza bile si apasa pe tava tapetata.",
+      "Coace 12-15 minute.",
+      "Lasa sa se raceasca complet (se intaresc la racire)."
+    ]
+  },
+  {
+    "name": "Inghetata proteica din capsuni congelate",
+    "description": "Inghetata proteica sanatoasa din fructe congelate, iaurt skyr si pudra proteica, servita cu ciocolata neagra.",
+    "mealType": "snack",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": null,
+    "ingredients": [
+      { "quantity": 150, "unit": "g", "name": "capsuni congelate sau alte fructe congelate" },
+      { "quantity": 2, "unit": "linguri", "name": "iaurt skyr" },
+      { "quantity": 50, "unit": "g", "name": "pudra proteica" },
+      { "quantity": 1, "unit": "lingurita", "name": "miere" },
+      { "quantity": null, "unit": "optional", "name": "ciocolata min 80% cacao, rasa" }
+    ],
+    "instructions": [
+      "Pune fructele congelate in blender.",
+      "Adauga iaurtul skyr, pudra proteica si mierea.",
+      "Blendizeaza pana obtii o crema fina.",
+      "Da la congelator 1.5 ore.",
+      "Serveste cu ciocolata neagra rasa deasupra."
+    ]
+  },
+  {
+    "name": "Shake proteic de mic dejun",
+    "description": "Shake inlocuitor de mic dejun din izolat proteic din zer, fructe, colagen optional si lapte vegetal.",
+    "mealType": "breakfast",
+    "servings": 1,
+    "prepTimeMin": 5,
+    "cookTimeMin": null,
+    "ingredients": [
+      { "quantity": 1, "unit": "portie", "name": "pudra proteica WPI" },
+      { "quantity": 1, "unit": "ceasca", "name": "fruct la alegere" },
+      { "quantity": 1, "unit": "cupa", "name": "colagen (optional)" },
+      { "quantity": 1, "unit": "lingurita", "name": "seminte la alegere sau 5-6 nuci caju" },
+      { "quantity": 200, "unit": "ml", "name": "lapte vegetal sau lapte 1.5% grasime" }
+    ],
+    "instructions": [
+      "Pune toate ingredientele in blender.",
+      "Blendizeaza pana se combina bine.",
+      "Serveste imediat."
+    ]
+  },
+  {
+    "name": "Salata de naut cu rosii cherry si telemea",
+    "description": "Salata proaspata cu naut fiert, patrunjel, masline, ardei gras, rosii cherry si telemea de capra.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": null,
+    "ingredients": [
+      { "quantity": 100, "unit": "g", "name": "naut fiert" },
+      { "quantity": null, "unit": "pumn", "name": "patrunjel proaspat" },
+      { "quantity": null, "unit": "5-6", "name": "masline" },
+      { "quantity": 0.5, "unit": null, "name": "ardei gras" },
+      { "quantity": null, "unit": "3-4", "name": "rosii cherry" },
+      { "quantity": 40, "unit": "g", "name": "branza telemea de capra" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": null, "unit": "dupa gust", "name": "lamaie sau otet" }
+    ],
+    "instructions": [
+      "Pune nautul in bol.",
+      "Adauga patrunjelul tocat, maslinele, ardeiul tocat, rosiile si telemea sfarimat.",
+      "Dresesaza cu ulei de masline si lamaie sau otet.",
+      "Amesteca si serveste."
+    ]
+  },
+  {
+    "name": "Ciorba de pasare cu legume",
+    "description": "Ciorba traditionala de pasare cu legume, ce poate fi dresa cu ou si smantana sau servita cu iaurt.",
+    "mealType": "lunch",
+    "servings": 2,
+    "prepTimeMin": 20,
+    "cookTimeMin": 60,
+    "ingredients": [
+      { "quantity": null, "unit": "portie", "name": "carne de pasare (pui)" },
+      { "quantity": 2, "unit": null, "name": "morcovi" },
+      { "quantity": 1, "unit": null, "name": "telina" },
+      { "quantity": 1, "unit": null, "name": "ceapa" },
+      { "quantity": 2, "unit": null, "name": "cartofi" },
+      { "quantity": null, "unit": "dupa gust", "name": "sare, piper, leustean" },
+      { "quantity": 1, "unit": "mic", "name": "iaurt sau smantana (pentru servire)" }
+    ],
+    "instructions": [
+      "Pune carnea de pasare la fiert in apa rece cu sare.",
+      "Adauga legumele curatate si taiate.",
+      "Lasa sa fiarba 45-60 minute.",
+      "Condimenteaza cu sare, piper si leustean.",
+      "Poti dresa cu ou si smantana sau servi cu iaurt alaturi."
+    ]
+  },
+  {
+    "name": "Salata tabbouleh cu quinoa",
+    "description": "Salata inspirata din tabbouleh, cu patrunjel proaspat, ceapa verde, quinoa fiarta, rosii cherry si ulei de masline.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 15,
+    "ingredients": [
+      { "quantity": null, "unit": "pumn generos", "name": "patrunjel proaspat, tocat" },
+      { "quantity": null, "unit": "cateva", "name": "ceapa verde, tocata" },
+      { "quantity": null, "unit": "dupa gust", "name": "lamaie" },
+      { "quantity": 2, "unit": "linguri", "name": "quinoa fiarta" },
+      { "quantity": null, "unit": "cateva", "name": "rosii cherry" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" }
+    ],
+    "instructions": [
+      "Fierbe quinoa conform instructiunilor si lasa sa se raceasca.",
+      "Toaca patrunjelul si ceapa verde fin.",
+      "Combina toate ingredientele intr-un bol.",
+      "Adauga sucul de lamaie si uleiul de masline.",
+      "Amesteca si serveste ca garnitura sau salata."
+    ]
+  },
+  {
+    "name": "Piure de cartof dulce cu muschi de porc",
+    "description": "Piure cremos de cartof dulce cu unt si lapte, servit cu muschi de porc la gratar si salata verde.",
+    "mealType": "lunch",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": 40,
+    "ingredients": [
+      { "quantity": 1, "unit": "mediu", "name": "cartof dulce" },
+      { "quantity": 10, "unit": "g", "name": "unt" },
+      { "quantity": 2, "unit": "linguri", "name": "lapte" },
+      { "quantity": null, "unit": "dupa gust", "name": "condimente" },
+      { "quantity": 110, "unit": "g", "name": "muschi de porc la gratar" },
+      { "quantity": null, "unit": "portie", "name": "salata verde cu ceapa si lamaie" }
+    ],
+    "instructions": [
+      "Coace cartoful dulce in coaja la 200 grade pana este moale.",
+      "Scoop miezul si amesteca cu untul si laptele pana obtii un piure cremos.",
+      "Condimenteaza.",
+      "Fa muschiul de porc la gratar.",
+      "Serveste piureul cald cu muschiul si salata verde."
+    ]
+  },
+  {
+    "name": "Salata cu fasole alba si prosciutto",
+    "description": "Salata rapida cu fasole alba din conserva, fasii de prosciutto, telemea si castraveti murati.",
+    "mealType": "dinner",
+    "servings": 1,
+    "prepTimeMin": 10,
+    "cookTimeMin": null,
+    "ingredients": [
+      { "quantity": 1, "unit": "conserva", "name": "fasole alba boabe" },
+      { "quantity": 2, "unit": "fasii", "name": "prosciutto" },
+      { "quantity": 20, "unit": "g", "name": "telemea de capra sau oaie" },
+      { "quantity": null, "unit": "cateva", "name": "castraveti murati" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" }
+    ],
+    "instructions": [
+      "Scurge fasolea alba.",
+      "Pune in bol cu prosciutto taiat fasii, telemea si castravetii murati.",
+      "Dresesaza cu ulei de masline.",
+      "Amesteca si serveste."
+    ]
+  },
+  {
+    "name": "Chiftele de pui la cuptor cu quinoa si dressing de tahini",
+    "description": "Chiftele din carne de pui tocata cu verdeata, coapte la cuptor, servite cu salata verde si dressing de pasta de susan.",
+    "mealType": "dinner",
+    "servings": 2,
+    "prepTimeMin": 20,
+    "cookTimeMin": 30,
+    "ingredients": [
+      { "quantity": 300, "unit": "g", "name": "carne de pui tocata" },
+      { "quantity": null, "unit": "pumn", "name": "verdeata (patrunjel, marar)" },
+      { "quantity": 2, "unit": "catei", "name": "usturoi" },
+      { "quantity": 1, "unit": null, "name": "ou" },
+      { "quantity": 1, "unit": "lingura", "name": "pesmet" },
+      { "quantity": 1, "unit": "lingura", "name": "ulei de masline" },
+      { "quantity": 2, "unit": "linguri", "name": "quinoa fiarta (pentru salata)" },
+      { "quantity": 1, "unit": "lingura", "name": "pasta de susan (tahini)" }
+    ],
+    "instructions": [
+      "Amesteca carnea tocata cu ou, verdeata, pesmetul, usturoiul si uleiul.",
+      "Formeaza chiftele si pune pe tava tapetata.",
+      "Coace la 180 grade 25-30 minute.",
+      "Prepara dressingul: amesteca pasta de susan cu lamaie si putina apa.",
+      "Serveste 2 chiftele cu salata de frunze verzi, quinoa si dressingul de tahini."
+    ]
+  },
+  {
+    "name": "Soufle de broccoli sau conopida cu cottage cheese",
+    "description": "Soufle usor cu broccoli sau conopida fiert, cottage cheese, unt si parmezan, copt pana se rumeneste.",
+    "mealType": "dinner",
+    "servings": 2,
+    "prepTimeMin": 10,
+    "cookTimeMin": 25,
+    "ingredients": [
+      { "quantity": null, "unit": "portie", "name": "broccoli sau conopida" },
+      { "quantity": 1, "unit": "cutie", "name": "cottage cheese" },
+      { "quantity": 10, "unit": "g", "name": "unt" },
+      { "quantity": 10, "unit": "g", "name": "parmezan ras" }
+    ],
+    "instructions": [
+      "Fierbe broccoliul sau conopida 5 minute in apa cu sare.",
+      "Scurge bine.",
+      "Adauga cottage cheese, untul si parmezanul, amesteca.",
+      "Pune intr-un vas de cuptor.",
+      "Da la cuptor pana se rumeneste deasupra (20-25 minute)."
+    ]
+  }
+]
