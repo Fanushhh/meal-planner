@@ -42,16 +42,16 @@ export function MealCardMenu({ planId, dayOfWeek, mealType, mealId }: MealCardMe
         onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen((v) => !v); }}
         disabled={isPending}
         title="Meal options"
-        className="flex h-6 w-6 items-center justify-center rounded-full opacity-0 transition-all group-hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-30"
+        className="flex h-6 w-6 items-center justify-center rounded-full transition-all opacity-0 group-hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-30"
         style={{
-          color: "var(--text-faint)",
-          background: open ? "rgba(255,255,255,0.08)" : "transparent",
+          color: "var(--text)",
+          background: open ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)",
         }}
         onMouseEnter={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.08)";
+          (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.15)";
         }}
         onMouseLeave={(e) => {
-          if (!open) (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+          if (!open) (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.08)";
         }}
       >
         {isPending ? (

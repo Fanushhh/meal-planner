@@ -164,11 +164,13 @@ export async function upsertUserRecipeSlot(
     });
 }
 
-export async function getScheduledDaysForRecipe(
+export type ScheduledSlot = { dayOfWeek: number; mealType: string };
+
+export async function getScheduledDaysForMeal(
   userId: string,
   weekStart: string,
-  userRecipeId: string
-): Promise<number[]> {
+  mealId: string
+): Promise<ScheduledSlot[]> {
   const planRows = await db
     .select({ id: weeklyPlans.id })
     .from(weeklyPlans)
@@ -178,7 +180,33 @@ export async function getScheduledDaysForRecipe(
   if (!planRows[0]) return [];
 
   const rows = await db
-    .select({ dayOfWeek: plannedMeals.dayOfWeek })
+    .select({ dayOfWeek: plannedMeals.dayOfWeek, mealType: plannedMeals.mealType })
+    .from(plannedMeals)
+    .where(
+      and(
+        eq(plannedMeals.planId, planRows[0].id),
+        eq(plannedMeals.mealId, mealId)
+      )
+    );
+
+  return rows;
+}
+
+export async function getScheduledDaysForRecipe(
+  userId: string,
+  weekStart: string,
+  userRecipeId: string
+): Promise<ScheduledSlot[]> {
+  const planRows = await db
+    .select({ id: weeklyPlans.id })
+    .from(weeklyPlans)
+    .where(and(eq(weeklyPlans.userId, userId), eq(weeklyPlans.weekStart, weekStart)))
+    .limit(1);
+
+  if (!planRows[0]) return [];
+
+  const rows = await db
+    .select({ dayOfWeek: plannedMeals.dayOfWeek, mealType: plannedMeals.mealType })
     .from(plannedMeals)
     .where(
       and(
@@ -187,7 +215,7 @@ export async function getScheduledDaysForRecipe(
       )
     );
 
-  return rows.map((r) => r.dayOfWeek);
+  return rows;
 }
 
 export async function getMealIdsInPlan(planId: string): Promise<string[]> {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { aggregateInto, makeKey } from "@/lib/shopping-list-utils";
+import { aggregateInto, expandIngredient, makeKey, normalizeStoredItems } from "@/lib/shopping-list-utils";
 import type { ShoppingItem, AddableItem } from "@/lib/shopping-list-utils";
 
 const STORAGE_KEY = "meal-planner-shopping-list-v1";
@@ -47,22 +47,33 @@ export function useShoppingList() {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    setItems(load());
+    const raw = load();
+    const migrated = normalizeStoredItems(raw);
+    // If normalization changed anything, persist the cleaned-up list immediately
+    if (
+      migrated.length !== raw.length ||
+      migrated.some((m, i) => m.name !== raw[i]?.name || m.unit !== raw[i]?.unit)
+    ) {
+      save(migrated);
+    }
+    setItems(migrated);
     setUnseenCount(loadUnseen());
     setHydrated(true);
   }, []);
 
   const addItem = useCallback((item: AddableItem) => {
-    const isNew = !items.some(
-      (i) => makeKey(i.name, i.unit) === makeKey(item.name, item.unit)
-    );
+    const expanded = expandIngredient(item);
+    const newCount = expanded.filter(
+      (e) => !items.some((i) => makeKey(i.name, i.unit) === makeKey(e.name, e.unit))
+    ).length;
     setItems((prev) => {
-      const next = aggregateInto(prev, item);
+      let next = prev;
+      for (const e of expanded) next = aggregateInto(next, e);
       save(next);
       return next;
     });
-    if (isNew) {
-      const n = loadUnseen() + 1;
+    if (newCount > 0) {
+      const n = loadUnseen() + newCount;
       saveUnseen(n);
       setUnseenCount(n);
     }
@@ -70,9 +81,10 @@ export function useShoppingList() {
   }, [items]);
 
   const addItems = useCallback((incoming: AddableItem[]) => {
+    const allExpanded = incoming.flatMap(expandIngredient);
     let next = items;
     let newCount = 0;
-    for (const item of incoming) {
+    for (const item of allExpanded) {
       const isNew = !next.some(
         (i) => makeKey(i.name, i.unit) === makeKey(item.name, item.unit)
       );
@@ -90,6 +102,25 @@ export function useShoppingList() {
     }
     notifyChange();
   }, [items]);
+
+  const updateItem = useCallback(
+    (
+      name: string,
+      unit: string | null,
+      patch: { name?: string; quantity?: number | null; unit?: string | null },
+    ) => {
+      const key = makeKey(name, unit);
+      setItems((prev) => {
+        const next = prev.map((i) =>
+          makeKey(i.name, i.unit) === key ? { ...i, ...patch } : i,
+        );
+        save(next);
+        return next;
+      });
+      notifyChange();
+    },
+    [],
+  );
 
   const removeItem = useCallback((name: string, unit: string | null) => {
     const key = makeKey(name, unit);
@@ -146,6 +177,7 @@ export function useShoppingList() {
     unseenCount,
     addItem,
     addItems,
+    updateItem,
     removeItem,
     toggleChecked,
     clearChecked,

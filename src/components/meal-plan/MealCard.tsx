@@ -39,9 +39,9 @@ export function MealCard({ meal, planId, dayOfWeek, mealType }: MealCardProps) {
         style={{ textDecoration: "none" }}
       >
         <p
-          className="mt-1 min-w-0 leading-snug line-clamp-3"
+          className="mt-1 min-w-0 leading-snug line-clamp-3 font-medium"
           style={{
-            fontFamily: "var(--font-dm-serif)",
+            fontFamily: "var(--font-dm-sans)",
             color: "var(--text)",
             fontSize: "13px",
             wordBreak: "break-word",

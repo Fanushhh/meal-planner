@@ -103,6 +103,7 @@ const NAME_NORMALIZE_MAP: Record<string, string> = {
   "cepe": "ceapă", "ceapa": "ceapă",
   "ceapa tocata": "ceapă",
   "ceapa verde tocata": "ceapă verde",
+  "ceapa rosie": "ceapă roșie", "ceapă rosie": "ceapă roșie",
   "ardei grași": "ardei gras", "ardei grasi": "ardei gras",
   "ciuperci": "ciupercă", "ciuperca": "ciupercă",
   "ciuperci feliate": "ciupercă",
@@ -125,9 +126,12 @@ const NAME_NORMALIZE_MAP: Record<string, string> = {
   // spanac
   "frunze de baby spanac": "spanac",
   "spanac proaspat": "spanac",
-  // salată / frunze
+  // salată / frunze — all loose-leaf / mixed-greens variants → "salată verde"
   "frunze de salata verde": "salată verde",
-  "frunze verzi": "mix frunze verzi",
+  "frunze salata verde": "salată verde",
+  "frunze verzi": "salată verde",
+  "mix frunze verzi": "salată verde",
+  "salata verde": "salată verde",
   "frunze": "frunză", "frunza": "frunză",
   // varza
   "varza pentru salata": "varză",
@@ -152,11 +156,17 @@ const NAME_NORMALIZE_MAP: Record<string, string> = {
   "lămâi": "lămâie", "lamai": "lămâie",
   "lamaie": "lămâie",
   "lamaie stoarsa": "lămâie",
-  "lamaie sau otet": "lămâie sau oțet",
-  "lamaie sau otet pentru salata": "lămâie sau oțet",
+  "lamaie sau otet": "lămâie",
+  "lamaie sau otet pentru salata": "lămâie",
+  "lămâie sau oțet": "lămâie",
   "lamaie sare piper": "lămâie",
   "lamaie sucul": "lămâie",
   "lamaie zeama": "lămâie",
+  "zeama de lamaie": "lămâie",
+  "suc de lamaie": "lămâie",
+  "suc de lămâie": "lămâie",
+  "suc de lamaie sau otet": "lămâie",
+  "suc de lămâie sau oțet": "lămâie",
 
   // ── Grains & legumes ────────────────────────────────────────────────────────
   "quinoa fiarta pentru salata": "quinoa",
@@ -240,14 +250,30 @@ const ROMANIAN_PLURALS: Record<string, string> = {
   "pahar": "pahare",
 };
 
+// Leading qualifiers to strip before map lookup
+const LEADING_QUALIFIER_RE =
+  /^(op[tț]ional|aproximativ|c[âa]teva|câteva|cateva|cca|circa|dup[aă]\s+gust,?\s*|pu[tț]in[aă]?\s+de\s+|pu[tț]in[aă]?\s+)\s*/i;
+// Leading quantity-words embedded in ingredient names
+const LEADING_QUANTITY_WORD_RE = /^(pumn|mână|mana|un pumn de|o mână de|o mana de)\s+/i;
+
+// Standalone prep-instruction words that should be dropped from the shopping list.
+// These appear when comma-split ingredient strings produce non-food fragments
+// (e.g. "morcov, ras, tocat" splits into "morcov", "ras", "tocat").
+const DISCARD_PREP_RE =
+  /^(ra[sș][aă]?|tocat[ăa]?|tocat[ăa]?\s+\S+|feliat[ăa]?|fiert[ăa]?|copt[ăa]?|pisat[ăa]?|crud[ăa]?|t[aă]iat(\s+\S+)?|fierbinte|r[aă]cit[ăa]?|m[aă]runt|cubulete|cuburi|condiment[e]?(\s+.*)?)$/i;
+
 function normalizeName(name: string): string {
   // 1. Lowercase and trim
   let s = name.toLowerCase().trim();
   // 2. Strip parenthetical qualifiers: "(pentru servire)", "(fara zahar)", etc.
   s = s.replace(/\s*\([^)]*\)/g, "").trim();
-  // 3. Strip trailing ", <prep-modifier>" e.g. ", tocat" / ", ras"
+  // 3. Strip leading qualifiers: "optional", "opțional", "cca", etc.
+  s = s.replace(LEADING_QUALIFIER_RE, "").trim();
+  // 4. Strip leading quantity-words: "pumn", "mână", etc.
+  s = s.replace(LEADING_QUANTITY_WORD_RE, "").trim();
+  // 5. Strip trailing ", <prep-modifier>" e.g. ", tocat" / ", ras"
   s = s.replace(TRAILING_PREP_RE, "").trim();
-  // 4. Collapse multiple spaces left by stripping
+  // 6. Collapse multiple spaces left by stripping
   s = s.replace(/\s{2,}/g, " ").trim();
   return NAME_NORMALIZE_MAP[s] ?? s;
 }
@@ -284,6 +310,64 @@ export function aggregateInto(list: ShoppingItem[], incoming: AddableItem): Shop
   const canonicalName = normalizeName(incoming.name);
   const canonicalUnit = normalizeUnit(incoming.unit) || null;
   return [...list, { ...incoming, name: canonicalName, unit: canonicalUnit, checked: false }];
+}
+
+// ─── Ingredient expansion ─────────────────────────────────────────────────────
+// Some recipes store compound seasoning strings as a single ingredient name,
+// e.g. "sare, piper, dafin, cimbru" or "dupa gust sare, piper, condimente".
+// expandIngredient splits these into individual AddableItems so they aggregate
+// correctly. It also strips "dupa gust" / "putin" prefixes before splitting.
+
+const TASTE_PREFIX_RE = /^(dup[aă]\s+gust[,\s]*|de\s+gust[,\s]*)/i;
+const LITTLE_PREFIX_RE = /^(pu[tț]in[aă]?(\s+de)?\s+)/i;
+
+export function expandIngredient(item: AddableItem): AddableItem[] {
+  let name = item.name.trim();
+  // Strip "dupa gust" / "după gust" and "puțin / putin" prefixes
+  name = name.replace(TASTE_PREFIX_RE, "").trim();
+  name = name.replace(LITTLE_PREFIX_RE, "").trim();
+
+  // Discard if the whole name is a standalone prep instruction (e.g. "ras", "tocata")
+  if (!name || DISCARD_PREP_RE.test(name)) return [];
+
+  // Split on commas if this looks like a compound seasoning list
+  if (name.includes(",")) {
+    const parts = name.split(",").map((p) => p.trim()).filter(Boolean);
+    if (parts.length > 1) {
+      // Each part is a standalone ingredient — no measured quantity.
+      // Drop fragments that are pure prep instructions (e.g. "ras", "taiat cubulete").
+      return parts
+        .filter((part) => part && !DISCARD_PREP_RE.test(part))
+        .map((part) => ({ name: part, quantity: null, unit: null }));
+    }
+  }
+
+  return [{ ...item, name }];
+}
+
+// ─── Migration ────────────────────────────────────────────────────────────────
+// Re-runs all items in localStorage through the current normalization pipeline.
+// This fixes items that were stored with non-canonical names in older sessions
+// (e.g. "optional ceapă verde", "dupa gust lămâie") and merges any duplicates
+// that now resolve to the same key after map updates.
+
+export function normalizeStoredItems(items: ShoppingItem[]): ShoppingItem[] {
+  // Capture which keys were checked so we can restore that state after re-keying
+  const checkedKeys = new Set(
+    items.filter((i) => i.checked).map((i) => makeKey(i.name, i.unit))
+  );
+  let normalized: ShoppingItem[] = [];
+  for (const item of items) {
+    // Drop items that are prep instructions or generic "condimente" — check
+    // against the normalized name so prefixes like "dupa gust" are stripped first.
+    if (DISCARD_PREP_RE.test(normalizeName(item.name))) continue;
+    const { checked: _checked, ...addable } = item;
+    normalized = aggregateInto(normalized, addable);
+  }
+  return normalized.map((item) => ({
+    ...item,
+    checked: checkedKeys.has(makeKey(item.name, item.unit)),
+  }));
 }
 
 // ─── Categorisation ───────────────────────────────────────────────────────────
@@ -545,9 +629,9 @@ export function buildCategories(items: ShoppingItem[]): ShoppingCategory[] {
     if (cat && cat.items.length > 0)
       result.push({ name: rule.name, icon: rule.icon, items: cat.items });
   }
-  const other = catMap.get("Other");
+  const other = catMap.get(DEFAULT_CATEGORY.name);
   if (other && other.items.length > 0)
-    result.push({ name: "Other", icon: DEFAULT_CATEGORY.icon, items: other.items });
+    result.push({ name: DEFAULT_CATEGORY.name, icon: DEFAULT_CATEGORY.icon, items: other.items });
 
   return result;
 }

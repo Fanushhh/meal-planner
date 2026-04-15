@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useShoppingList } from "@/hooks/use-shopping-list";
 import { buildCategories, formatItem, makeKey } from "@/lib/shopping-list-utils";
+import type { ShoppingItem } from "@/lib/shopping-list-utils";
 
 // ─── Copy button ─────────────────────────────────────────────────────────────
 
@@ -55,11 +56,100 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
+// ─── Inline edit row ─────────────────────────────────────────────────────────
+
+function EditRow({
+  item,
+  onSave,
+  onCancel,
+}: {
+  item: ShoppingItem;
+  onSave: (patch: { name: string; quantity: number | null; unit: string | null }) => void;
+  onCancel: () => void;
+}) {
+  const [name, setName] = useState(item.name);
+  const [qty, setQty] = useState(item.quantity !== null ? String(item.quantity) : "");
+  const [unit, setUnit] = useState(item.unit ?? "");
+  const nameRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => { nameRef.current?.focus(); }, []);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const trimmedName = name.trim();
+    if (!trimmedName) return;
+    onSave({
+      name: trimmedName,
+      quantity: qty.trim() !== "" ? parseFloat(qty) || null : null,
+      unit: unit.trim() || null,
+    });
+  }
+
+  const inputStyle: React.CSSProperties = {
+    background: "var(--surface-raised)",
+    border: "1px solid var(--border-bright)",
+    borderRadius: "0.375rem",
+    color: "var(--text)",
+    fontSize: "0.8125rem",
+    padding: "0.25rem 0.5rem",
+    outline: "none",
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="flex items-center gap-2 flex-1">
+      <input
+        type="number"
+        min="0"
+        step="any"
+        value={qty}
+        onChange={(e) => setQty(e.target.value)}
+        placeholder="qty"
+        style={{ ...inputStyle, width: "4rem" }}
+      />
+      <input
+        type="text"
+        value={unit}
+        onChange={(e) => setUnit(e.target.value)}
+        placeholder="unit"
+        style={{ ...inputStyle, width: "5rem" }}
+      />
+      <input
+        ref={nameRef}
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="name"
+        style={{ ...inputStyle, flex: 1 }}
+      />
+      <button
+        type="submit"
+        style={{ color: "var(--accent)", background: "none", border: "none", cursor: "pointer", padding: "0 2px" }}
+        aria-label="Save"
+      >
+        <svg width="14" height="11" viewBox="0 0 14 11" fill="none">
+          <path d="M1 5.5L5 9.5L13 1.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+      <button
+        type="button"
+        onClick={onCancel}
+        style={{ color: "var(--text-faint)", background: "none", border: "none", cursor: "pointer", padding: "0 2px" }}
+        aria-label="Cancel"
+      >
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+          <path d="M1 1l8 8M9 1L1 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+      </button>
+    </form>
+  );
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export function ShoppingListClient() {
-  const { items, hydrated, toggleChecked, removeItem, clearChecked, clearAll, clearUnseen } =
+  const { items, hydrated, toggleChecked, updateItem, removeItem, clearChecked, clearAll, clearUnseen } =
     useShoppingList();
+  const [editingKey, setEditingKey] = useState<string | null>(null);
 
   useEffect(() => {
     if (hydrated) clearUnseen();
@@ -212,6 +302,7 @@ export function ShoppingListClient() {
               <ul>
                 {cat.items.map((item, idx) => {
                   const key = makeKey(item.name, item.unit);
+                  const isEditing = editingKey === key;
 
                   return (
                     <li
@@ -221,58 +312,92 @@ export function ShoppingListClient() {
                         borderTop: idx > 0 ? "1px solid var(--border-subtle)" : undefined,
                       }}
                     >
-                      {/* Checkbox */}
-                      <button
-                        type="button"
-                        onClick={() => toggleChecked(item.name, item.unit)}
-                        className="shrink-0 flex items-center justify-center rounded transition-all"
-                        style={{
-                          width: "1.125rem",
-                          height: "1.125rem",
-                          border: item.checked
-                            ? "1.5px solid var(--accent)"
-                            : "1.5px solid var(--border-bright)",
-                          background: item.checked ? "var(--accent-light)" : "transparent",
-                        }}
-                        aria-label={item.checked ? "Unmark" : "Mark as got"}
-                      >
-                        {item.checked && (
-                          <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
-                            <path
-                              d="M1 3.5L3.5 6L8 1"
-                              stroke="var(--accent)"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        )}
-                      </button>
+                      {/* Checkbox — hidden while editing */}
+                      {!isEditing && (
+                        <button
+                          type="button"
+                          onClick={() => toggleChecked(item.name, item.unit)}
+                          className="shrink-0 flex items-center justify-center rounded transition-all"
+                          style={{
+                            width: "1.125rem",
+                            height: "1.125rem",
+                            border: item.checked
+                              ? "1.5px solid var(--accent)"
+                              : "1.5px solid var(--border-bright)",
+                            background: item.checked ? "var(--accent-light)" : "transparent",
+                          }}
+                          aria-label={item.checked ? "Unmark" : "Mark as got"}
+                        >
+                          {item.checked && (
+                            <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
+                              <path
+                                d="M1 3.5L3.5 6L8 1"
+                                stroke="var(--accent)"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          )}
+                        </button>
+                      )}
 
-                      {/* Label */}
-                      <span
-                        className="flex-1 text-sm leading-snug"
-                        style={{
-                          color: item.checked ? "var(--text-faint)" : "var(--text-muted)",
-                          textDecoration: item.checked ? "line-through" : "none",
-                          transition: "color 0.15s",
-                        }}
-                      >
-                        {formatItem(item)}
-                      </span>
+                      {isEditing ? (
+                        <EditRow
+                          item={item}
+                          onSave={(patch) => {
+                            updateItem(item.name, item.unit, patch);
+                            setEditingKey(null);
+                          }}
+                          onCancel={() => setEditingKey(null)}
+                        />
+                      ) : (
+                        <>
+                          {/* Label — clickable to toggle */}
+                          <button
+                            type="button"
+                            onClick={() => toggleChecked(item.name, item.unit)}
+                            className="flex-1 text-left text-sm leading-snug"
+                            style={{
+                              color: item.checked ? "var(--text-faint)" : "var(--text-muted)",
+                              textDecoration: item.checked ? "line-through" : "none",
+                              transition: "color 0.15s",
+                              cursor: "pointer",
+                              background: "none",
+                              border: "none",
+                              padding: 0,
+                            }}
+                          >
+                            {formatItem(item)}
+                          </button>
 
-                      {/* Remove */}
-                      <button
-                        type="button"
-                        onClick={() => removeItem(item.name, item.unit)}
-                        className="flex h-6 w-6 shrink-0 items-center justify-center rounded opacity-0 transition-opacity group-hover:opacity-100"
-                        style={{ color: "var(--text-faint)" }}
-                        aria-label="Remove item"
-                      >
-                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                          <path d="M1 1l8 8M9 1L1 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                        </svg>
-                      </button>
+                          {/* Edit — visible on hover */}
+                          <button
+                            type="button"
+                            onClick={() => setEditingKey(key)}
+                            className="flex h-6 w-6 shrink-0 items-center justify-center rounded opacity-0 transition-opacity group-hover:opacity-100"
+                            style={{ color: "var(--text-faint)" }}
+                            aria-label="Edit item"
+                          >
+                            <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                              <path d="M7.5 1.5l2 2L3 10H1V8L7.5 1.5z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </button>
+
+                          {/* Remove — visible on hover */}
+                          <button
+                            type="button"
+                            onClick={() => removeItem(item.name, item.unit)}
+                            className="flex h-6 w-6 shrink-0 items-center justify-center rounded opacity-0 transition-opacity group-hover:opacity-100"
+                            style={{ color: "var(--text-faint)" }}
+                            aria-label="Remove item"
+                          >
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                              <path d="M1 1l8 8M9 1L1 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                            </svg>
+                          </button>
+                        </>
+                      )}
                     </li>
                   );
                 })}

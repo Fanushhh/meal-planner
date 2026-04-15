@@ -96,33 +96,56 @@ export async function regeneratePlan(): Promise<{ success: true } | { error: str
   return { success: true };
 }
 
-export async function getPlanIngredients(): Promise<AddableItem[]> {
+export type PlanIngredients = {
+  mainItems: AddableItem[];
+  snackItems: AddableItem[];
+};
+
+export async function getPlanIngredients(): Promise<PlanIngredients> {
   const session = await getSession();
-  if (!session) return [];
+  if (!session) return { mainItems: [], snackItems: [] };
 
   const weekStart = getWeekStart();
   const plan = await getPlanForWeek(session.user.id, weekStart);
-  if (!plan) return [];
+  if (!plan) return { mainItems: [], snackItems: [] };
 
   const prefs = await getUserPreferences(session.user.id);
   const numPeople = prefs?.numPeople ?? 2;
 
-  const mealIds = plan.plannedMeals.flatMap((pm) => pm.mealId ? [pm.mealId] : []);
-  const recipeIds = plan.plannedMeals.flatMap((pm) => pm.userRecipeId ? [pm.userRecipeId] : []);
-
-  const [mealRows, recipeRows] = await Promise.all([
-    mealIds.length > 0 ? db.select().from(meals).where(inArray(meals.id, mealIds)) : [],
-    recipeIds.length > 0 ? db.select().from(userRecipes).where(inArray(userRecipes.id, recipeIds)) : [],
-  ]);
-
   type Ingredient = { quantity: number | null; unit: string | null; name: string; note?: string };
 
-  const items: AddableItem[] = [];
+  // Separate snack planned meals from main ones
+  const snackPlannedMealIds = new Set(
+    plan.plannedMeals.filter((pm) => pm.mealType === "snack").map((pm) => pm.mealId ?? pm.userRecipeId ?? "")
+  );
+
+  // Count how many times each meal/recipe appears in the plan this week
+  const mealCounts = new Map<string, number>();
+  const recipeCounts = new Map<string, number>();
+  for (const pm of plan.plannedMeals) {
+    if (pm.mealId) mealCounts.set(pm.mealId, (mealCounts.get(pm.mealId) ?? 0) + 1);
+    if (pm.userRecipeId) recipeCounts.set(pm.userRecipeId, (recipeCounts.get(pm.userRecipeId) ?? 0) + 1);
+  }
+
+  const uniqueMealIds = [...mealCounts.keys()];
+  const uniqueRecipeIds = [...recipeCounts.keys()];
+
+  const [mealRows, recipeRows] = await Promise.all([
+    uniqueMealIds.length > 0 ? db.select().from(meals).where(inArray(meals.id, uniqueMealIds)) : [],
+    uniqueRecipeIds.length > 0 ? db.select().from(userRecipes).where(inArray(userRecipes.id, uniqueRecipeIds)) : [],
+  ]);
+
+  const mainItems: AddableItem[] = [];
+  const snackItems: AddableItem[] = [];
+
   for (const row of [...mealRows, ...recipeRows]) {
-    const scale = numPeople / (row.servings ?? 1);
+    const isSnack = snackPlannedMealIds.has(row.id);
+    const occurrences = mealCounts.get(row.id) ?? recipeCounts.get(row.id) ?? 1;
+    const scale = (numPeople / (row.servings ?? 1)) * occurrences;
     const ingredients = JSON.parse(row.ingredients) as Ingredient[];
+    const target = isSnack ? snackItems : mainItems;
     for (const ing of ingredients) {
-      items.push({
+      target.push({
         name: ing.name,
         quantity: ing.quantity !== null ? Math.round(ing.quantity * scale * 100) / 100 : null,
         unit: ing.unit ?? null,
@@ -131,7 +154,7 @@ export async function getPlanIngredients(): Promise<AddableItem[]> {
     }
   }
 
-  return items;
+  return { mainItems, snackItems };
 }
 
 export async function addUserRecipeToPlanAction(

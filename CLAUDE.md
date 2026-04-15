@@ -85,12 +85,14 @@ Quantities are scaled on the recipe page: `scale = numPeople / meal.servings`. `
 ### Shopping List
 Entirely client-side — no DB involvement.
 
-- **`src/lib/shopping-list-utils.ts`** — shared pure utilities (client and server safe): `ShoppingItem` / `ShoppingCategory` types, `normalizeUnit()`, `makeKey()`, `aggregateInto()`, `categorize()`, `buildCategories()`, `formatItem()`. Keyword-based categorisation into **11 Romanian buckets**: Pește, Carne, Ouă, Lactate, Leguminoase, Cereale, Conserve, Legume, Fructe, Condimente, Semințe — with "Altele" as fallback. Rule order matters — first match wins. `normalizeName` strips parentheticals and trailing prep-modifier phrases before looking up the canonical name map, so ingredient variants like "brânză telemea de capră (50g, rasă)" and "telemea de capra rasa" both resolve to the same key.
-- **`src/hooks/use-shopping-list.ts`** — React hook. Reads/writes `localStorage` on mount. Exposes `addItem`, `addItems`, `removeItem`, `toggleChecked`, `clearChecked`, `clearAll`, `isInList`. `addItem`/`addItems` call `aggregateInto` so identical `(name, normalizedUnit)` pairs are summed, never duplicated.
+- **`src/lib/shopping-list-utils.ts`** — shared pure utilities (client and server safe): `ShoppingItem` / `ShoppingCategory` types, `normalizeUnit()`, `makeKey()`, `aggregateInto()`, `categorize()`, `buildCategories()`, `formatItem()`. Keyword-based categorisation into **11 Romanian buckets**: Pește, Carne, Ouă, Lactate, Leguminoase, Cereale, Conserve, Legume, Fructe, Condimente, Semințe — with "Altele" as fallback. Rule order matters — first match wins. `normalizeName` strips parentheticals, leading qualifiers (`optional`, `dupa gust`, `puțin`, `cca`, etc.), leading quantity-words (`pumn`, `mână`), and trailing prep-modifier phrases before looking up the canonical name map. `expandIngredient()` is called before `aggregateInto` — it strips "dupa gust" / "puțin" prefixes and splits compound seasoning strings on commas (e.g. `"sare, piper, dafin, cimbru"` → 4 separate items).
+- **`src/hooks/use-shopping-list.ts`** — React hook. Reads/writes `localStorage` on mount. Exposes `addItem`, `addItems`, `updateItem`, `removeItem`, `toggleChecked`, `clearChecked`, `clearAll`, `isInList`. `addItem`/`addItems` call `expandIngredient` then `aggregateInto` so identical `(name, normalizedUnit)` pairs are summed, never duplicated. `updateItem(name, unit, patch)` edits an existing item in-place.
 - **`src/components/meals/IngredientsPanel.tsx`** — client component used on the recipe page. Receives pre-scaled `AddableItem[]` from the server component. Shows a `+` button per ingredient (turns to a checkmark when already in the list) and an "Add all to list" button.
-- **`src/components/shopping-list/ShoppingListClient.tsx`** — reads from `useShoppingList`, groups via `buildCategories`, renders category sections with checkboxes and hover-reveal remove buttons. Includes a "Copy list" button (plain-text clipboard), "Remove ticked", and "Clear all".
+- **`src/components/shopping-list/ShoppingListClient.tsx`** — reads from `useShoppingList`, groups via `buildCategories`, renders category sections. Clicking the item label toggles checked state. Hover reveals a pencil (edit) and remove button. The edit pencil opens an inline form with qty / unit / name fields. Includes a "Copy list" button (plain-text clipboard), "Remove ticked", and "Clear all".
 
 Quantities added via `IngredientsPanel` are always **scaled** (`numPeople / meal.servings`) before being passed as props from the server component.
+
+**`getPlanIngredients()`** in `src/server/actions/meal-plan.ts` counts how many times each meal appears in the weekly plan and multiplies quantities by that occurrence count (on top of the `numPeople / servings` scale), so a recipe appearing 3 times across the week contributes 3× its ingredients to the list.
 
 ### Design System
 Dark "Midnight Pantry" theme. CSS custom properties defined in `src/app/globals.css`. Fonts: `DM Serif Display` (display/headings, `--font-dm-serif`) + `DM Sans` (body, `--font-dm-sans`).
@@ -172,8 +174,14 @@ Run `scripts/fix-meal-types.ts` to repair meal types on existing rows and clear 
 ### Shopping List — Romanian Normalisation
 `src/lib/shopping-list-utils.ts` normalises ingredient names and units before deduplication so Romanian singular/plural variants aggregate correctly (e.g. "ou" + "ouă" → same entry, "lingură" + "linguri" → same unit). `aggregateInto` always stores the canonical singular form; `formatItem` applies `pluralize()` at display time using `ROMANIAN_PLURALS`.
 
-`normalizeName` applies two preprocessing steps before the canonical name map lookup:
+`normalizeName` applies these preprocessing steps before the canonical name map lookup:
 1. Strip parenthetical notes: `\s*\([^)]*\)` removed
-2. Strip trailing prep-modifier phrases (e.g. "tocat", "rasă", "fiert", "proaspăt") via `TRAILING_PREP_RE`
+2. Strip leading qualifiers (`LEADING_QUALIFIER_RE`): "optional", "opțional", "cca", "circa", "dupa gust", "puțin / puțină", etc.
+3. Strip leading quantity-words (`LEADING_QUANTITY_WORD_RE`): "pumn", "mână", "un pumn de", etc.
+4. Strip trailing prep-modifier phrases (e.g. "tocat", "rasă", "fiert", "proaspăt") via `TRAILING_PREP_RE`
 
-This ensures variants like "brânză telemea de capră (50g, rasă)" and "telemea de capra rasa" deduplicate correctly.
+`expandIngredient(item)` runs before `aggregateInto` and handles compound seasoning strings:
+- Strips "dupa gust" / "după gust" and "puțin / putin" prefixes from the name
+- If the name contains commas, splits it into multiple `AddableItem`s with `quantity: null, unit: null` (e.g. `"sare, piper, dafin, cimbru"` → 4 items)
+
+Canonical name groupings: "ceapă" (white), "ceapă verde" (spring), and "ceapă roșie" (red) are kept as **separate** canonical forms. All loose-leaf / mixed-greens variants ("frunze salata verde", "mix frunze verzi", "frunze verzi", "salata verde") normalise to **"salată verde"**.

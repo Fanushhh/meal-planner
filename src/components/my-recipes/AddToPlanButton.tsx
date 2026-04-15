@@ -9,17 +9,19 @@ const MEAL_TYPE_LABELS: Record<string, string> = {
   dinner: "Cină",
 };
 
+interface ScheduledSlot { dayOfWeek: number; mealType: string }
+
 interface AddToPlanButtonProps {
   recipeId: string;
   weekDays: string[]; // 7 items, e.g. ["Mon 17", "Tue 18", ...]
-  scheduledDays: number[]; // day indices already in the plan for this recipe
+  scheduledDays: ScheduledSlot[]; // slots already in the plan for this recipe
   mealType: string;
 }
 
 export function AddToPlanButton({ recipeId, weekDays, scheduledDays, mealType }: AddToPlanButtonProps) {
   const [open, setOpen] = useState(false);
   const [addedDay, setAddedDay] = useState<number | null>(null);
-  const [confirmedDays, setConfirmedDays] = useState<Set<number>>(new Set(scheduledDays));
+  const [confirmedDays, setConfirmedDays] = useState<Set<number>>(new Set(scheduledDays.map((s) => s.dayOfWeek)));
   const [isPending, startTransition] = useTransition();
 
   function handleDayClick(dayIndex: number) {
