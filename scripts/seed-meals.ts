@@ -127,7 +127,7 @@ const seedMeals: Array<{
     instructions: [
       "Zdrobește avocado cu o furculiță.",
       "Amestecă cu cottage cheese și ceapă tocată mărunt.",
-      "Aseazăpe felie de pâine.",
+      "Așează pe felie de pâine.",
       "Servește cu frunze verzi alături.",
     ],
   },
@@ -165,7 +165,7 @@ const seedMeals: Array<{
       { quantity: 1, unit: "felie", name: "pâine" },
       { quantity: 3, unit: "felie", name: "prosciutto crudo" },
       { quantity: 2, unit: "linguri", name: "hummus" },
-      { quantity: 1, unit: null, name: "morcov crud" },
+      { quantity: 1, unit: null, name: "morcov" },
       { quantity: null, unit: null, name: "măsline" },
     ],
     instructions: [
@@ -190,7 +190,8 @@ const seedMeals: Array<{
       { quantity: 0.5, unit: null, name: "avocado" },
       { quantity: 20, unit: "g", name: "brânză feta" },
       { quantity: null, unit: null, name: "oregano" },
-      { quantity: null, unit: null, name: "suc de lămâie sau oțet" },
+      { quantity: null, unit: null, name: "suc de lămâie" },
+      { quantity: null, unit: null, name: "oțet" },
     ],
     instructions: [
       "Scurge și clătește fasolea.",
@@ -207,7 +208,7 @@ const seedMeals: Array<{
     cookTimeMin: 15,
     ingredients: [
       { quantity: 1, unit: "bol", name: "supă cremă de legume" },
-      { quantity: 1, unit: null, name: "kefir" },
+      { quantity: 1, unit: "pahar", name: "kefir" },
     ],
     instructions: [
       "Încălzește supa cremă de legume.",
@@ -290,7 +291,7 @@ const seedMeals: Array<{
     prepTimeMin: 5,
     cookTimeMin: 10,
     ingredients: [
-      { quantity: 1, unit: null, name: "paticel carne burger" },
+      { quantity: 1, unit: null, name: "chiftea de burger" },
       { quantity: null, unit: null, name: "castraveți murați fără zahăr" },
       { quantity: 1, unit: "linguriță", name: "maioneză light" },
       { quantity: null, unit: null, name: "frunze de salată iceberg" },

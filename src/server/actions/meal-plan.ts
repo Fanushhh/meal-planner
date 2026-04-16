@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/server/lib/auth";
-import { getWeekStart } from "@/server/lib/date";
+import { getWeekStart, getTodayIndex } from "@/server/lib/date";
 import { getAllMeals } from "@/server/queries/meals";
 import { db } from "@/server/db";
 import { meals, userRecipes } from "@/server/db/schema";
@@ -114,10 +114,13 @@ export async function getPlanIngredients(): Promise<PlanIngredients> {
 
   type Ingredient = { quantity: number | null; unit: string | null; name: string; note?: string };
 
-  // Count how many times each meal/recipe appears in the plan this week
+  // Count how many times each meal/recipe appears in the plan this week,
+  // skipping days that have already passed.
+  const todayIndex = getTodayIndex();
   const mealCounts = new Map<string, number>();
   const recipeCounts = new Map<string, number>();
   for (const pm of plan.plannedMeals) {
+    if (pm.dayOfWeek < todayIndex) continue;
     if (pm.mealId) mealCounts.set(pm.mealId, (mealCounts.get(pm.mealId) ?? 0) + 1);
     if (pm.userRecipeId) recipeCounts.set(pm.userRecipeId, (recipeCounts.get(pm.userRecipeId) ?? 0) + 1);
   }
