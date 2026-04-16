@@ -97,6 +97,8 @@ Quantities added via `IngredientsPanel` are always **scaled** (`numPeople / meal
 ### Design System
 Dark "Midnight Pantry" theme. CSS custom properties defined in `src/app/globals.css`. Fonts: `DM Serif Display` (display/headings, `--font-dm-serif`) + `DM Sans` (body, `--font-dm-sans`).
 
+**Color contrast:** `--text-faint` (`#727D92`) passes WCAG AA on `--bg` only. On `--surface` backgrounds (e.g. inside meal cards), use `--text-muted` instead — the lighter surface raises the minimum passing value above what `--text-faint` provides.
+
 All `(app)` pages follow the same header pattern: eyebrow breadcrumb (`text-[11px] uppercase tracking-[0.14em]` in `--text-faint` / `--accent`), serif italic `text-[40px]` `h1`, gradient rule (`linear-gradient(to right, var(--border), transparent 70%)`), then content in `max-w-[1400px] px-6`.
 
 Auth pages (`/login`, `/verify`) and the onboarding page now match the same Midnight Pantry dark theme — centered card with accent top bar, wordmark, and italic serif heading.
@@ -107,6 +109,8 @@ Auth pages (`/login`, `/verify`) and the onboarding page now match the same Midn
 
 ### Dashboard Grid
 `WeeklyPlanGrid` uses CSS Grid with `gridTemplateColumns: "80px repeat(7, minmax(140px, 1fr))"` — an 80px label column followed by 7 day columns. Rows are grouped by meal type (Mic dejun / Prânz / Cină / Gustare); only types that have at least one planned slot are rendered. Separators between groups are per-column cells (not a single spanning div) so the today-column highlight can run through them unbroken.
+
+`WeeklyPlanGrid` is a **client component** (`"use client"`). It uses `useRef` + `useEffect` to auto-scroll to today's column on mount. `todayIndex` (0=Mon…6=Sun) is passed as a prop from the dashboard server component.
 
 **Today column highlight** — a cohesive vertical band across all rows: 2px accent cap on the header top, 1px warm-tinted side rails (`rgba(212,120,67,0.13)`) on every cell, 4.5% warm wash background, and rounded corners at the top of the header and bottom of the last row. Meal type separators for the today column carry the rails silently with no divider line.
 
@@ -135,7 +139,26 @@ Each meal card on the dashboard has a three-dot `⋮` button (visible on hover) 
 `src/components/meal-plan/MealCardMenu.tsx` is the client component handling this.
 
 ### Adding Recipes
-Recipes are added through My Recipes (`/my-recipes/new`). Each recipe has: name, description, servings, prep time, cook time, meal type, ingredients (with quantity/unit/name/note), and step-by-step instructions. No cuisine or dietary tag. The "Add to plan" button on the recipe detail page places the recipe into the correct meal type slot for the chosen day.
+Recipes are added through My Recipes (`/my-recipes/new`). Each recipe has: name, description, servings, prep time, cook time, meal type, ingredients (with quantity/unit/name/note), and step-by-step instructions. No cuisine or dietary tag.
+
+### Add to Plan Widget
+`src/components/meal-plan/AddToPlanWidget.tsx` — client component rendered on both `/meals/[id]` and `/my-recipes/[id]`. Triggered by an "Add to plan" button; opens a centered modal (via `createPortal`) with a `table-fixed` weekly calendar grid.
+
+**Props:** `source` ("meal" | "userRecipe"), `recipeId`, `mealType`, `weekDays` (7 labels), `todayIndex` (0=Mon…6=Sun), `weekSlots` (full week occupancy from `getWeekSlots`).
+
+**Grid behaviour:**
+- Past day columns (index < `todayIndex`) are rendered as narrow 32px hatched strips — no label, no interaction.
+- `breakfast` and `snack` meals show 1 row; `lunch` and `dinner` show both Prânz and Cină rows (cross-compatible).
+- Cell states: past (hatched strip) | empty (clickable) | self (teal checkmark) | other (warm-tinted, shows meal name).
+- Clicking an "other" cell triggers a full-cell Yes/No confirmation split before replacing.
+- All cells and columns have fixed dimensions (`h-[72px]` td, `w-[82px]` active / `w-[32px]` past th) with `table-fixed` to prevent layout shift on state transitions.
+
+**Supporting infrastructure:**
+- `getTodayIndex()` in `src/server/lib/date.ts` — returns 0–6 for the current UTC weekday.
+- `getWeekSlots(userId, weekStart)` in `src/server/queries/plans.ts` — returns all planned slots for the week with meal names; used by the widget to determine cell occupancy.
+- `upsertMealSlot(planId, dayOfWeek, mealType, mealId)` in `src/server/queries/plans.ts` — mirror of `upsertUserRecipeSlot` for seeded meals.
+- `addMealToPlanAction(mealId, dayOfWeek, mealType)` in `src/server/actions/meal-plan.ts` — server action for adding seeded meals to the plan (auth → `getOrCreatePlan` → `upsertMealSlot`).
+- `AddToPlanButton` (old inline component) was deleted; `AddToPlanWidget` supersedes it entirely.
 
 ### Tests
 Tests live in `tests/`. `tests/setup.ts` exports `createTestDb()` which creates an **in-memory SQLite DB** (still uses `better-sqlite3`) and applies migrations — use this for integration tests. This is intentionally kept separate from the production Neon driver so tests run offline without network access. Component tests should add `// @vitest-environment jsdom` at the top of the file.

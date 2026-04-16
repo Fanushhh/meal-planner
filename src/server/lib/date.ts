@@ -13,6 +13,11 @@ export function getWeekStart(date: Date = new Date()): string {
   return d.toISOString().slice(0, 10);
 }
 
+/** Returns today's day index in the current week: 0 = Monday … 6 = Sunday (UTC). */
+export function getTodayIndex(): number {
+  return (new Date().getUTCDay() + 6) % 7;
+}
+
 const DAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 export function getDayName(dayOfWeek: number): string {

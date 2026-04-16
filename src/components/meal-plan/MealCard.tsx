@@ -6,7 +6,6 @@ const MEAL_TYPE_COLORS: Record<string, string> = {
   breakfast: "#F5A623",
   lunch: "var(--accent)",
   dinner: "#7B95C4",
-  snack: "#8B77C5",
 };
 
 interface MealCardProps {
@@ -52,11 +51,11 @@ export function MealCard({ meal, planId, dayOfWeek, mealType }: MealCardProps) {
 
         {meal.prepTimeMin && (
           <div className="mt-1.5 flex items-center gap-0.5">
-            <svg className="h-2.5 w-2.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: "var(--text-faint)" }}>
+            <svg className="h-2.5 w-2.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: "var(--text-muted)" }}>
               <circle cx="8" cy="8" r="6.5" />
               <path strokeLinecap="round" d="M8 4.5V8l2.5 1.5" />
             </svg>
-            <span className="text-[10px]" style={{ color: "var(--text-faint)" }}>
+            <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>
               {meal.prepTimeMin}m
             </span>
           </div>

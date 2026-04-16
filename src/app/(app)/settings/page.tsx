@@ -81,9 +81,9 @@ export default async function SettingsPage() {
               }}
             />
 
-            <div className="flex items-center justify-between gap-4 px-6 py-5">
+            <div className="flex flex-wrap items-center justify-between gap-4 px-4 py-5 sm:px-6">
               {/* Avatar + email */}
-              <div className="flex items-center gap-4">
+              <div className="flex min-w-0 items-center gap-4">
                 {/* Monogram avatar */}
                 <div
                   className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-lg font-semibold"

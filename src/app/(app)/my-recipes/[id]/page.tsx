@@ -5,10 +5,9 @@ import { getUserPreferences } from "@/server/queries/users";
 import { getUserRecipeById } from "@/server/queries/userRecipes";
 import { IngredientsPanel } from "@/components/meals/IngredientsPanel";
 import { MyRecipeDeleteButton } from "@/components/my-recipes/MyRecipeDeleteButton";
-import { AddToPlanButton } from "@/components/my-recipes/AddToPlanButton";
-import { getWeekStart, getDayName } from "@/server/lib/date";
-import { getScheduledDaysForRecipe } from "@/server/queries/plans";
-import { MEAL_TYPE_LABELS } from "@/server/db/schema";
+import { AddToPlanWidget } from "@/components/meal-plan/AddToPlanWidget";
+import { getWeekStart, getDayName, getTodayIndex } from "@/server/lib/date";
+import { getWeekSlots } from "@/server/queries/plans";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -28,7 +27,8 @@ export default async function MyRecipeDetailPage({ params }: Props) {
   if (!prefs) redirect("/onboarding");
 
   const weekStart = getWeekStart();
-  const scheduledDays = await getScheduledDaysForRecipe(session.user.id, weekStart, recipe.id);
+  const todayIndex = getTodayIndex();
+  const weekSlots = await getWeekSlots(session.user.id, weekStart);
 
   const weekDate = new Date(weekStart + "T00:00:00Z");
   const weekDays = Array.from({ length: 7 }, (_, i) => {
@@ -67,6 +67,14 @@ export default async function MyRecipeDetailPage({ params }: Props) {
           </Link>
 
           <div className="flex items-center gap-2">
+            <AddToPlanWidget
+              source="userRecipe"
+              recipeId={recipe.id}
+              mealType={recipe.mealType ?? "lunch"}
+              weekDays={weekDays}
+              todayIndex={todayIndex}
+              weekSlots={weekSlots}
+            />
             <Link
               href={`/my-recipes/${recipe.id}/edit`}
               className="rounded-lg px-3 py-1.5 text-sm font-medium transition-colors hover:bg-white/5"
@@ -76,15 +84,6 @@ export default async function MyRecipeDetailPage({ params }: Props) {
             </Link>
             <MyRecipeDeleteButton id={recipe.id} label="Delete" />
           </div>
-        </div>
-
-        {scheduledDays.length > 0 && (
-          <PlanBadge slots={scheduledDays} />
-        )}
-
-        {/* Add to plan */}
-        <div className="mb-6">
-          <AddToPlanButton recipeId={recipe.id} weekDays={weekDays} scheduledDays={scheduledDays} mealType={recipe.mealType} />
         </div>
 
         {/* Header */}
@@ -195,44 +194,6 @@ export default async function MyRecipeDetailPage({ params }: Props) {
           </div>
 
         </div>
-      </div>
-    </div>
-  );
-}
-
-const SHORT_DAY = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-function PlanBadge({ slots }: { slots: { dayOfWeek: number; mealType: string }[] }) {
-  return (
-    <div
-      className="mb-6 flex flex-wrap items-center gap-2 rounded-xl px-4 py-2.5"
-      style={{
-        background: "rgba(45, 212, 191, 0.07)",
-        border: "1px solid rgba(45, 212, 191, 0.22)",
-      }}
-    >
-      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#2DD4BF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
-        <rect x="2" y="3" width="12" height="11" rx="2" />
-        <path d="M5 1v3M11 1v3M2 7h12" />
-      </svg>
-      <span className="text-xs font-semibold" style={{ color: "#2DD4BF" }}>
-        In this week&apos;s plan
-      </span>
-      <span className="mx-0.5 text-xs" style={{ color: "rgba(45,212,191,0.35)" }}>·</span>
-      <div className="flex flex-wrap gap-1.5">
-        {slots.map((s, i) => (
-          <span
-            key={i}
-            className="rounded-md px-2 py-0.5 text-[11px] font-medium"
-            style={{
-              background: "rgba(45, 212, 191, 0.1)",
-              border: "1px solid rgba(45, 212, 191, 0.25)",
-              color: "rgba(45, 212, 191, 0.85)",
-            }}
-          >
-            {SHORT_DAY[s.dayOfWeek]} · {MEAL_TYPE_LABELS[s.mealType as keyof typeof MEAL_TYPE_LABELS] ?? s.mealType}
-          </span>
-        ))}
       </div>
     </div>
   );

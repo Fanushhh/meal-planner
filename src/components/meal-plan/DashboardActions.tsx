@@ -3,18 +3,11 @@
 import { useTransition, useState } from "react";
 import { regeneratePlan, getPlanIngredients } from "@/server/actions/meal-plan";
 import { useShoppingList } from "@/hooks/use-shopping-list";
-import type { AddableItem } from "@/lib/shopping-list-utils";
-
-type SnackPromptState = {
-  mainItems: AddableItem[];
-  snackItems: AddableItem[];
-};
 
 export function DashboardActions() {
   const [isRegenerating, startRegenerate] = useTransition();
   const [isAddingToList, startAddToList] = useTransition();
   const [listAdded, setListAdded] = useState(false);
-  const [snackPrompt, setSnackPrompt] = useState<SnackPromptState | null>(null);
   const { addItems } = useShoppingList();
 
   function handleRegenerate() {
@@ -25,32 +18,13 @@ export function DashboardActions() {
 
   function handleAddToList() {
     startAddToList(async () => {
-      const { mainItems, snackItems } = await getPlanIngredients();
-      if (snackItems.length > 0) {
-        // Pause and let the user decide about snacks
-        setSnackPrompt({ mainItems, snackItems });
-      } else {
-        // No snacks in the plan — add everything directly
-        if (mainItems.length > 0) {
-          addItems(mainItems);
-          setListAdded(true);
-          setTimeout(() => setListAdded(false), 2500);
-        }
+      const { items } = await getPlanIngredients();
+      if (items.length > 0) {
+        addItems(items);
+        setListAdded(true);
+        setTimeout(() => setListAdded(false), 2500);
       }
     });
-  }
-
-  function confirmAdd(includeSnacks: boolean) {
-    if (!snackPrompt) return;
-    const items = includeSnacks
-      ? [...snackPrompt.mainItems, ...snackPrompt.snackItems]
-      : snackPrompt.mainItems;
-    setSnackPrompt(null);
-    if (items.length > 0) {
-      addItems(items);
-      setListAdded(true);
-      setTimeout(() => setListAdded(false), 2500);
-    }
   }
 
   return (
@@ -134,59 +108,6 @@ export function DashboardActions() {
         </button>
       </div>
 
-      {/* Snack confirmation modal */}
-      {snackPrompt && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center px-4"
-          style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }}
-          onClick={() => setSnackPrompt(null)}
-        >
-          <div
-            className="w-full max-w-sm rounded-2xl p-6 shadow-2xl"
-            style={{ background: "var(--surface-raised)", border: "1px solid var(--border)" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Icon */}
-            <div
-              className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl"
-              style={{ background: "var(--accent-light)", border: "1px solid rgba(212,120,67,0.25)" }}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <path d="M16 10a4 4 0 0 1-8 0" />
-              </svg>
-            </div>
-
-            <h3
-              className="mb-1 text-lg"
-              style={{ fontFamily: "var(--font-dm-serif)", fontStyle: "italic", color: "var(--text)" }}
-            >
-              Include snacks?
-            </h3>
-            <p className="mb-6 text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
-              Your plan includes snacks this week. Do you want to add their ingredients to the shopping list too?
-            </p>
-
-            <div className="flex flex-col gap-2">
-              <button
-                onClick={() => confirmAdd(true)}
-                className="w-full rounded-xl px-4 py-2.5 text-sm font-semibold transition-all hover:opacity-90"
-                style={{ background: "var(--accent)", color: "#0D0E11" }}
-              >
-                Yes, include snacks
-              </button>
-              <button
-                onClick={() => confirmAdd(false)}
-                className="w-full rounded-xl px-4 py-2.5 text-sm font-medium transition-all hover:bg-white/5"
-                style={{ border: "1px solid var(--border)", color: "var(--text-muted)" }}
-              >
-                Skip snacks
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }

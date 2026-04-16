@@ -12,7 +12,7 @@ export async function Header() {
         borderBottom: "1px solid var(--border-subtle)",
       }}
     >
-      <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between px-6">
+      <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between px-4 sm:px-6">
         {/* Wordmark */}
         <Link
           href="/dashboard"
@@ -37,10 +37,10 @@ export async function Header() {
         </Link>
 
         {/* Nav */}
-        <nav className="flex items-center gap-1">
+        <nav className="flex items-center gap-0 sm:gap-1">
           <Link
             href="/my-recipes"
-            className="rounded-lg px-3 py-1.5 text-sm transition-colors hover:bg-white/5"
+            className="rounded-lg px-2 py-1.5 text-sm transition-colors hover:bg-white/5 sm:px-3"
             style={{ color: "var(--text-muted)" }}
           >
             My Recipes

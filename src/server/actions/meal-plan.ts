@@ -17,6 +17,7 @@ import {
   getMealIdsByTypeInPlan,
   getOrCreatePlan,
   upsertUserRecipeSlot,
+  upsertMealSlot,
   removePlannedMeal,
   deletePlanForWeek,
 } from "@/server/queries/plans";
@@ -97,27 +98,21 @@ export async function regeneratePlan(): Promise<{ success: true } | { error: str
 }
 
 export type PlanIngredients = {
-  mainItems: AddableItem[];
-  snackItems: AddableItem[];
+  items: AddableItem[];
 };
 
 export async function getPlanIngredients(): Promise<PlanIngredients> {
   const session = await getSession();
-  if (!session) return { mainItems: [], snackItems: [] };
+  if (!session) return { items: [] };
 
   const weekStart = getWeekStart();
   const plan = await getPlanForWeek(session.user.id, weekStart);
-  if (!plan) return { mainItems: [], snackItems: [] };
+  if (!plan) return { items: [] };
 
   const prefs = await getUserPreferences(session.user.id);
   const numPeople = prefs?.numPeople ?? 2;
 
   type Ingredient = { quantity: number | null; unit: string | null; name: string; note?: string };
-
-  // Separate snack planned meals from main ones
-  const snackPlannedMealIds = new Set(
-    plan.plannedMeals.filter((pm) => pm.mealType === "snack").map((pm) => pm.mealId ?? pm.userRecipeId ?? "")
-  );
 
   // Count how many times each meal/recipe appears in the plan this week
   const mealCounts = new Map<string, number>();
@@ -135,17 +130,14 @@ export async function getPlanIngredients(): Promise<PlanIngredients> {
     uniqueRecipeIds.length > 0 ? db.select().from(userRecipes).where(inArray(userRecipes.id, uniqueRecipeIds)) : [],
   ]);
 
-  const mainItems: AddableItem[] = [];
-  const snackItems: AddableItem[] = [];
+  const items: AddableItem[] = [];
 
   for (const row of [...mealRows, ...recipeRows]) {
-    const isSnack = snackPlannedMealIds.has(row.id);
     const occurrences = mealCounts.get(row.id) ?? recipeCounts.get(row.id) ?? 1;
     const scale = (numPeople / (row.servings ?? 1)) * occurrences;
     const ingredients = JSON.parse(row.ingredients) as Ingredient[];
-    const target = isSnack ? snackItems : mainItems;
     for (const ing of ingredients) {
-      target.push({
+      items.push({
         name: ing.name,
         quantity: ing.quantity !== null ? Math.round(ing.quantity * scale * 100) / 100 : null,
         unit: ing.unit ?? null,
@@ -154,7 +146,23 @@ export async function getPlanIngredients(): Promise<PlanIngredients> {
     }
   }
 
-  return { mainItems, snackItems };
+  return { items };
+}
+
+export async function addMealToPlanAction(
+  mealId: string,
+  dayOfWeek: number,
+  mealType: string
+): Promise<{ success: true } | { error: string }> {
+  const session = await getSession();
+  if (!session) return { error: "Not authenticated." };
+
+  const weekStart = getWeekStart();
+  const plan = await getOrCreatePlan(session.user.id, weekStart);
+  await upsertMealSlot(plan.id, dayOfWeek, mealType, mealId);
+  revalidatePath("/dashboard");
+
+  return { success: true };
 }
 
 export async function addUserRecipeToPlanAction(

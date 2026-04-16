@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useRef, useEffect } from "react";
 import { MealCard } from "./MealCard";
 import { getDayName } from "@/server/lib/date";
 import { MEAL_TYPES, MEAL_TYPE_LABELS, type MealType } from "@/server/db/schema";
@@ -18,13 +20,23 @@ const TODAY_CAP_TOP   = "2px solid rgba(212, 120, 67, 0.55)";
 const TODAY_CAP_BTM   = "1px solid rgba(212, 120, 67, 0.13)";
 
 export function WeeklyPlanGrid({ plan, todayIndex }: WeeklyPlanGridProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!scrollRef.current) return;
+    // 80px label column + todayIndex * (140px min column + 5px gap)
+    // Subtract 80px so the label column stays visible at the left edge
+    const offset = 80 + todayIndex * 145 - 80;
+    scrollRef.current.scrollLeft = Math.max(0, offset);
+  }, [todayIndex]);
+
   const activeMealTypes = MEAL_TYPES.filter((t) =>
     plan.plannedMeals.some((pm) => pm.mealType === t)
   );
   const lastTypeIndex = activeMealTypes.length - 1;
 
   return (
-    <div className="overflow-x-auto scroll-x pb-3">
+    <div ref={scrollRef} className="overflow-x-auto scroll-x pb-3">
       <div
         style={{
           display: "grid",

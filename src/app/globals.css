@@ -12,7 +12,7 @@
   /* Text hierarchy */
   --text: #EBE8E2;
   --text-muted: #7C8196;
-  --text-faint: #444B5C;
+  --text-faint: #727D92;
 
   /* Primary accent: warm terracotta */
   --accent: #D47843;
@@ -31,10 +31,6 @@
   --dinner-color: #A78BFA;
   --dinner-bg: rgba(167, 139, 250, 0.07);
   --dinner-border: rgba(167, 139, 250, 0.18);
-
-  --snack-color: #F472B6;
-  --snack-bg: rgba(244, 114, 182, 0.07);
-  --snack-border: rgba(244, 114, 182, 0.18);
 
   /* Today column highlight */
   --today-bg: rgba(212, 120, 67, 0.055);
@@ -114,13 +110,3 @@ body {
   animation-delay: var(--col-delay, 0ms);
 }
 
-/* Ingredient row flash on add */
-@keyframes ingredient-flash {
-  0%, 30% { background-color: rgba(212, 120, 67, 0.14); }
-  100%    { background-color: transparent; }
-}
-
-.ingredient-flash {
-  border-radius: 0.5rem;
-  animation: ingredient-flash 1.2s ease forwards;
-}

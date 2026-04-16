@@ -246,6 +246,69 @@ export async function deletePlanForWeek(
     .where(and(eq(weeklyPlans.userId, userId), eq(weeklyPlans.weekStart, weekStart)));
 }
 
+export type WeekSlot = {
+  dayOfWeek: number;
+  mealType: string;
+  mealName: string;
+  mealId: string | null;
+  userRecipeId: string | null;
+};
+
+export async function getWeekSlots(
+  userId: string,
+  weekStart: string
+): Promise<WeekSlot[]> {
+  const planRows = await db
+    .select({ id: weeklyPlans.id })
+    .from(weeklyPlans)
+    .where(and(eq(weeklyPlans.userId, userId), eq(weeklyPlans.weekStart, weekStart)))
+    .limit(1);
+
+  if (!planRows[0]) return [];
+
+  const rows = await db
+    .select({ pm: plannedMeals, meal: meals, userRecipe: userRecipes })
+    .from(plannedMeals)
+    .leftJoin(meals, eq(plannedMeals.mealId, meals.id))
+    .leftJoin(userRecipes, eq(plannedMeals.userRecipeId, userRecipes.id))
+    .where(eq(plannedMeals.planId, planRows[0].id));
+
+  return rows.flatMap(({ pm, meal: m, userRecipe: ur }) => {
+    const name = m?.name ?? ur?.name;
+    if (!name) return [];
+    return [{
+      dayOfWeek: pm.dayOfWeek,
+      mealType: pm.mealType,
+      mealName: name,
+      mealId: pm.mealId ?? null,
+      userRecipeId: pm.userRecipeId ?? null,
+    }];
+  });
+}
+
+export async function upsertMealSlot(
+  planId: string,
+  dayOfWeek: number,
+  mealType: string,
+  mealId: string
+): Promise<void> {
+  await db
+    .insert(plannedMeals)
+    .values({
+      id: createId(),
+      planId,
+      mealId,
+      userRecipeId: null,
+      dayOfWeek,
+      mealType,
+      rerolledAt: null,
+    })
+    .onConflictDoUpdate({
+      target: [plannedMeals.planId, plannedMeals.dayOfWeek, plannedMeals.mealType],
+      set: { mealId, userRecipeId: null, rerolledAt: now() },
+    });
+}
+
 export async function removePlannedMeal(
   planId: string,
   dayOfWeek: number,

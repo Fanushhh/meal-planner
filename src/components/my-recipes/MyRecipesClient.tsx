@@ -125,25 +125,12 @@ export function MyRecipesClient({ recipes, meals }: Props) {
           </h2>
           {!isSearching && recipes.length === 0 ? (
             <div
-              className="flex flex-col items-center justify-center rounded-2xl px-6 py-16 text-center"
+              className="flex items-center justify-center rounded-2xl px-6 py-14 text-center"
               style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
             >
-              <h3
-                className="mb-2 text-xl"
-                style={{ fontFamily: "var(--font-dm-serif)", fontStyle: "italic", color: "var(--text)" }}
-              >
-                Nicio rețetă încă
-              </h3>
-              <p className="mb-6 max-w-sm text-sm" style={{ color: "var(--text-muted)" }}>
-                Adaugă prima rețetă și va apărea în planul tău săptămânal.
+              <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+                No recipes yet. Use the <strong style={{ color: "var(--text)" }}>Add recipe</strong> button above to get started.
               </p>
-              <Link
-                href="/my-recipes/new"
-                className="rounded-xl px-5 py-2.5 text-sm font-semibold transition-all hover:opacity-90"
-                style={{ background: "var(--accent)", color: "#0D0E11" }}
-              >
-                Adaugă rețetă
-              </Link>
             </div>
           ) : filteredRecipes.length === 0 ? null : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

@@ -111,17 +111,15 @@ export type WeeklyPlan = typeof weeklyPlans.$inferSelect;
 export type PlannedMeal = typeof plannedMeals.$inferSelect;
 export type UserRecipe = typeof userRecipes.$inferSelect;
 
-export type MealType = "breakfast" | "lunch" | "dinner" | "snack";
+export type MealType = "breakfast" | "lunch" | "dinner";
 export const MEAL_TYPE_LABELS: Record<MealType, string> = {
   breakfast: "Mic dejun",
   lunch: "Prânz",
   dinner: "Cină",
-  snack: "Gustare",
 };
 export const MEAL_TYPE_COLORS: Record<MealType, { text: string; bg: string; border: string }> = {
   breakfast: { text: "#F5A623", bg: "rgba(245,166,35,0.12)", border: "rgba(245,166,35,0.25)" },
   lunch:     { text: "#D47843", bg: "rgba(212,120,67,0.12)", border: "rgba(212,120,67,0.25)" },
   dinner:    { text: "#7B95C4", bg: "rgba(123,149,196,0.12)", border: "rgba(123,149,196,0.25)" },
-  snack:     { text: "#8B77C5", bg: "rgba(139,119,197,0.12)", border: "rgba(139,119,197,0.25)" },
 };
-export const MEAL_TYPES: MealType[] = ["breakfast", "lunch", "dinner", "snack"];
+export const MEAL_TYPES: MealType[] = ["breakfast", "lunch", "dinner"];
