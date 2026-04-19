@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { createRecipeAction, updateRecipeAction } from "@/server/actions/userRecipes";
 import type { ParsedUserRecipe } from "@/server/queries/userRecipes";
 import type { Ingredient } from "@/server/queries/meals";
+import { MEAL_TYPES, MEAL_TYPE_LABELS, MEAL_TYPE_COLORS } from "@/server/db/schema";
+import type { MealType } from "@/server/db/schema";
 
 interface RecipeEditorProps {
   mode: "create" | "edit";
@@ -71,6 +73,9 @@ export function RecipeEditor({ mode, initialData }: RecipeEditorProps) {
   const [cookTimeMin, setCookTimeMin] = useState<string>(
     initialData?.cookTimeMin != null ? String(initialData.cookTimeMin) : ""
   );
+  const [mealType, setMealType] = useState<MealType>(
+    (initialData?.mealType as MealType) ?? "lunch"
+  );
   const [ingredients, setIngredients] = useState<Ingredient[]>(
     initialData?.ingredients.length ? initialData.ingredients : [emptyIngredient()]
   );
@@ -120,6 +125,7 @@ export function RecipeEditor({ mode, initialData }: RecipeEditorProps) {
     const data = {
       name: name.trim(),
       description: description.trim() || null,
+      mealType,
       servings,
       prepTimeMin: prepTimeMin !== "" ? parseInt(prepTimeMin, 10) : null,
       cookTimeMin: cookTimeMin !== "" ? parseInt(cookTimeMin, 10) : null,
@@ -166,6 +172,31 @@ export function RecipeEditor({ mode, initialData }: RecipeEditorProps) {
               rows={3}
               style={{ ...inputStyle(), resize: "vertical" }}
             />
+          </div>
+
+          <div>
+            <label style={labelStyle()}>Meal type</label>
+            <div className="flex gap-2">
+              {MEAL_TYPES.map((type) => {
+                const active = mealType === type;
+                const colors = MEAL_TYPE_COLORS[type];
+                return (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => setMealType(type)}
+                    className="rounded-lg px-3 py-1.5 text-sm font-medium transition-all"
+                    style={{
+                      background: active ? colors.bg : "var(--surface-raised)",
+                      border: `1px solid ${active ? colors.border : "var(--border)"}`,
+                      color: active ? colors.text : "var(--text-muted)",
+                    }}
+                  >
+                    {MEAL_TYPE_LABELS[type]}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </SectionCard>

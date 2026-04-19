@@ -23,3 +23,10 @@ const DAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Satu
 export function getDayName(dayOfWeek: number): string {
   return DAY_NAMES[dayOfWeek] ?? DAY_NAMES[0]!;
 }
+
+/** Offsets a YYYY-MM-DD weekStart by `delta` weeks. */
+export function offsetWeek(weekStart: string, delta: number): string {
+  const d = new Date(weekStart + "T00:00:00Z");
+  d.setUTCDate(d.getUTCDate() + delta * 7);
+  return d.toISOString().slice(0, 10);
+}

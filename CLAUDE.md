@@ -5,6 +5,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
+# One-off DB patches (write a small script, run it, delete it)
+npx dotenv-cli -e .env.local -- npx tsx scripts/your-script.ts
+
 npm run dev          # Start dev server (localhost:3000)
 npm run build        # Production build
 npm run test         # Run tests in watch mode
@@ -42,6 +45,8 @@ All database access goes through three layers:
 2. **`src/server/queries/`** — raw DB queries returning typed results. `meals.ts` exports `ParsedMeal` and `Ingredient`. Queries never handle auth.
 
 3. **`src/server/actions/`** — Server Actions (`"use server"`). All mutations go here. They call `getSession()` first for auth, then delegate to queries. Server Actions used with `useActionState` must accept `(_prevState, formData)` as their signature.
+
+> **Server Action gotcha:** Never call `redirect()` inside a Server Action if the caller reads the return value — the redirect throws before the return is reached. Handle navigation in the component after checking the result.
 
 ### Meal Plan Generation
 `src/server/lib/meal-generator.ts` — pure functions, fully testable without a DB:
@@ -117,7 +122,7 @@ Auth pages (`/login`, `/verify`) and the onboarding page now match the same Midn
 **Meal card left bar** is colour-coded by meal type: breakfast `#F5A623`, lunch `var(--accent)`, dinner `#7B95C4`, snack `#8B77C5`. Same palette used for the meal type badges on the My Recipes page.
 
 ### Shopping List — Unseen Badge
-`use-shopping-list.ts` tracks a separate `meal-planner-shopping-unseen-v1` localStorage key counting new ingredients added since the user last visited the shopping list. `ShoppingNavLink` listens for a `shopping-list-change` custom event (dispatched on every mutation) and reads the key directly, so the badge updates in real time. `ShoppingListClient` calls `clearUnseen()` on mount.
+`use-shopping-list.ts` tracks a separate `meal-planner-shopping-unseen-v1` localStorage key counting new ingredients added since the user last visited the shopping list. `ShoppingNavLink` listens for a `shopping-list-change` custom event (dispatched on every mutation) and reads the key directly, so the badge updates in real time. `ShoppingListClient` calls `clearUnseen()` on mount. Every mutation function in the hook (`addItem`, `addItems`, `removeItem`, `toggleChecked`, `clearChecked`, `clearAll`) must call `notifyChange()` — omitting it causes the nav badge to lag silently.
 
 ### Ingredient Add Feedback
 When an ingredient is added via `IngredientsPanel`, the row gets the `.ingredient-flash` CSS class (keyframe defined in `globals.css`) which briefly highlights the row with the accent colour. The add button is never disabled — repeated clicks accumulate quantities via `aggregateInto`.
@@ -132,6 +137,8 @@ Both use `useTransition`; each disables the other while in-flight.
 `src/server/actions/meal-plan.ts` exports `regeneratePlan()` and `getPlanIngredients()` to support these buttons.
 
 ### Meal Card — Randomize & Remove
+Any Server Action that accepts a client-supplied `planId` must verify ownership: call `getPlanForWeek(session.user.id, weekStart)` and confirm `plan.id === planId` before mutating.
+
 Each meal card on the dashboard has a three-dot `⋮` button (visible on hover) that opens a small dropdown with two options:
 - **Randomize** — replaces the slot with a different meal via the `rerollMeal` action.
 - **Remove** — deletes the planned meal slot via `removePlannedMealAction` → `removePlannedMeal` query (includes a `userId` ownership check before deleting).
@@ -144,20 +151,24 @@ Recipes are added through My Recipes (`/my-recipes/new`). Each recipe has: name,
 ### Add to Plan Widget
 `src/components/meal-plan/AddToPlanWidget.tsx` — client component rendered on both `/meals/[id]` and `/my-recipes/[id]`. Triggered by an "Add to plan" button; opens a centered modal (via `createPortal`) with a `table-fixed` weekly calendar grid.
 
-**Props:** `source` ("meal" | "userRecipe"), `recipeId`, `mealType`, `weekDays` (7 labels), `todayIndex` (0=Mon…6=Sun), `weekSlots` (full week occupancy from `getWeekSlots`).
+**Props:** `source` ("meal" | "userRecipe"), `recipeId`, `mealType`, `weekStart` (current week YYYY-MM-DD), `weekDays` (7 labels), `todayIndex` (0=Mon…6=Sun), `weekSlots` (full week occupancy from `getWeekSlots`).
 
 **Grid behaviour:**
-- Past day columns (index < `todayIndex`) are rendered as narrow 32px hatched strips — no label, no interaction.
+- Past day columns (index < `todayIndex`) are rendered as narrow 32px hatched strips — no label, no interaction. For "Next week" tab, `effectiveTodayIndex = -1` so no days are past.
 - `breakfast` and `snack` meals show 1 row; `lunch` and `dinner` show both Prânz and Cină rows (cross-compatible).
 - Cell states: past (hatched strip) | empty (clickable) | self (teal checkmark) | other (warm-tinted, shows meal name).
 - Clicking an "other" cell triggers a full-cell Yes/No confirmation split before replacing.
 - All cells and columns have fixed dimensions (`h-[72px]` td, `w-[82px]` active / `w-[32px]` past th) with `table-fixed` to prevent layout shift on state transitions.
 
+**Week selector (This week / Next week):** A pill-tab toggle in the modal header lets users switch between the current week and the next. Next week's slots are fetched lazily via `getWeekSlotsAction` (with a spinner) on first switch. Separate local state (`localThisWeekSlots` / `nextWeekSlots`) tracks optimistic updates per week. `doAdd` passes the selected `weekStart` to the server action.
+
 **Supporting infrastructure:**
 - `getTodayIndex()` in `src/server/lib/date.ts` — returns 0–6 for the current UTC weekday.
 - `getWeekSlots(userId, weekStart)` in `src/server/queries/plans.ts` — returns all planned slots for the week with meal names; used by the widget to determine cell occupancy.
+- `getWeekSlotsAction(weekStart)` in `src/server/actions/meal-plan.ts` — authenticated server action wrapper around `getWeekSlots`; used by the widget to lazy-load next week's slots client-side.
 - `upsertMealSlot(planId, dayOfWeek, mealType, mealId)` in `src/server/queries/plans.ts` — mirror of `upsertUserRecipeSlot` for seeded meals.
-- `addMealToPlanAction(mealId, dayOfWeek, mealType)` in `src/server/actions/meal-plan.ts` — server action for adding seeded meals to the plan (auth → `getOrCreatePlan` → `upsertMealSlot`).
+- `addMealToPlanAction(mealId, dayOfWeek, mealType, weekStart?)` in `src/server/actions/meal-plan.ts` — server action for adding seeded meals to the plan; optional `weekStart` defaults to current week.
+- `addUserRecipeToPlanAction(recipeId, dayOfWeek, mealType, weekStart?)` — same optional `weekStart` support.
 - `AddToPlanButton` (old inline component) was deleted; `AddToPlanWidget` supersedes it entirely.
 
 ### Tests
@@ -188,9 +199,10 @@ The following features were intentionally removed to keep the app simple:
 
 ## Seed Data
 
-The DB currently holds ~84 meals total:
+The DB currently holds **104 meals** total:
 - **19 meals** from the original Săptămâna I Romanian weekly plan — seeded via `npm run db:seed` (`scripts/seed-meals.ts`). Breakdown: 7 breakfast / 6 lunch / 6 dinner.
 - **65 meals** extracted from user-provided `.docx` recipe files and inserted via `scripts/seed-extracted-meals.ts` (reads from `recipes/extracted-recipes.json`). This script skips names already in the DB.
+- **20 meals** added from a scan of the `.docx` meal plan files in `recipes/WhatsApp Unknown 2026-04-14 at 20.35.38/` that were not covered by the existing 84. Seeded directly via a one-off script (now deleted). Breakdown: 7 breakfast / 6 lunch / 7 dinner. Includes "Halloumi la gratar cu legume proaspete" and other recipes found in the weekly plans.
 
 Run `scripts/fix-meal-types.ts` to repair meal types on existing rows and clear stale weekly plans.
 

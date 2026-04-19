@@ -1,6 +1,5 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { getSession } from "@/server/lib/auth";
 import { upsertPreferences } from "@/server/queries/users";
@@ -23,5 +22,5 @@ export async function savePreferences(
   }
 
   await upsertPreferences(session.user.id, parsed.data);
-  redirect("/dashboard");
+  return { success: true };
 }

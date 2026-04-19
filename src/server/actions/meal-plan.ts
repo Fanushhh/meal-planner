@@ -5,8 +5,8 @@ import { getSession } from "@/server/lib/auth";
 import { getWeekStart, getTodayIndex } from "@/server/lib/date";
 import { getAllMeals } from "@/server/queries/meals";
 import { db } from "@/server/db";
-import { meals, userRecipes } from "@/server/db/schema";
-import { inArray } from "drizzle-orm";
+import { meals, userRecipes, weeklyPlans } from "@/server/db/schema";
+import { eq, inArray, and } from "drizzle-orm";
 import { getUserPreferences } from "@/server/queries/users";
 import type { AddableItem } from "@/lib/shopping-list-utils";
 import {
@@ -16,6 +16,7 @@ import {
   getMealIdsInPlan,
   getMealIdsByTypeInPlan,
   getOrCreatePlan,
+  getWeekSlots,
   upsertUserRecipeSlot,
   upsertMealSlot,
   removePlannedMeal,
@@ -23,15 +24,15 @@ import {
 } from "@/server/queries/plans";
 import { getUserRecipeById } from "@/server/queries/userRecipes";
 import { generateWeeklyPlan, pickRerollMeal } from "@/server/lib/meal-generator";
-import type { WeeklyPlanWithMeals } from "@/server/queries/plans";
+import type { WeeklyPlanWithMeals, WeekSlot } from "@/server/queries/plans";
 import type { MealType } from "@/server/db/schema";
 
-export async function getOrGeneratePlan(): Promise<WeeklyPlanWithMeals | null> {
+export async function getOrGeneratePlan(weekStart?: string): Promise<WeeklyPlanWithMeals | null> {
   const session = await getSession();
   if (!session) return null;
 
-  const weekStart = getWeekStart();
-  const existing = await getPlanForWeek(session.user.id, weekStart);
+  const ws = weekStart ?? getWeekStart();
+  const existing = await getPlanForWeek(session.user.id, ws);
   if (existing) return existing;
 
   const allMeals = await getAllMeals();
@@ -39,8 +40,8 @@ export async function getOrGeneratePlan(): Promise<WeeklyPlanWithMeals | null> {
 
   if (slots.length === 0) return null;
 
-  await createWeeklyPlan(session.user.id, weekStart, slots);
-  return getPlanForWeek(session.user.id, weekStart);
+  await createWeeklyPlan(session.user.id, ws, slots);
+  return getPlanForWeek(session.user.id, ws);
 }
 
 export type RerollResult = { error: string } | { success: true };
@@ -53,6 +54,14 @@ export async function rerollMeal(
 ): Promise<RerollResult> {
   const session = await getSession();
   if (!session) return { error: "Not authenticated." };
+
+  // Verify the plan belongs to the current user by planId+userId (works for any week)
+  const planRows = await db
+    .select({ id: weeklyPlans.id })
+    .from(weeklyPlans)
+    .where(and(eq(weeklyPlans.id, planId), eq(weeklyPlans.userId, session.user.id)))
+    .limit(1);
+  if (!planRows[0]) return { error: "Plan not found." };
 
   const allMeals = await getAllMeals();
   const planMealIds = await getMealIdsByTypeInPlan(planId, mealType);
@@ -80,17 +89,17 @@ export async function removePlannedMealAction(
   return { success: true };
 }
 
-export async function regeneratePlan(): Promise<{ success: true } | { error: string }> {
+export async function regeneratePlan(weekStart?: string): Promise<{ success: true } | { error: string }> {
   const session = await getSession();
   if (!session) return { error: "Not authenticated." };
 
-  const weekStart = getWeekStart();
-  await deletePlanForWeek(session.user.id, weekStart);
+  const ws = weekStart ?? getWeekStart();
+  await deletePlanForWeek(session.user.id, ws);
 
   const allMeals = await getAllMeals();
   const slots = generateWeeklyPlan(allMeals);
   if (slots.length > 0) {
-    await createWeeklyPlan(session.user.id, weekStart, slots);
+    await createWeeklyPlan(session.user.id, ws, slots);
   }
 
   revalidatePath("/dashboard");
@@ -101,12 +110,12 @@ export type PlanIngredients = {
   items: AddableItem[];
 };
 
-export async function getPlanIngredients(): Promise<PlanIngredients> {
+export async function getPlanIngredients(weekStart?: string): Promise<PlanIngredients> {
   const session = await getSession();
   if (!session) return { items: [] };
 
-  const weekStart = getWeekStart();
-  const plan = await getPlanForWeek(session.user.id, weekStart);
+  const ws = weekStart ?? getWeekStart();
+  const plan = await getPlanForWeek(session.user.id, ws);
   if (!plan) return { items: [] };
 
   const prefs = await getUserPreferences(session.user.id);
@@ -114,13 +123,14 @@ export async function getPlanIngredients(): Promise<PlanIngredients> {
 
   type Ingredient = { quantity: number | null; unit: string | null; name: string; note?: string };
 
-  // Count how many times each meal/recipe appears in the plan this week,
-  // skipping days that have already passed.
-  const todayIndex = getTodayIndex();
+  // For the current week, skip days that have already passed.
+  // For other weeks, include all days.
+  const currentWeekStart = getWeekStart();
+  const todayIndex = ws === currentWeekStart ? getTodayIndex() : -1;
   const mealCounts = new Map<string, number>();
   const recipeCounts = new Map<string, number>();
   for (const pm of plan.plannedMeals) {
-    if (pm.dayOfWeek < todayIndex) continue;
+    if (todayIndex >= 0 && pm.dayOfWeek < todayIndex) continue;
     if (pm.mealId) mealCounts.set(pm.mealId, (mealCounts.get(pm.mealId) ?? 0) + 1);
     if (pm.userRecipeId) recipeCounts.set(pm.userRecipeId, (recipeCounts.get(pm.userRecipeId) ?? 0) + 1);
   }
@@ -152,16 +162,26 @@ export async function getPlanIngredients(): Promise<PlanIngredients> {
   return { items };
 }
 
+export async function getWeekSlotsAction(weekStart: string): Promise<WeekSlot[]> {
+  const session = await getSession();
+  if (!session) return [];
+  return getWeekSlots(session.user.id, weekStart);
+}
+
 export async function addMealToPlanAction(
   mealId: string,
   dayOfWeek: number,
-  mealType: string
+  mealType: string,
+  weekStart?: string
 ): Promise<{ success: true } | { error: string }> {
   const session = await getSession();
   if (!session) return { error: "Not authenticated." };
 
-  const weekStart = getWeekStart();
-  const plan = await getOrCreatePlan(session.user.id, weekStart);
+  const mealRows = await db.select({ id: meals.id }).from(meals).where(eq(meals.id, mealId)).limit(1);
+  if (!mealRows[0]) return { error: "Meal not found." };
+
+  const ws = weekStart ?? getWeekStart();
+  const plan = await getOrCreatePlan(session.user.id, ws);
   await upsertMealSlot(plan.id, dayOfWeek, mealType, mealId);
   revalidatePath("/dashboard");
 
@@ -171,7 +191,8 @@ export async function addMealToPlanAction(
 export async function addUserRecipeToPlanAction(
   recipeId: string,
   dayOfWeek: number,
-  mealType: string
+  mealType: string,
+  weekStart?: string
 ): Promise<{ success: true } | { error: string }> {
   const session = await getSession();
   if (!session) return { error: "Not authenticated." };
@@ -179,8 +200,8 @@ export async function addUserRecipeToPlanAction(
   const recipe = await getUserRecipeById(recipeId, session.user.id);
   if (!recipe) return { error: "Recipe not found." };
 
-  const weekStart = getWeekStart();
-  const plan = await getOrCreatePlan(session.user.id, weekStart);
+  const ws = weekStart ?? getWeekStart();
+  const plan = await getOrCreatePlan(session.user.id, ws);
   await upsertUserRecipeSlot(plan.id, dayOfWeek, mealType, recipeId);
   revalidatePath("/dashboard");
 

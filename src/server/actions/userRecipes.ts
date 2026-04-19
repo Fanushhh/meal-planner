@@ -18,6 +18,7 @@ const ingredientSchema = z.object({
 const recipeSchema = z.object({
   name: z.string().min(1, "Recipe name is required."),
   description: z.string().nullable().optional(),
+  mealType: z.enum(["breakfast", "lunch", "dinner"]).default("lunch"),
   servings: z.number().int().min(1).max(100),
   prepTimeMin: z.number().int().min(0).nullable().optional(),
   cookTimeMin: z.number().int().min(0).nullable().optional(),

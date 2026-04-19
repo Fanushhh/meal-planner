@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { savePreferences } from "@/server/actions/preferences";
 
 interface SettingsFormProps {
@@ -28,6 +29,7 @@ function SectionCard({ title, children }: { title: string; children: React.React
 }
 
 export function SettingsForm({ initialNumPeople }: SettingsFormProps) {
+  const router = useRouter();
   const [numPeople, setNumPeople] = useState(initialNumPeople);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
@@ -41,6 +43,7 @@ export function SettingsForm({ initialNumPeople }: SettingsFormProps) {
         setError(result.error);
       } else {
         setSaved(true);
+        setTimeout(() => router.push("/dashboard"), 1200);
       }
     });
   }

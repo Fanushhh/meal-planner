@@ -144,20 +144,45 @@ function EditRow({
   );
 }
 
+const CONDIMENTE_CATEGORY = "Condimente & Uleiuri"; // matches CATEGORY_RULES name in shopping-list-utils.ts
+const HIDE_STAPLES_KEY = "meal-planner-hide-condimente-v1";
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export function ShoppingListClient() {
   const { items, hydrated, toggleChecked, updateItem, removeItem, clearChecked, clearAll, clearUnseen } =
     useShoppingList();
   const [editingKey, setEditingKey] = useState<string | null>(null);
+  const [hideStaples, setHideStaples] = useState(false);
 
   useEffect(() => {
     if (hydrated) clearUnseen();
   }, [hydrated, clearUnseen]);
 
-  const categories = buildCategories(items);
+  useEffect(() => {
+    try {
+      setHideStaples(localStorage.getItem(HIDE_STAPLES_KEY) === "true");
+    } catch {}
+  }, []);
+
+  function toggleHideStaples() {
+    setHideStaples((prev) => {
+      const next = !prev;
+      try { localStorage.setItem(HIDE_STAPLES_KEY, String(next)); } catch {}
+      return next;
+    });
+  }
+
+  const allCategories = buildCategories(items);
+  const categories = hideStaples
+    ? allCategories.filter((c) => c.name !== CONDIMENTE_CATEGORY)
+    : allCategories;
+  const hiddenStaplesCount = hideStaples
+    ? (allCategories.find((c) => c.name === CONDIMENTE_CATEGORY)?.items.length ?? 0)
+    : 0;
   const totalItems = items.length;
   const checkedCount = items.filter((i) => i.checked).length;
+  const visibleItems = categories.flatMap((c) => c.items);
   const progress = totalItems > 0 ? (checkedCount / totalItems) * 100 : 0;
 
   const copyText = categories
@@ -215,7 +240,13 @@ export function ShoppingListClient() {
             <span className="text-sm" style={{ color: "var(--text-muted)" }}>
               <span style={{ color: "var(--text)", fontWeight: 600 }}>{checkedCount}</span>
               {" / "}
-              {totalItems}{" "}
+              {visibleItems.length}
+              {hiddenStaplesCount > 0 && (
+                <span className="text-[11px]" style={{ color: "var(--text-faint)" }}>
+                  {" "}+{hiddenStaplesCount} hidden
+                </span>
+              )}
+              {" "}
               <span
                 className="text-[11px] uppercase tracking-[0.08em]"
                 style={{ color: "var(--text-faint)" }}
@@ -260,7 +291,37 @@ export function ShoppingListClient() {
           </div>
         </div>
 
-        <CopyButton text={copyText} />
+        <div className="flex items-center gap-2">
+          {/* Hide pantry staples toggle */}
+          <button
+            type="button"
+            onClick={toggleHideStaples}
+            className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all"
+            style={
+              hideStaples
+                ? {
+                    background: "rgba(212,120,67,0.1)",
+                    border: "1px solid rgba(212,120,67,0.35)",
+                    color: "var(--accent)",
+                  }
+                : {
+                    background: "var(--surface-raised)",
+                    border: "1px solid var(--border-bright)",
+                    color: "var(--text-muted)",
+                  }
+            }
+          >
+            <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+              {hideStaples ? (
+                <path d="M13 2H3a1 1 0 0 0-1 1v1.5l5 5V14l2-1v-4.5l5-5V3a1 1 0 0 0-1-1Z" />
+              ) : (
+                <path d="M13 2H3a1 1 0 0 0-1 1v1.5l5 5V14l2-1v-4.5l5-5V3a1 1 0 0 0-1-1ZM2 2l12 12" />
+              )}
+            </svg>
+            {hideStaples ? "Staples hidden" : "Hide staples"}
+          </button>
+          <CopyButton text={copyText} />
+        </div>
       </div>
 
       {/* Category sections */}

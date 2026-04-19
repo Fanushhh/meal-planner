@@ -82,16 +82,13 @@ export function useShoppingList() {
 
   const addItems = useCallback((incoming: AddableItem[]) => {
     const allExpanded = incoming.flatMap(expandIngredient);
-    let next = items;
-    let newCount = 0;
-    for (const item of allExpanded) {
-      const isNew = !next.some(
-        (i) => makeKey(i.name, i.unit) === makeKey(item.name, item.unit)
-      );
-      if (isNew) newCount++;
-      next = aggregateInto(next, item);
-    }
-    setItems(() => {
+    // newCount uses the current items snapshot for badge counting (minor race acceptable)
+    const newCount = allExpanded.filter(
+      (e) => !items.some((i) => makeKey(i.name, i.unit) === makeKey(e.name, e.unit))
+    ).length;
+    setItems((prev) => {
+      let next = prev;
+      for (const item of allExpanded) next = aggregateInto(next, item);
       save(next);
       return next;
     });
@@ -129,6 +126,7 @@ export function useShoppingList() {
       save(next);
       return next;
     });
+    notifyChange();
   }, []);
 
   const toggleChecked = useCallback((name: string, unit: string | null) => {
@@ -148,6 +146,7 @@ export function useShoppingList() {
       save(next);
       return next;
     });
+    notifyChange();
   }, []);
 
   const clearAll = useCallback(() => {
@@ -155,6 +154,9 @@ export function useShoppingList() {
       localStorage.removeItem(STORAGE_KEY);
     } catch {}
     setItems([]);
+    saveUnseen(0);
+    setUnseenCount(0);
+    notifyChange();
   }, []);
 
   const clearUnseen = useCallback(() => {

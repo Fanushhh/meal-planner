@@ -4,7 +4,7 @@ import { useTransition, useState } from "react";
 import { regeneratePlan, getPlanIngredients } from "@/server/actions/meal-plan";
 import { useShoppingList } from "@/hooks/use-shopping-list";
 
-export function DashboardActions() {
+export function DashboardActions({ weekStart }: { weekStart: string }) {
   const [isRegenerating, startRegenerate] = useTransition();
   const [isAddingToList, startAddToList] = useTransition();
   const [listAdded, setListAdded] = useState(false);
@@ -12,13 +12,13 @@ export function DashboardActions() {
 
   function handleRegenerate() {
     startRegenerate(async () => {
-      await regeneratePlan();
+      await regeneratePlan(weekStart);
     });
   }
 
   function handleAddToList() {
     startAddToList(async () => {
-      const { items } = await getPlanIngredients();
+      const { items } = await getPlanIngredients(weekStart);
       if (items.length > 0) {
         addItems(items);
         setListAdded(true);

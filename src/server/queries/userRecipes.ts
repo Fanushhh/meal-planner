@@ -26,6 +26,7 @@ function parseRecipe(recipe: UserRecipe): ParsedUserRecipe {
 export type RecipeInput = {
   name: string;
   description?: string | null;
+  mealType?: string;
   servings: number;
   prepTimeMin?: number | null;
   cookTimeMin?: number | null;
@@ -64,6 +65,7 @@ export async function createUserRecipe(
     userId,
     name: data.name,
     description: data.description ?? null,
+    mealType: data.mealType ?? "lunch",
     servings: data.servings,
     prepTimeMin: data.prepTimeMin ?? null,
     cookTimeMin: data.cookTimeMin ?? null,
@@ -90,6 +92,7 @@ export async function updateUserRecipe(
     .set({
       name: data.name,
       description: data.description ?? null,
+      mealType: data.mealType ?? "lunch",
       servings: data.servings,
       prepTimeMin: data.prepTimeMin ?? null,
       cookTimeMin: data.cookTimeMin ?? null,

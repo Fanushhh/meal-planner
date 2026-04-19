@@ -65,6 +65,7 @@ export default async function RecipePage({ params }: Props) {
               source="meal"
               recipeId={meal.id}
               mealType={meal.mealType ?? "lunch"}
+              weekStart={weekStart}
               weekDays={weekDays}
               todayIndex={todayIndex}
               weekSlots={weekSlots}

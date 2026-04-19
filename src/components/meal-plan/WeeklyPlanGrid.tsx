@@ -9,6 +9,7 @@ import type { WeeklyPlanWithMeals } from "@/server/queries/plans";
 interface WeeklyPlanGridProps {
   plan: WeeklyPlanWithMeals;
   todayIndex: number;
+  weekStart: string;
 }
 
 const DAYS = [0, 1, 2, 3, 4, 5, 6];
@@ -19,7 +20,7 @@ const TODAY_RAIL      = "1px solid rgba(212, 120, 67, 0.13)";
 const TODAY_CAP_TOP   = "2px solid rgba(212, 120, 67, 0.55)";
 const TODAY_CAP_BTM   = "1px solid rgba(212, 120, 67, 0.13)";
 
-export function WeeklyPlanGrid({ plan, todayIndex }: WeeklyPlanGridProps) {
+export function WeeklyPlanGrid({ plan, todayIndex, weekStart }: WeeklyPlanGridProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -82,7 +83,7 @@ export function WeeklyPlanGrid({ plan, todayIndex }: WeeklyPlanGridProps) {
                   fontStyle: isToday ? "italic" : "normal",
                 }}
               >
-                {getDateForDay(day)}
+                {getDateForDay(day, weekStart)}
               </p>
             </div>
           );
@@ -191,13 +192,8 @@ export function WeeklyPlanGrid({ plan, todayIndex }: WeeklyPlanGridProps) {
   );
 }
 
-function getDateForDay(dayIndex: number): number {
-  const now = new Date();
-  const dow = now.getUTCDay();
-  const mondayOffset = dow === 0 ? -6 : 1 - dow;
-  const monday = new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + mondayOffset)
-  );
+function getDateForDay(dayIndex: number, weekStart: string): number {
+  const monday = new Date(weekStart + "T00:00:00Z");
   monday.setUTCDate(monday.getUTCDate() + dayIndex);
   return monday.getUTCDate();
 }

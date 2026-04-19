@@ -4,7 +4,7 @@ import { eq, and } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 import type { WeeklyPlan } from "@/server/db/schema";
 
-const now = () => Math.floor(Date.now() / 1000);
+const now = () => Date.now();
 
 export type PlanMealDisplay = {
   id: string;

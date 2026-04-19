@@ -2,7 +2,11 @@
 
 import { useState, useTransition, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { addMealToPlanAction, addUserRecipeToPlanAction } from "@/server/actions/meal-plan";
+import {
+  addMealToPlanAction,
+  addUserRecipeToPlanAction,
+  getWeekSlotsAction,
+} from "@/server/actions/meal-plan";
 import type { WeekSlot } from "@/server/queries/plans";
 
 const MEAL_TYPE_LABELS: Record<string, string> = {
@@ -17,9 +21,26 @@ const ROW_BAR_COLORS: Record<string, string> = {
   dinner: "#7B95C4",
 };
 
+const DAY_SHORT = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
 function getAllowedTypes(mealType: string): string[] {
   if (mealType === "lunch" || mealType === "dinner") return ["lunch", "dinner"];
   return [mealType];
+}
+
+function getNextWeekStart(weekStart: string): string {
+  const d = new Date(weekStart + "T00:00:00Z");
+  d.setUTCDate(d.getUTCDate() + 7);
+  return d.toISOString().slice(0, 10);
+}
+
+function buildWeekDays(weekStart: string): string[] {
+  const d = new Date(weekStart + "T00:00:00Z");
+  return Array.from({ length: 7 }, (_, i) => {
+    const day = new Date(d);
+    day.setUTCDate(day.getUTCDate() + i);
+    return `${DAY_SHORT[i]} ${day.getUTCDate()}`;
+  });
 }
 
 type CellState =
@@ -29,11 +50,13 @@ type CellState =
   | { kind: "other"; name: string };
 
 type ConflictKey = `${number}-${string}`;
+type SelectedWeek = "this" | "next";
 
 interface Props {
   source: "meal" | "userRecipe";
   recipeId: string;
   mealType: string;
+  weekStart: string;
   weekDays: string[];
   todayIndex: number;
   weekSlots: WeekSlot[];
@@ -43,22 +66,32 @@ export function AddToPlanWidget({
   source,
   recipeId,
   mealType,
+  weekStart,
   weekDays,
   todayIndex,
   weekSlots,
 }: Props) {
   const [open, setOpen] = useState(false);
-  const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
   const [mounted, setMounted] = useState(false);
-  const [localSlots, setLocalSlots] = useState<WeekSlot[]>(weekSlots);
+  const [selectedWeek, setSelectedWeek] = useState<SelectedWeek>("this");
+  const [localThisWeekSlots, setLocalThisWeekSlots] = useState<WeekSlot[]>(weekSlots);
+  const [nextWeekSlots, setNextWeekSlots] = useState<WeekSlot[] | null>(null);
+  const [loadingNextWeek, setLoadingNextWeek] = useState(false);
   const [pendingKey, setPendingKey] = useState<ConflictKey | null>(null);
   const [confirmKey, setConfirmKey] = useState<ConflictKey | null>(null);
   const [isPending, startTransition] = useTransition();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
+  const nextWeekStart = getNextWeekStart(weekStart);
+  const nextWeekDays = buildWeekDays(nextWeekStart);
+
+  const effectiveWeekStart = selectedWeek === "this" ? weekStart : nextWeekStart;
+  const effectiveWeekDays = selectedWeek === "this" ? weekDays : nextWeekDays;
+  const effectiveTodayIndex = selectedWeek === "this" ? todayIndex : -1;
+  const effectiveSlots = selectedWeek === "this" ? localThisWeekSlots : (nextWeekSlots ?? []);
+
   useEffect(() => setMounted(true), []);
 
-  // Close on Escape key
   useEffect(() => {
     if (!open) return;
     function onKey(e: KeyboardEvent) {
@@ -68,22 +101,31 @@ export function AddToPlanWidget({
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
-  const allowedTypes = getAllowedTypes(mealType);
-
-  function handleOpen() {
-    if (buttonRef.current) {
-      setAnchorRect(buttonRef.current.getBoundingClientRect());
+  async function handleSelectNextWeek() {
+    setSelectedWeek("next");
+    setConfirmKey(null);
+    if (nextWeekSlots === null && !loadingNextWeek) {
+      setLoadingNextWeek(true);
+      const slots = await getWeekSlotsAction(nextWeekStart);
+      setNextWeekSlots(slots);
+      setLoadingNextWeek(false);
     }
-    setOpen(true);
   }
+
+  function handleSelectThisWeek() {
+    setSelectedWeek("this");
+    setConfirmKey(null);
+  }
+
+  const allowedTypes = getAllowedTypes(mealType);
 
   function slotKey(day: number, type: string): ConflictKey {
     return `${day}-${type}`;
   }
 
   function cellState(day: number, type: string): CellState {
-    if (day < todayIndex) return { kind: "past" };
-    const existing = localSlots.find(
+    if (day < effectiveTodayIndex) return { kind: "past" };
+    const existing = effectiveSlots.find(
       (s) => s.dayOfWeek === day && s.mealType === type
     );
     if (!existing) return { kind: "empty" };
@@ -101,25 +143,28 @@ export function AddToPlanWidget({
     startTransition(async () => {
       const result =
         source === "meal"
-          ? await addMealToPlanAction(recipeId, day, type)
-          : await addUserRecipeToPlanAction(recipeId, day, type);
+          ? await addMealToPlanAction(recipeId, day, type, effectiveWeekStart)
+          : await addUserRecipeToPlanAction(recipeId, day, type, effectiveWeekStart);
 
       if ("success" in result) {
-        setLocalSlots((prev) => {
-          const filtered = prev.filter(
-            (s) => !(s.dayOfWeek === day && s.mealType === type)
-          );
-          return [
-            ...filtered,
-            {
-              dayOfWeek: day,
-              mealType: type,
-              mealName: "",
-              mealId: source === "meal" ? recipeId : null,
-              userRecipeId: source === "userRecipe" ? recipeId : null,
-            },
-          ];
-        });
+        const newSlot: WeekSlot = {
+          dayOfWeek: day,
+          mealType: type,
+          mealName: "",
+          mealId: source === "meal" ? recipeId : null,
+          userRecipeId: source === "userRecipe" ? recipeId : null,
+        };
+        if (selectedWeek === "this") {
+          setLocalThisWeekSlots((prev) => [
+            ...prev.filter((s) => !(s.dayOfWeek === day && s.mealType === type)),
+            newSlot,
+          ]);
+        } else {
+          setNextWeekSlots((prev) => [
+            ...(prev ?? []).filter((s) => !(s.dayOfWeek === day && s.mealType === type)),
+            newSlot,
+          ]);
+        }
         setConfirmKey(null);
       }
       setPendingKey(null);
@@ -159,14 +204,39 @@ export function AddToPlanWidget({
           boxShadow: "0 24px 64px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.05) inset",
         }}
       >
-        {/* Header */}
-        <div className="mb-4 flex items-center justify-between">
-          <span
-            className="text-[11px] font-semibold uppercase tracking-[0.12em]"
-            style={{ color: "var(--text-faint)" }}
+        {/* Header row */}
+        <div className="mb-4 flex items-center justify-between gap-4">
+          {/* Week tabs */}
+          <div
+            className="flex items-center rounded-lg p-0.5"
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--border-subtle)" }}
           >
-            Add to week
-          </span>
+            <button
+              type="button"
+              onClick={handleSelectThisWeek}
+              className="rounded-md px-3 py-1 text-[11px] font-semibold transition-all"
+              style={
+                selectedWeek === "this"
+                  ? { background: "var(--surface-raised)", color: "var(--text)", boxShadow: "0 1px 3px rgba(0,0,0,0.3)" }
+                  : { color: "var(--text-faint)" }
+              }
+            >
+              This week
+            </button>
+            <button
+              type="button"
+              onClick={handleSelectNextWeek}
+              className="rounded-md px-3 py-1 text-[11px] font-semibold transition-all"
+              style={
+                selectedWeek === "next"
+                  ? { background: "var(--surface-raised)", color: "var(--text)", boxShadow: "0 1px 3px rgba(0,0,0,0.3)" }
+                  : { color: "var(--text-faint)" }
+              }
+            >
+              Next week
+            </button>
+          </div>
+
           <button
             type="button"
             onClick={() => setOpen(false)}
@@ -182,74 +252,91 @@ export function AddToPlanWidget({
 
         {/* Grid */}
         <div className="overflow-x-auto">
-          <table className="w-full table-fixed border-collapse" style={{ minWidth: 660 }}>
-            <thead>
-              <tr>
-                {/* Fixed label column */}
-                <th className="w-[80px]" />
-                {weekDays.map((label, i) => {
-                  const isToday = i === todayIndex;
-                  const isPast = i < todayIndex;
-                  return (
-                    <th
-                      key={i}
-                      className={`pb-3 text-center text-xs font-semibold ${isPast ? "w-[32px]" : "w-[82px]"}`}
-                      style={{
-                        color: isToday ? "var(--accent)" : "var(--text-muted)",
-                        opacity: isPast ? 0.35 : 1,
-                      }}
-                    >
-                      {isPast ? null : label}
-                      {isToday && (
-                        <span
-                          className="mx-auto mt-1 block h-1 w-1 rounded-full"
-                          style={{ background: "var(--accent)" }}
-                        />
-                      )}
-                    </th>
-                  );
-                })}
-              </tr>
-            </thead>
-            <tbody>
-              {allowedTypes.map((type) => (
-                <tr key={type}>
-                  <td className="py-1.5 pr-3">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="h-3.5 w-0.5 rounded-full"
-                        style={{ background: ROW_BAR_COLORS[type] ?? "var(--border)" }}
-                      />
-                      <span
-                        className="text-xs font-medium"
-                        style={{ color: "var(--text-faint)" }}
-                      >
-                        {MEAL_TYPE_LABELS[type]}
-                      </span>
-                    </div>
-                  </td>
-                  {weekDays.map((_, dayIndex) => {
-                    const state = cellState(dayIndex, type);
-                    const key = slotKey(dayIndex, type);
-                    const isConfirming = confirmKey === key;
-                    const isThisPending = pendingKey === key;
+          {loadingNextWeek && selectedWeek === "next" ? (
+            <div className="flex h-32 items-center justify-center">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 10 10"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                className="animate-spin"
+                style={{ color: "var(--accent)" }}
+              >
+                <path d="M5 1a4 4 0 1 1-4 4" />
+              </svg>
+            </div>
+          ) : (
+            <table className="w-full table-fixed border-collapse" style={{ minWidth: 660 }}>
+              <thead>
+                <tr>
+                  <th className="w-[80px]" />
+                  {effectiveWeekDays.map((label, i) => {
+                    const isToday = selectedWeek === "this" && i === todayIndex;
+                    const isPast = i < effectiveTodayIndex;
                     return (
-                      <td key={dayIndex} className={`h-[72px] align-top ${cellState(dayIndex, type).kind === "past" ? "px-0.5 py-1" : "px-1 py-1.5"}`}>
-                        <Cell
-                          state={state}
-                          isConfirming={isConfirming}
-                          isPending={isThisPending}
-                          onCellClick={() => handleCellClick(dayIndex, type)}
-                          onConfirm={() => doAdd(dayIndex, type)}
-                          onCancelConfirm={() => setConfirmKey(null)}
-                        />
-                      </td>
+                      <th
+                        key={i}
+                        className={`pb-3 text-center text-xs font-semibold ${isPast ? "w-[32px]" : "w-[82px]"}`}
+                        style={{
+                          color: isToday ? "var(--accent)" : "var(--text-muted)",
+                          opacity: isPast ? 0.35 : 1,
+                        }}
+                      >
+                        {isPast ? null : label}
+                        {isToday && (
+                          <span
+                            className="mx-auto mt-1 block h-1 w-1 rounded-full"
+                            style={{ background: "var(--accent)" }}
+                          />
+                        )}
+                      </th>
                     );
                   })}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {allowedTypes.map((type) => (
+                  <tr key={type}>
+                    <td className="py-1.5 pr-3">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="h-3.5 w-0.5 rounded-full"
+                          style={{ background: ROW_BAR_COLORS[type] ?? "var(--border)" }}
+                        />
+                        <span
+                          className="text-xs font-medium"
+                          style={{ color: "var(--text-faint)" }}
+                        >
+                          {MEAL_TYPE_LABELS[type]}
+                        </span>
+                      </div>
+                    </td>
+                    {effectiveWeekDays.map((_, dayIndex) => {
+                      const state = cellState(dayIndex, type);
+                      const key = slotKey(dayIndex, type);
+                      const isConfirming = confirmKey === key;
+                      const isThisPending = pendingKey === key;
+                      return (
+                        <td key={dayIndex} className={`h-[72px] align-top ${state.kind === "past" ? "px-0.5 py-1" : "px-1 py-1.5"}`}>
+                          <Cell
+                            state={state}
+                            isConfirming={isConfirming}
+                            isPending={isThisPending}
+                            onCellClick={() => handleCellClick(dayIndex, type)}
+                            onConfirm={() => doAdd(dayIndex, type)}
+                            onCancelConfirm={() => setConfirmKey(null)}
+                          />
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </>
@@ -260,7 +347,7 @@ export function AddToPlanWidget({
       <button
         ref={buttonRef}
         type="button"
-        onClick={handleOpen}
+        onClick={() => setOpen(true)}
         className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all hover:opacity-90"
         style={{ background: "var(--accent)", color: "#0D0E11" }}
       >
@@ -343,7 +430,6 @@ function Cell({
         className={`${CELL_H} flex w-full overflow-hidden rounded-lg`}
         style={{ border: "1px solid rgba(212,120,67,0.35)" }}
       >
-        {/* Confirm half */}
         <button
           type="button"
           onClick={onConfirm}
@@ -362,10 +448,8 @@ function Cell({
           )}
         </button>
 
-        {/* 1px divider */}
         <div className="w-px" style={{ background: "rgba(212,120,67,0.25)" }} />
 
-        {/* Cancel half */}
         <button
           type="button"
           onClick={onCancelConfirm}
@@ -402,7 +486,6 @@ function Cell({
     );
   }
 
-  // empty
   return (
     <button
       type="button"
