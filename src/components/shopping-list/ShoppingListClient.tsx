@@ -418,7 +418,7 @@ export function ShoppingListClient() {
                           <button
                             type="button"
                             onClick={() => toggleChecked(item.name, item.unit)}
-                            className="flex-1 text-left text-sm leading-snug"
+                            className="flex-1 text-left"
                             style={{
                               color: item.checked ? "var(--text-faint)" : "var(--text-muted)",
                               textDecoration: item.checked ? "line-through" : "none",
@@ -429,7 +429,20 @@ export function ShoppingListClient() {
                               padding: 0,
                             }}
                           >
-                            {formatItem(item)}
+                            <span className="block text-sm leading-snug">{formatItem(item)}</span>
+                            {item.sources && item.sources.length > 0 && (
+                              <span
+                                className="block text-[11px] leading-snug mt-0.5"
+                                style={{
+                                  color: "var(--text-faint)",
+                                  opacity: item.checked ? 0.5 : 0.7,
+                                  textDecoration: "none",
+                                  fontStyle: "italic",
+                                }}
+                              >
+                                {item.sources.join(" · ")}
+                              </span>
+                            )}
                           </button>
 
                           {/* Edit — visible on hover */}

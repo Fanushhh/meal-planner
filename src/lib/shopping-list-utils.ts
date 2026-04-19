@@ -6,6 +6,7 @@ export type ShoppingItem = {
   unit: string | null;
   note?: string;
   checked: boolean;
+  sources?: string[];
 };
 
 export type ShoppingCategory = {
@@ -317,12 +318,17 @@ export function aggregateInto(list: ShoppingItem[], incoming: AddableItem): Shop
   if (idx >= 0) {
     const next = [...list];
     const cur = next[idx];
+    const rawSources = [...(cur.sources ?? []), ...(incoming.sources ?? [])];
+    const mergedSources = rawSources.length > 0
+      ? [...new Set(rawSources)]
+      : undefined;
     next[idx] = {
       ...cur,
       quantity:
         cur.quantity !== null && incoming.quantity !== null
           ? cur.quantity + incoming.quantity
           : cur.quantity ?? incoming.quantity,
+      sources: mergedSources,
     };
     return next;
   }
@@ -365,7 +371,7 @@ export function expandIngredient(item: AddableItem): AddableItem[] {
       // Drop fragments that are pure prep instructions (e.g. "ras", "taiat cubulete").
       return parts
         .filter((part) => part && !DISCARD_PREP_RE.test(part))
-        .map((part) => ({ name: part, quantity: null, unit: null }));
+        .map((part) => ({ name: part, quantity: null, unit: null, ...(item.sources ? { sources: item.sources } : {}) }));
     }
   }
 

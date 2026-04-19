@@ -41,6 +41,7 @@ export default async function RecipePage({ params }: Props) {
     quantity: ing.quantity !== null ? ing.quantity * scale : null,
     unit: ing.unit ?? null,
     note: ing.note,
+    sources: [meal.name],
   }));
 
   return (

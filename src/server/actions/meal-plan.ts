@@ -155,6 +155,7 @@ export async function getPlanIngredients(weekStart?: string): Promise<PlanIngred
         quantity: ing.quantity !== null ? Math.round(ing.quantity * scale * 100) / 100 : null,
         unit: ing.unit ?? null,
         note: ing.note,
+        sources: [row.name],
       });
     }
   }
