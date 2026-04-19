@@ -7,9 +7,10 @@ import { deleteRecipeAction } from "@/server/actions/userRecipes";
 interface MyRecipeDeleteButtonProps {
   id: string;
   label: string;
+  variant?: "btn" | "link";
 }
 
-export function MyRecipeDeleteButton({ id, label }: MyRecipeDeleteButtonProps) {
+export function MyRecipeDeleteButton({ id, label, variant = "btn" }: MyRecipeDeleteButtonProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -26,8 +27,18 @@ export function MyRecipeDeleteButton({ id, label }: MyRecipeDeleteButtonProps) {
       type="button"
       onClick={handleDelete}
       disabled={isPending}
-      className="rounded-lg px-3 py-1.5 text-sm font-medium transition-colors hover:bg-red-500/10 disabled:opacity-50"
-      style={{ color: "#f87171", border: "1px solid rgba(239,68,68,0.25)" }}
+      className={variant === "btn" ? "btn btn-ghost" : undefined}
+      style={variant === "link" ? {
+        background: "none",
+        border: "none",
+        fontFamily: "var(--font-jetbrains, monospace)",
+        fontSize: 10,
+        letterSpacing: ".14em",
+        textTransform: "uppercase",
+        color: "var(--ink-3)",
+        cursor: "pointer",
+        padding: 0,
+      } : undefined}
     >
       {label}
     </button>

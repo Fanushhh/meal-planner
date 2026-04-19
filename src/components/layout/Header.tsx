@@ -10,6 +10,7 @@ export async function Header() {
       }}
     >
       <div
+        className="header-outer"
         style={{
           maxWidth: 1400,
           margin: "0 auto",
@@ -32,9 +33,10 @@ export async function Header() {
           display: "flex",
           alignItems: "baseline",
           gap: 12,
+          whiteSpace: "nowrap",
         }}>
           La Cucina
-          <span style={{
+          <span className="header-tagline" style={{
             fontFamily: "var(--font-jetbrains, monospace)",
             fontSize: 9,
             letterSpacing: ".22em",
@@ -53,7 +55,7 @@ export async function Header() {
             Recipes
           </Link>
 
-          <ShoppingNavLink label="Market List" />
+          <ShoppingNavLink label="Market List" hideLabelOnMobile />
 
           <Link
             href="/settings"

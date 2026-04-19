@@ -88,7 +88,7 @@ export function MyRecipesClient({ recipes, meals }: Props) {
   return (
     <div>
       {/* ── Filters ── */}
-      <div style={{
+      <div className="recipes-filter-grid" style={{
         display: "grid",
         gridTemplateColumns: "1.5fr 1fr 1fr",
         gap: 28,
@@ -200,7 +200,7 @@ export function MyRecipesClient({ recipes, meals }: Props) {
 
       {/* Recipe grid */}
       {hasResults && (
-        <div style={{
+        <div className="recipes-grid" style={{
           display: "grid",
           gridTemplateColumns: "repeat(2, 1fr)",
           gap: "1px",
@@ -276,7 +276,7 @@ export function MyRecipesClient({ recipes, meals }: Props) {
                   >
                     Edit
                   </Link>
-                  <MyRecipeDeleteButton id={recipe.id} label="Delete" />
+                  <MyRecipeDeleteButton id={recipe.id} label="Delete" variant="link" />
                 </div>
               </div>
             );

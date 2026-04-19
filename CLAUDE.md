@@ -110,7 +110,7 @@ Quantities added via `IngredientsPanel` are always **scaled** (`numPeople / meal
 
 **Form style** — recipe editor (`RecipeEditor.tsx`) uses flat `FormSection` sections: Fraunces italic 20px label + small-caps hint + `.rule` divider, then content. Inputs have bottom-border only (`border: 0; border-bottom: 1px solid var(--rule)`), no background box. Unit field is a `<select>` dropdown. Ingredient rows use a 5-column grid (`28px 90px 110px 1fr 30px`) with sequential 01/02 numbering in JetBrains Mono. Cooking steps use Roman numeral prefixes in Fraunces italic accent color. Save button is in the top header row (left: back link, right: save), not at the bottom.
 
-**Header** — `src/components/layout/Header.tsx` shows "La Cucina — EST. MCMXCII" wordmark and nav links (Recipes / Market List / gear icon). Uses `.nav-link` CSS class for hover styling — no inline event handlers (Server Component).
+**Header** — `src/components/layout/Header.tsx` shows "La Cucina — EST. MCMXCII" wordmark and nav links (Recipes / Market List / gear icon). Uses `.nav-link` CSS class for hover styling — no inline event handlers (Server Component). On mobile (≤640px): tagline hidden (`.header-tagline`), "Market List" label hidden (`.header-nav-text`) and replaced by a shopping bag SVG icon (`.header-shopping-icon`) that always shows. The badge rendered by `ShoppingNavLink` uses fully inline styles (not Tailwind utilities) to guarantee positioning. Wordmark has `white-space: nowrap` to prevent wrapping.
 
 **Settings page** — `src/app/(app)/settings/page.tsx` has a prominent account identity card: monogram avatar, "Signed in as" eyebrow, email, and sign-out button. This sits above the preferences section.
 
@@ -141,11 +141,21 @@ Both use `useTransition`; each disables the other while in-flight.
 ### Meal Card — Randomize & Remove
 Any Server Action that accepts a client-supplied `planId` must verify ownership: call `getPlanForWeek(session.user.id, weekStart)` and confirm `plan.id === planId` before mutating.
 
-Each meal card on the dashboard has a three-dot `⋮` button (visible on hover) that opens a small dropdown with two options:
+Each meal card on the dashboard has a three-dot `⋮` button that opens a small dropdown with two options:
 - **Randomize** — replaces the slot with a different meal via the `rerollMeal` action.
 - **Remove** — deletes the planned meal slot via `removePlannedMealAction` → `removePlannedMeal` query (includes a `userId` ownership check before deleting).
 
-`src/components/meal-plan/MealCardMenu.tsx` is the client component handling this.
+`src/components/meal-plan/MealCardMenu.tsx` is the client component handling this. The button has no inline `opacity: 0` — visibility is controlled entirely by the `.slot-tools` container (CSS `.slot-surface .slot-tools { opacity: 0 }`, shown on hover/focus-within). On mobile, `.slot-tools { opacity: 1 !important }` overrides this so the button is always visible (touch devices have no hover). The mobile list view (`plan-mobile-list`) also renders `MealCardMenu` inline next to each meal name link.
+
+### Mobile Responsiveness
+All pages are responsive at ≤640px via CSS class hooks and `@media (max-width: 640px)` rules in `globals.css`. The pattern: add a className to the element, then override its styles in the media query with `!important`. Never use Tailwind utilities for responsive layout — use the CSS class hook pattern instead so Server Components can participate.
+
+**Class hooks by page:**
+- **Header** — `.header-outer` (padding), `.header-tagline` (hide tagline), `.header-nav-text` (hide nav labels), `.header-shopping-icon` (show bag icon)
+- **Dashboard** — `.dash-pad` (padding), `.dash-nav-row` / `.dash-nav-left` / `.dash-nav-center` / `.dash-actions-wrap` (nav row layout), `.dash-grid-pad` (grid padding), `.dash-footer` (hide), `.dash-btn-long` / `.dash-btn-short` (button label swap), `.plan-grid-scroll` (hide desktop grid), `.plan-mobile-list` (show vertical list), `.slot-tools` (always visible)
+- **My Recipes** — `.recipes-pad` (padding), `.recipes-header` (stack title+button), `.recipes-filter-grid` (single column filters), `.recipes-grid` (single column cards)
+- **Recipe detail** (`/meals/[id]`, `/my-recipes/[id]`) — `.recipe-pad` (padding), `.recipe-back-row` (stack back+actions), `.recipe-meta-strip` (2×2 grid), `.recipe-two-col` (single column ingredients+method)
+- **Settings** — `.settings-pad` (padding), `.settings-account-row` (stack email+signout)
 
 ### Adding Recipes
 Recipes are added through My Recipes (`/my-recipes/new`). Each recipe has: name, description, servings, prep time, cook time, meal type, ingredients (with quantity/unit/name/note), and step-by-step instructions. No cuisine or dietary tag.

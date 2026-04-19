@@ -19,8 +19,8 @@ export default async function MyRecipesPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--paper)" }}>
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "52px 40px 0" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 32 }}>
+      <div className="recipes-pad" style={{ maxWidth: 1080, margin: "0 auto", padding: "52px 40px 0" }}>
+        <div className="recipes-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 32 }}>
           <div>
             <div style={{ textAlign: "left", marginBottom: 4 }}>
               <span style={{
@@ -75,7 +75,7 @@ export default async function MyRecipesPage() {
         <div style={{ height: 1, background: "var(--rule)", marginBottom: 32 }} />
       </div>
 
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 40px 80px" }}>
+      <div className="recipes-pad" style={{ maxWidth: 1080, margin: "0 auto", padding: "0 40px 80px" }}>
         <MyRecipesClient recipes={recipes} meals={meals} />
       </div>
     </div>

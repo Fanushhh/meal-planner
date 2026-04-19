@@ -53,11 +53,9 @@ export function MealCardMenu({ planId, dayOfWeek, mealType, mealId }: MealCardMe
           color: "var(--ink-2)",
           background: "rgba(251, 245, 231, 0.92)",
           cursor: "pointer",
-          opacity: 0,
-          transition: "opacity .15s, border-color .15s",
+          transition: "border-color .15s",
           flexShrink: 0,
         }}
-        className="group-hover:opacity-100"
       >
         {isPending ? (
           <svg style={{ width: 11, height: 11, animation: "spin .6s linear infinite" }} viewBox="0 0 24 24" fill="none">

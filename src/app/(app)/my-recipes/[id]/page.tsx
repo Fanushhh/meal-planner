@@ -55,10 +55,10 @@ export default async function MyRecipeDetailPage({ params }: Props) {
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--paper)" }}>
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "48px 56px 100px" }}>
+      <div className="recipe-pad" style={{ maxWidth: 1080, margin: "0 auto", padding: "48px 56px 100px" }}>
 
         {/* Back link + actions row */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
+        <div className="recipe-back-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
           <Link
             href="/my-recipes"
             style={{
@@ -86,20 +86,7 @@ export default async function MyRecipeDetailPage({ params }: Props) {
               todayIndex={todayIndex}
               weekSlots={weekSlots}
             />
-            <Link
-              href={`/my-recipes/${recipe.id}/edit`}
-              style={{
-                border: "1px solid var(--rule)",
-                padding: "8px 14px",
-                fontFamily: "var(--font-jetbrains, monospace)",
-                fontSize: 10,
-                letterSpacing: ".16em",
-                textTransform: "uppercase",
-                color: "var(--ink-2)",
-                textDecoration: "none",
-                transition: "all .15s",
-              }}
-            >
+            <Link href={`/my-recipes/${recipe.id}/edit`} className="btn btn-ghost">
               Edit
             </Link>
             <MyRecipeDeleteButton id={recipe.id} label="Delete" />
@@ -158,7 +145,7 @@ export default async function MyRecipeDetailPage({ params }: Props) {
           borderBottom: "1px solid var(--rule)",
           padding: "18px 0",
           marginBottom: 52,
-        }}>
+        }} className="recipe-meta-strip">
           {[
             { k: "Time",        v: totalTime > 0 ? `${totalTime} min` : "—" },
             { k: "Course",      v: (recipe.mealType ?? "lunch")[0].toUpperCase() + (recipe.mealType ?? "lunch").slice(1) },
@@ -194,7 +181,7 @@ export default async function MyRecipeDetailPage({ params }: Props) {
         </div>
 
         {/* Two-column: ingredients + instructions */}
-        <div style={{ display: "grid", gridTemplateColumns: "0.9fr 1.4fr", gap: 72 }}>
+        <div className="recipe-two-col" style={{ display: "grid", gridTemplateColumns: "0.9fr 1.4fr", gap: 72 }}>
 
           <div>
             <div style={{

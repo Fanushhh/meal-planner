@@ -63,7 +63,7 @@ export default async function DashboardPage({
       </Suspense>
 
       {/* ── Cookbook header banner ── */}
-      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "52px 40px 0" }}>
+      <div className="dash-pad" style={{ maxWidth: 1400, margin: "0 auto", padding: "52px 40px 0" }}>
         {/* Chapter label */}
         <div style={{ textAlign: "center", marginBottom: 6 }}>
           <span style={{
@@ -99,7 +99,7 @@ export default async function DashboardPage({
         </div>
 
         {/* Week nav + actions row */}
-        <div style={{
+        <div className="dash-nav-row" style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -109,7 +109,7 @@ export default async function DashboardPage({
           marginBottom: 32,
         }}>
           {/* Week navigation */}
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <div className="dash-nav-left" style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <Link
               href={`/dashboard?week=${prevWeek}`}
               style={{
@@ -119,12 +119,13 @@ export default async function DashboardPage({
                 textTransform: "uppercase",
                 color: "var(--ink-2)",
                 textDecoration: "none",
+                flexShrink: 0,
               }}
             >
               ← Prev
             </Link>
 
-            <div style={{ minWidth: 240, textAlign: "center" }}>
+            <div className="dash-nav-center" style={{ minWidth: 240, textAlign: "center" }}>
               <div style={{
                 fontFamily: "var(--font-fraunces, Georgia, serif)",
                 fontSize: 20,
@@ -155,6 +156,7 @@ export default async function DashboardPage({
                 textTransform: "uppercase",
                 color: "var(--ink-2)",
                 textDecoration: "none",
+                flexShrink: 0,
               }}
             >
               Next →
@@ -162,12 +164,12 @@ export default async function DashboardPage({
           </div>
 
           {/* Action buttons */}
-          {plan && <DashboardActions weekStart={weekStart} />}
+          {plan && <div className="dash-actions-wrap" style={{ display: "flex", justifyContent: "flex-end" }}><DashboardActions weekStart={weekStart} /></div>}
         </div>
       </div>
 
       {/* ── Grid ── */}
-      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px 80px" }}>
+      <div className="dash-grid-pad" style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px 80px" }}>
         {plan ? (
           <div style={{
             border: "1px solid var(--rule)",
@@ -202,7 +204,7 @@ export default async function DashboardPage({
         )}
 
         {/* Footer note */}
-        <div style={{
+        <div className="dash-footer" style={{
           display: "flex",
           justifyContent: "space-between",
           padding: "18px 4px 0",

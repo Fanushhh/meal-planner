@@ -8,26 +8,6 @@ interface SettingsFormProps {
   initialNumPeople: number;
 }
 
-function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section
-      className="rounded-2xl p-6"
-      style={{
-        background: "var(--surface)",
-        border: "1px solid var(--border)",
-      }}
-    >
-      <h2
-        className="mb-5 text-[11px] font-semibold uppercase tracking-[0.13em]"
-        style={{ color: "var(--text-faint)" }}
-      >
-        {title}
-      </h2>
-      {children}
-    </section>
-  );
-}
-
 export function SettingsForm({ initialNumPeople }: SettingsFormProps) {
   const router = useRouter();
   const [numPeople, setNumPeople] = useState(initialNumPeople);
@@ -49,58 +29,91 @@ export function SettingsForm({ initialNumPeople }: SettingsFormProps) {
   }
 
   return (
-    <div className="space-y-5">
-      {/* Number of people */}
-      <SectionCard title="Servings">
-        <p className="mb-4 text-sm" style={{ color: "var(--text-muted)" }}>
+    <div>
+      {/* Servings section */}
+      <div style={{ marginBottom: 36 }}>
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "baseline",
+          marginBottom: 10,
+        }}>
+          <div style={{
+            fontFamily: "var(--font-fraunces, Georgia, serif)",
+            fontSize: 20,
+            fontStyle: "italic",
+            fontWeight: 500,
+            color: "var(--ink)",
+          }}>
+            Servings
+          </div>
+          <div className="small-caps">For ingredient scaling</div>
+        </div>
+        <div className="rule" style={{ marginBottom: 20 }} />
+
+        <p style={{
+          fontFamily: "var(--font-newsreader, Georgia, serif)",
+          fontSize: 15,
+          color: "var(--ink-2)",
+          fontStyle: "italic",
+          marginBottom: 20,
+        }}>
           Ingredient quantities on recipes are scaled to this number.
         </p>
-        <div className="flex items-center gap-5">
+
+        <div style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
           <button
             type="button"
             onClick={() => { setSaved(false); setNumPeople((p) => Math.max(1, p - 1)); }}
-            className="flex h-10 w-10 items-center justify-center rounded-full text-xl font-medium transition-colors"
             style={{
-              background: "var(--surface-raised)",
-              border: "1px solid var(--border)",
-              color: "var(--text-muted)",
+              background: "none",
+              border: "none",
+              fontFamily: "var(--font-jetbrains, monospace)",
+              fontSize: 20,
+              color: "var(--ink-3)",
+              cursor: "pointer",
+              padding: "0 4px",
             }}
-          >
-            −
-          </button>
-          <span
-            className="w-10 text-center text-4xl font-semibold"
-            style={{
-              fontFamily: "var(--font-fraunces, Georgia, serif)",
-              color: "var(--text)",
-            }}
-          >
+          >−</button>
+          <span style={{
+            fontFamily: "var(--font-fraunces, Georgia, serif)",
+            fontSize: 48,
+            fontWeight: 500,
+            color: "var(--ink)",
+            minWidth: 48,
+            textAlign: "center",
+            lineHeight: 1,
+          }}>
             {numPeople}
           </span>
           <button
             type="button"
             onClick={() => { setSaved(false); setNumPeople((p) => Math.min(20, p + 1)); }}
-            className="flex h-10 w-10 items-center justify-center rounded-full text-xl font-medium transition-colors"
             style={{
-              background: "var(--surface-raised)",
-              border: "1px solid var(--border)",
-              color: "var(--text-muted)",
+              background: "none",
+              border: "none",
+              fontFamily: "var(--font-jetbrains, monospace)",
+              fontSize: 20,
+              color: "var(--ink-3)",
+              cursor: "pointer",
+              padding: "0 4px",
             }}
-          >
-            +
-          </button>
+          >+</button>
+          <span className="small-caps">people</span>
         </div>
-      </SectionCard>
+      </div>
 
       {error && (
-        <div
-          className="rounded-xl px-4 py-3 text-sm"
-          style={{
-            background: "rgba(239, 68, 68, 0.08)",
-            border: "1px solid rgba(239, 68, 68, 0.25)",
-            color: "#f87171",
-          }}
-        >
+        <div style={{
+          padding: "12px 16px",
+          border: "1px solid rgba(166,58,31,0.35)",
+          background: "rgba(166,58,31,0.06)",
+          color: "var(--accent)",
+          fontFamily: "var(--font-jetbrains, monospace)",
+          fontSize: 11,
+          letterSpacing: ".1em",
+          marginBottom: 24,
+        }}>
           {error}
         </div>
       )}
@@ -109,26 +122,13 @@ export function SettingsForm({ initialNumPeople }: SettingsFormProps) {
         type="button"
         onClick={handleSave}
         disabled={isPending}
-        className="flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-60"
-        style={{
-          background: saved ? "rgba(45, 212, 191, 0.1)" : "var(--accent)",
-          border: saved ? "1px solid rgba(45, 212, 191, 0.4)" : "1px solid transparent",
-          color: saved ? "#2DD4BF" : "#0D0E11",
-        }}
+        className={saved ? "btn" : "btn btn-primary"}
+        style={saved ? {
+          borderColor: "var(--leaf)",
+          color: "var(--leaf)",
+        } : { opacity: isPending ? 0.6 : 1 }}
       >
-        {isPending ? (
-          <>
-            <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
-            Saving…
-          </>
-        ) : saved ? (
-          "Saved"
-        ) : (
-          "Save changes"
-        )}
+        {isPending ? "Saving…" : saved ? "✓ Saved" : "Save changes"}
       </button>
     </div>
   );

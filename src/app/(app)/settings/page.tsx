@@ -14,128 +14,91 @@ export default async function SettingsPage() {
   const initials = session.user.email[0].toUpperCase();
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg)" }}>
-      {/* Page header */}
-      <div className="mx-auto max-w-[1400px] px-6 pb-8 pt-10">
-        <div className="mb-3 flex items-center gap-2">
-          <span
-            className="text-[11px] font-semibold uppercase tracking-[0.14em]"
-            style={{ color: "var(--text-faint)" }}
-          >
-            Account
-          </span>
-          <span
-            className="inline-block h-px w-8"
-            style={{ background: "var(--border-subtle)" }}
-          />
-          <span
-            className="text-[11px] font-medium uppercase tracking-[0.1em]"
-            style={{ color: "var(--accent)", opacity: 0.85 }}
-          >
-            Preferences
-          </span>
+    <div style={{ minHeight: "100vh", background: "var(--paper)" }}>
+      <div className="settings-pad" style={{ maxWidth: 860, margin: "0 auto", padding: "48px 56px 100px" }}>
+
+        {/* Breadcrumb */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+          <span className="small-caps">Account</span>
+          <span style={{ display: "inline-block", height: 1, width: 32, background: "var(--rule-2)" }} />
+          <span className="small-caps" style={{ color: "var(--accent)" }}>Preferences</span>
         </div>
 
-        <h1
-          className="text-[40px] leading-none"
-          style={{
-            fontFamily: "var(--font-fraunces, Georgia, serif)",
-            fontStyle: "italic",
-            color: "var(--text)",
-          }}
-        >
+        {/* Title */}
+        <h1 style={{
+          fontFamily: "var(--font-fraunces, Georgia, serif)",
+          fontSize: "clamp(36px, 4vw, 56px)",
+          fontWeight: 500,
+          fontStyle: "italic",
+          letterSpacing: "-0.02em",
+          color: "var(--ink)",
+          margin: "0 0 40px",
+        }}>
           Settings
         </h1>
-        <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>
-          Adjust how recipes are scaled for you.
-        </p>
 
-        {/* Gradient rule */}
-        <div
-          className="mt-8 h-px"
-          style={{
-            background:
-              "linear-gradient(to right, var(--border), transparent 70%)",
-          }}
-        />
-      </div>
-
-      {/* Content */}
-      <div className="mx-auto max-w-[1400px] px-6 pb-16">
-        <div className="max-w-2xl space-y-8">
-
-          {/* Account identity card */}
-          <div
-            className="overflow-hidden rounded-2xl"
-            style={{
-              background: "var(--surface)",
-              border: "1px solid var(--border)",
-            }}
-          >
-            {/* Accent top bar */}
-            <div
-              className="h-px w-full"
-              style={{
-                background:
-                  "linear-gradient(to right, var(--accent), rgba(212,120,67,0.2) 55%, transparent)",
-              }}
-            />
-
-            <div className="flex flex-wrap items-center justify-between gap-4 px-4 py-5 sm:px-6">
-              {/* Avatar + email */}
-              <div className="flex min-w-0 items-center gap-4">
-                {/* Monogram avatar */}
-                <div
-                  className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-lg font-semibold"
-                  style={{
-                    background:
-                      "radial-gradient(circle at 35% 35%, rgba(212,120,67,0.22), rgba(212,120,67,0.06))",
-                    border: "1px solid rgba(212,120,67,0.32)",
-                    color: "var(--accent)",
-                    fontFamily: "var(--font-fraunces, Georgia, serif)",
-                    boxShadow:
-                      "0 0 0 4px rgba(212,120,67,0.06), inset 0 1px 0 rgba(255,255,255,0.04)",
-                  }}
-                >
-                  {initials}
-                </div>
-
-                <div>
-                  <p
-                    className="mb-0.5 text-[10px] font-semibold uppercase tracking-[0.16em]"
-                    style={{ color: "var(--text-faint)" }}
-                  >
-                    Signed in as
-                  </p>
-                  <p
-                    className="text-[15px] font-medium leading-snug"
-                    style={{ color: "var(--text)" }}
-                  >
-                    {session.user.email}
-                  </p>
-                </div>
-              </div>
-
-              {/* Sign out */}
-              <form action={logout} className="shrink-0">
-                <button
-                  type="submit"
-                  className="rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all hover:bg-white/5 active:scale-95"
-                  style={{
-                    color: "var(--text-muted)",
-                    border: "1px solid var(--border-bright)",
-                    letterSpacing: "0.02em",
-                  }}
-                >
-                  Sign out
-                </button>
-              </form>
+        {/* Account section */}
+        <div style={{ marginBottom: 36 }}>
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "baseline",
+            marginBottom: 10,
+          }}>
+            <div style={{
+              fontFamily: "var(--font-fraunces, Georgia, serif)",
+              fontSize: 20,
+              fontStyle: "italic",
+              fontWeight: 500,
+              color: "var(--ink)",
+            }}>
+              Your account
             </div>
           </div>
+          <div className="rule" style={{ marginBottom: 20 }} />
 
-          {/* Preferences */}
-          <SettingsForm initialNumPeople={prefs.numPeople} />
+          <div className="settings-account-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+              {/* Monogram */}
+              <div style={{
+                width: 44,
+                height: 44,
+                borderRadius: "50%",
+                background: "radial-gradient(circle at 35% 35%, rgba(166,58,31,0.18), rgba(166,58,31,0.05))",
+                border: "1px solid rgba(166,58,31,0.28)",
+                color: "var(--accent)",
+                fontFamily: "var(--font-fraunces, Georgia, serif)",
+                fontSize: 18,
+                fontWeight: 500,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}>
+                {initials}
+              </div>
+              <div>
+                <div className="small-caps" style={{ marginBottom: 3 }}>Signed in as</div>
+                <div style={{
+                  fontFamily: "var(--font-newsreader, Georgia, serif)",
+                  fontSize: 16,
+                  color: "var(--ink)",
+                }}>
+                  {session.user.email}
+                </div>
+              </div>
+            </div>
+
+            <form action={logout}>
+              <button type="submit" className="btn btn-ghost">
+                Sign out
+              </button>
+            </form>
+          </div>
         </div>
+
+        {/* Preferences */}
+        <SettingsForm initialNumPeople={prefs.numPeople} />
       </div>
     </div>
   );

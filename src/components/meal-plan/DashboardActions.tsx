@@ -76,7 +76,9 @@ export function DashboardActions({ weekStart }: { weekStart: string }) {
         >
           ⟳
         </span>
-        {isRegenerating ? "Rerolling…" : "Reroll the week"}
+        {isRegenerating ? "Rerolling…" : (
+          <><span className="dash-btn-long">Reroll the week</span><span className="dash-btn-short">Reroll</span></>
+        )}
       </button>
 
       {/* Add all to market list */}
@@ -106,9 +108,9 @@ export function DashboardActions({ weekStart }: { weekStart: string }) {
             Adding…
           </>
         ) : listAdded ? (
-          <>✦ Added to list</>
+          <>✦ Added</>
         ) : (
-          <>+ Add all to market list</>
+          <><span className="dash-btn-long">+ Add all to market list</span><span className="dash-btn-short">+ Add to list</span></>
         )}
       </button>
     </div>

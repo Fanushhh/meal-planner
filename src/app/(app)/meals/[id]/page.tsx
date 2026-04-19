@@ -49,10 +49,10 @@ export default async function RecipePage({ params }: Props) {
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--paper)" }}>
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "48px 56px 100px" }}>
+      <div className="recipe-pad" style={{ maxWidth: 1080, margin: "0 auto", padding: "48px 56px 100px" }}>
 
         {/* Back link + action row */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
+        <div className="recipe-back-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
           <Link
             href="/dashboard"
             style={{
@@ -135,7 +135,7 @@ export default async function RecipePage({ params }: Props) {
           borderBottom: "1px solid var(--rule)",
           padding: "18px 0",
           marginBottom: 52,
-        }}>
+        }} className="recipe-meta-strip">
           {[
             { k: "Time",        v: totalTime > 0 ? `${totalTime} min` : "—" },
             { k: "Course",      v: (meal.mealType ?? "lunch")[0].toUpperCase() + (meal.mealType ?? "lunch").slice(1) },
@@ -171,7 +171,7 @@ export default async function RecipePage({ params }: Props) {
         </div>
 
         {/* Two-column: ingredients + instructions */}
-        <div style={{ display: "grid", gridTemplateColumns: "0.9fr 1.4fr", gap: 72 }}>
+        <div className="recipe-two-col" style={{ display: "grid", gridTemplateColumns: "0.9fr 1.4fr", gap: 72 }}>
 
           {/* Ingredients */}
           <div>
