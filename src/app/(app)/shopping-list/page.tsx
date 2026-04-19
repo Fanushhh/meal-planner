@@ -11,50 +11,42 @@ export default async function ShoppingListPage() {
   if (!prefs?.onboardingCompleted) redirect("/onboarding");
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg)" }}>
-      {/* Page header */}
-      <div className="mx-auto max-w-[1400px] px-6 pb-8 pt-10">
-        <div className="mb-3 flex items-center gap-2">
-          <span
-            className="text-[11px] font-semibold uppercase tracking-[0.14em]"
-            style={{ color: "var(--text-faint)" }}
-          >
-            Shopping
-          </span>
-          <span
-            className="inline-block h-px w-8"
-            style={{ background: "var(--border-subtle)" }}
-          />
-          <span
-            className="text-[11px] font-medium uppercase tracking-[0.1em]"
-            style={{ color: "var(--accent)", opacity: 0.85 }}
-          >
-            This week
+    <div style={{ minHeight: "100vh", background: "var(--paper)" }}>
+      {/* Cookbook header */}
+      <div style={{ maxWidth: 920, margin: "0 auto", padding: "52px 40px 0" }}>
+        <div style={{ textAlign: "center", marginBottom: 6 }}>
+          <span style={{
+            fontFamily: "var(--font-fraunces, Georgia, serif)",
+            fontStyle: "italic",
+            fontWeight: 400,
+            color: "var(--ink-3)",
+            fontSize: 14,
+            letterSpacing: ".06em",
+          }}>
+            Chapter II
           </span>
         </div>
 
-        <h1
-          className="text-[40px] leading-none"
-          style={{
-            fontFamily: "var(--font-dm-serif)",
-            fontStyle: "italic",
-            color: "var(--text)",
-          }}
-        >
-          Shopping List
+        <h1 style={{
+          fontFamily: "var(--font-fraunces, Georgia, serif)",
+          textAlign: "center",
+          fontSize: "clamp(48px, 6vw, 72px)",
+          fontWeight: 500,
+          margin: "4px 0 6px",
+          letterSpacing: "-0.02em",
+          fontStyle: "italic",
+          color: "var(--ink)",
+        }}>
+          The Market List
         </h1>
-        <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>
-          Add ingredients from any recipe page.
-        </p>
 
-        <div
-          className="mt-8 h-px"
-          style={{ background: "linear-gradient(to right, var(--border), transparent 70%)" }}
-        />
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <span className="flourish">✦ ❖ ✦</span>
+        </div>
       </div>
 
       {/* List */}
-      <div className="mx-auto max-w-[1400px] px-6 pb-16">
+      <div style={{ maxWidth: 920, margin: "0 auto", padding: "0 40px 80px" }}>
         <ShoppingListClient />
       </div>
     </div>

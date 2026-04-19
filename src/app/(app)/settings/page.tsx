@@ -39,7 +39,7 @@ export default async function SettingsPage() {
         <h1
           className="text-[40px] leading-none"
           style={{
-            fontFamily: "var(--font-dm-serif)",
+            fontFamily: "var(--font-fraunces, Georgia, serif)",
             fontStyle: "italic",
             color: "var(--text)",
           }}
@@ -92,7 +92,7 @@ export default async function SettingsPage() {
                       "radial-gradient(circle at 35% 35%, rgba(212,120,67,0.22), rgba(212,120,67,0.06))",
                     border: "1px solid rgba(212,120,67,0.32)",
                     color: "var(--accent)",
-                    fontFamily: "var(--font-dm-serif)",
+                    fontFamily: "var(--font-fraunces, Georgia, serif)",
                     boxShadow:
                       "0 0 0 4px rgba(212,120,67,0.06), inset 0 1px 0 rgba(255,255,255,0.04)",
                   }}

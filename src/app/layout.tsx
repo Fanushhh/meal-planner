@@ -1,22 +1,32 @@
 import type { Metadata } from "next";
-import { DM_Serif_Display, DM_Sans } from "next/font/google";
+import { Fraunces, Newsreader, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const dmSerif = DM_Serif_Display({
-  variable: "--font-dm-serif",
-  subsets: ["latin", "latin-ext"],
-  weight: "400",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
+  display: "swap",
 });
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
-  subsets: ["latin", "latin-ext"],
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
+  subsets: ["latin"],
   weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Meal Planner",
+  title: "La Cucina — Meal Planner",
   description: "Your personal weekly meal planner",
 };
 
@@ -28,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${dmSerif.variable} ${dmSans.variable} antialiased`}
+        className={`${fraunces.variable} ${newsreader.variable} ${jetbrainsMono.variable} antialiased`}
         suppressHydrationWarning
       >
         {children}

@@ -48,7 +48,7 @@ export default async function VerifyPage({ searchParams }: PageProps) {
         </span>
         <span
           className="text-[17px] leading-none"
-          style={{ fontFamily: "var(--font-dm-serif)", color: "var(--text)" }}
+          style={{ fontFamily: "var(--font-fraunces, Georgia, serif)", color: "var(--text)" }}
         >
           Meal Planner
         </span>
@@ -82,7 +82,7 @@ export default async function VerifyPage({ searchParams }: PageProps) {
             <h1
               className="text-[32px] leading-none"
               style={{
-                fontFamily: "var(--font-dm-serif)",
+                fontFamily: "var(--font-fraunces, Georgia, serif)",
                 fontStyle: "italic",
                 color: "var(--text)",
               }}

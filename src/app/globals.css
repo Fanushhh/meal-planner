@@ -1,47 +1,59 @@
 @import "tailwindcss";
 
 :root {
-  /* Base surfaces */
-  --bg: #0D0E11;
-  --surface: #161820;
-  --surface-raised: #1C1F2A;
-  --border: #252932;
-  --border-subtle: #1B1E27;
-  --border-bright: #353B4E;
+  /* ─── Cream / Editorial palette ─── */
+  --paper:   #f2e9d8;
+  --paper-2: #ece2cd;
+  --paper-3: #e4d8bf;
+  --ink:     #2a2620;
+  --ink-2:   #57503f;
+  --ink-3:   #8a8068;
+  --rule:    #c9bb9b;
+  --rule-2:  #dccfae;
+  --accent:      #a63a1f;
+  --accent-ink:  #7d2912;
+  --leaf:    #4f5c2a;
 
-  /* Text hierarchy */
-  --text: #EBE8E2;
-  --text-muted: #7C8196;
-  --text-faint: #727D92;
+  /* ─── Legacy aliases (kept for existing component code) ─── */
+  --bg:             var(--paper);
+  --surface:        var(--paper-2);
+  --surface-raised: var(--paper-3);
+  --border:         var(--rule);
+  --border-subtle:  var(--rule-2);
+  --border-bright:  var(--rule);
+  --text:           var(--ink);
+  --text-muted:     var(--ink-2);
+  --text-faint:     var(--ink-3);
+  --accent-light:   rgba(166, 58, 31, 0.08);
+  --accent-glow:    0 0 0 3px rgba(166, 58, 31, 0.18);
 
-  /* Primary accent: warm terracotta */
-  --accent: #D47843;
-  --accent-light: rgba(212, 120, 67, 0.12);
-  --accent-glow: 0 0 0 3px rgba(212, 120, 67, 0.18);
+  /* ─── Meal type tokens — for cream backgrounds ─── */
+  --breakfast-color:  #c47a1a;
+  --breakfast-bg:     rgba(196, 122, 26, 0.09);
+  --breakfast-border: rgba(196, 122, 26, 0.22);
 
-  /* Meal type tokens — calibrated for dark backgrounds */
-  --breakfast-color: #F59E0B;
-  --breakfast-bg: rgba(245, 158, 11, 0.07);
-  --breakfast-border: rgba(245, 158, 11, 0.18);
+  --lunch-color:  var(--accent);
+  --lunch-bg:     rgba(166, 58, 31, 0.08);
+  --lunch-border: rgba(166, 58, 31, 0.22);
 
-  --lunch-color: #2DD4BF;
-  --lunch-bg: rgba(45, 212, 191, 0.07);
-  --lunch-border: rgba(45, 212, 191, 0.18);
+  --dinner-color:  #4a6894;
+  --dinner-bg:     rgba(74, 104, 148, 0.08);
+  --dinner-border: rgba(74, 104, 148, 0.22);
 
-  --dinner-color: #A78BFA;
-  --dinner-bg: rgba(167, 139, 250, 0.07);
-  --dinner-border: rgba(167, 139, 250, 0.18);
+  /* ─── Today column highlight ─── */
+  --today-bg:     rgba(166, 58, 31, 0.045);
+  --today-border: rgba(166, 58, 31, 0.38);
 
-  /* Today column highlight */
-  --today-bg: rgba(212, 120, 67, 0.055);
-  --today-border: rgba(212, 120, 67, 0.38);
+  /* ─── Shadow ─── */
+  --shadow: 0 1px 0 rgba(0,0,0,.02), 0 24px 60px -30px rgba(72,52,20,.35);
 }
 
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--text);
-  --font-display: var(--font-dm-serif);
-  --font-sans: var(--font-dm-sans);
+  --font-display: var(--font-fraunces);
+  --font-sans:    var(--font-newsreader);
+  --font-mono:    var(--font-jetbrains);
 }
 
 *,
@@ -58,55 +70,170 @@ html {
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-family: var(--font-newsreader, Georgia, serif);
+  /* Paper grain + warm corner vignettes */
+  background-image:
+    radial-gradient(1200px 800px at 10% 0%,  rgba(200,170,110,.22), transparent 60%),
+    radial-gradient(900px  600px at 100% 100%, rgba(150,90,40,.08),  transparent 55%);
+  background-attachment: fixed, fixed;
 }
 
-/* Thin custom scrollbar */
+/* ─── Typography helpers ─── */
+.font-display { font-family: var(--font-fraunces, Georgia, serif); }
+.font-mono    { font-family: var(--font-jetbrains, monospace); }
+
+.small-caps {
+  font-family: var(--font-jetbrains, monospace);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+/* ─── Cookbook ornaments ─── */
+.flourish {
+  font-family: var(--font-jetbrains, monospace);
+  color: var(--ink-3);
+  font-size: 13px;
+  letter-spacing: .25em;
+}
+
+/* ─── Rule lines ─── */
+.rule        { height: 1px; background: var(--rule); }
+.rule-dashed { border-top: 1px dashed var(--rule); height: 0; }
+.rule-double { height: 4px; background: none; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+
+/* ─── Scrollbar ─── */
 .scroll-x {
   scrollbar-width: thin;
-  scrollbar-color: var(--border-bright) transparent;
+  scrollbar-color: var(--rule) transparent;
 }
-.scroll-x::-webkit-scrollbar {
-  height: 4px;
-}
-.scroll-x::-webkit-scrollbar-track {
-  background: transparent;
-}
-.scroll-x::-webkit-scrollbar-thumb {
-  background: var(--border-bright);
-  border-radius: 2px;
-}
+.scroll-x::-webkit-scrollbar        { height: 4px; }
+.scroll-x::-webkit-scrollbar-track  { background: transparent; }
+.scroll-x::-webkit-scrollbar-thumb  { background: var(--rule); border-radius: 2px; }
 
-/* Meal card entrance */
+/* ─── Reroll crossfade ─── */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(3px); filter: blur(1px); }
+  to   { opacity: 1; transform: none;            filter: none; }
+}
+.fade-in { animation: fade-in .35s ease-out; }
+
+/* ─── Meal card entrance ─── */
 @keyframes card-in {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
 .meal-card-animate {
   animation: card-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Day column staggered entrance */
+/* ─── Day column staggered entrance ─── */
 @keyframes col-in {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
 .day-col-animate {
   animation: col-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: var(--col-delay, 0ms);
 }
 
+/* ─── Ingredient add flash ─── */
+@keyframes ingredient-flash {
+  0%   { background: rgba(166, 58, 31, 0.18); }
+  100% { background: transparent; }
+}
+.ingredient-flash {
+  animation: ingredient-flash 0.9s ease-out;
+}
+
+/* ─── Spin for reroll ─── */
+@keyframes spin-once {
+  to { transform: rotate(360deg); }
+}
+.spin-once { animation: spin-once .6s ease-in-out; display: inline-block; }
+
+/* ─── Toast ─── */
+.toast {
+  position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
+  background: var(--ink); color: var(--paper);
+  padding: 12px 20px;
+  font-family: var(--font-jetbrains, monospace); font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+  box-shadow: 0 12px 30px -10px rgba(0,0,0,.25);
+  z-index: 200;
+  animation: toast-in .25s ease-out;
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* ─── Pill / ghost buttons ─── */
+.btn {
+  border: 1px solid var(--ink);
+  padding: 9px 16px;
+  font-family: var(--font-jetbrains, monospace);
+  font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
+  background: transparent; color: var(--ink);
+  transition: all .15s;
+  display: inline-flex; align-items: center; gap: 8px;
+  cursor: pointer;
+}
+.btn:hover { background: var(--ink); color: var(--paper); }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #fff4e2; }
+.btn-primary:hover { background: var(--accent-ink); border-color: var(--accent-ink); }
+.btn-ghost { border-color: var(--rule); color: var(--ink-2); }
+.btn-ghost:hover { border-color: var(--ink); color: var(--paper); background: var(--ink); }
+
+/* ─── Custom checkbox ─── */
+.xbox {
+  width: 18px; height: 18px; border: 1.5px solid var(--ink-2);
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; background: transparent; transition: all .15s;
+}
+.xbox.on { background: var(--ink); }
+.xbox.on::after { content: '✕'; color: var(--paper); font-size: 12px; font-weight: 700; }
+
+/* ─── Focus ring ─── */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+/* ─── Header nav links ─── */
+.nav-link {
+  font-family: var(--font-jetbrains, monospace);
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  text-decoration: none;
+  padding: 6px 12px;
+  border: 1px solid transparent;
+  transition: all .15s;
+}
+.nav-link:hover {
+  border-color: var(--rule);
+  color: var(--ink);
+}
+
+/* ─── Slot hover surface ─── */
+.slot-surface { background: var(--paper); transition: background-color .2s ease; }
+.slot-surface:hover { background: rgba(255, 250, 235, .55); }
+.slot-surface .slot-tools { opacity: 0; transition: opacity .15s ease; }
+.slot-surface:hover .slot-tools,
+.slot-surface:focus-within .slot-tools { opacity: 1; }
+
+/* ─── Recipe card links ─── */
+.recipe-grid-card {
+  background: var(--paper);
+  display: block;
+  text-decoration: none;
+  transition: background .15s;
+}
+.recipe-grid-card:hover { background: rgba(166, 58, 31, 0.05); }
+
+/* ─── Meal name link hover ─── */
+.meal-name-link {
+  color: var(--ink);
+  text-decoration: none;
+  transition: color .15s;
+}
+.meal-name-link:hover { color: var(--accent-ink); }

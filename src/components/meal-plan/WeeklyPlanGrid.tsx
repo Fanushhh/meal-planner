@@ -13,21 +13,19 @@ interface WeeklyPlanGridProps {
 }
 
 const DAYS = [0, 1, 2, 3, 4, 5, 6];
-
-// Shared today-column visual language — warm accent rails + barely-there wash
-const TODAY_BG        = "rgba(212, 120, 67, 0.045)";
-const TODAY_RAIL      = "1px solid rgba(212, 120, 67, 0.13)";
-const TODAY_CAP_TOP   = "2px solid rgba(212, 120, 67, 0.55)";
-const TODAY_CAP_BTM   = "1px solid rgba(212, 120, 67, 0.13)";
+const SLOT_ORNAMENT: Record<string, string> = {
+  breakfast: "☉",
+  lunch: "☼",
+  dinner: "☾",
+  snack: "✦",
+};
 
 export function WeeklyPlanGrid({ plan, todayIndex, weekStart }: WeeklyPlanGridProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!scrollRef.current) return;
-    // 80px label column + todayIndex * (140px min column + 5px gap)
-    // Subtract 80px so the label column stays visible at the left edge
-    const offset = 80 + todayIndex * 145 - 80;
+    const offset = 170 + todayIndex * 145 - 170;
     scrollRef.current.scrollLeft = Math.max(0, offset);
   }, [todayIndex]);
 
@@ -37,54 +35,66 @@ export function WeeklyPlanGrid({ plan, todayIndex, weekStart }: WeeklyPlanGridPr
   const lastTypeIndex = activeMealTypes.length - 1;
 
   return (
-    <div ref={scrollRef} className="overflow-x-auto scroll-x pb-3">
+    <div ref={scrollRef} className="scroll-x" style={{ overflowX: "auto", paddingBottom: 2 }}>
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "80px repeat(7, minmax(140px, 1fr))",
-          columnGap: "5px",
-          minWidth: "1060px",
+          gridTemplateColumns: "170px repeat(7, minmax(0, 1fr))",
+          background: "var(--paper-2)",
+          width: "100%",
+          overflow: "hidden",
+          minWidth: 1060,
         }}
       >
-        {/* ── Header row ── */}
-        <div />
+        {/* ── Header row: corner + 7 days ── */}
+        <div style={{
+          padding: "14px 16px",
+          borderBottom: "1px solid var(--rule)",
+          borderRight: "1px solid var(--rule)",
+          display: "flex",
+          alignItems: "center",
+        }}>
+          <span style={{ color: "var(--rule)", fontSize: 16 }}>✦</span>
+        </div>
 
         {DAYS.map((day) => {
           const isToday = day === todayIndex;
+          const d = getDateForDay(day, weekStart);
+          const dateObj = new Date(weekStart + "T00:00:00Z");
+          dateObj.setUTCDate(dateObj.getUTCDate() + day);
+          const dateStr = dateObj
+            .toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })
+            .toUpperCase();
+
           return (
             <div
               key={`dh-${day}`}
-              className="pb-3 text-center"
               style={{
-                borderBottom: `2px solid ${isToday ? "var(--accent)" : "var(--border-subtle)"}`,
-                // Today column: accent cap on top + side rails + warm wash + top rounding
-                ...(isToday && {
-                  borderTop: TODAY_CAP_TOP,
-                  borderLeft: TODAY_RAIL,
-                  borderRight: TODAY_RAIL,
-                  background: TODAY_BG,
-                  borderRadius: "6px 6px 0 0",
-                  paddingLeft: "4px",
-                  paddingRight: "4px",
-                }),
+                padding: "14px 16px",
+                borderBottom: "1px solid var(--rule)",
+                borderRight: day === 6 ? "none" : "1px solid var(--rule)",
+                background: isToday ? "rgba(166,58,31,0.04)" : "var(--paper-2)",
+                borderTop: isToday ? "2px solid rgba(166,58,31,0.55)" : "none",
               }}
             >
-              <p
-                className="text-[9px] font-semibold uppercase tracking-[0.16em]"
-                style={{ color: isToday ? "var(--accent)" : "var(--text-faint)" }}
-              >
-                {getDayName(day).slice(0, 3)}
-              </p>
-              <p
-                className="mt-0.5 text-[22px] leading-none"
-                style={{
-                  fontFamily: "var(--font-dm-serif)",
-                  color: isToday ? "var(--text)" : "var(--text-muted)",
-                  fontStyle: isToday ? "italic" : "normal",
-                }}
-              >
-                {getDateForDay(day, weekStart)}
-              </p>
+              <div style={{
+                fontFamily: "var(--font-fraunces, Georgia, serif)",
+                fontSize: 18,
+                fontWeight: 500,
+                letterSpacing: ".01em",
+                color: isToday ? "var(--accent)" : "var(--ink)",
+              }}>
+                {getDayName(day)}
+              </div>
+              <div style={{
+                fontFamily: "var(--font-jetbrains, monospace)",
+                fontSize: 10,
+                color: "var(--ink-3)",
+                marginTop: 2,
+                letterSpacing: ".12em",
+              }}>
+                {dateStr}
+              </div>
             </div>
           );
         })}
@@ -92,53 +102,50 @@ export function WeeklyPlanGrid({ plan, todayIndex, weekStart }: WeeklyPlanGridPr
         {/* ── Meal type rows ── */}
         {activeMealTypes.map((mealType: MealType, typeIndex) => (
           <React.Fragment key={mealType}>
-            {/*
-             * Separator between groups — rendered as per-column cells so the
-             * today column can carry its side rails through without a crossing line.
-             */}
-            {typeIndex > 0 && (
-              <>
-                {/* Label column spacer */}
-                <div style={{ height: "9px" }} />
-
-                {DAYS.map((day) => {
-                  const isToday = day === todayIndex;
-                  return (
-                    <div
-                      key={`sep-${mealType}-${day}`}
-                      style={{
-                        height: "9px",
-                        background: isToday ? TODAY_BG : "transparent",
-                        borderLeft:  isToday ? TODAY_RAIL : "none",
-                        borderRight: isToday ? TODAY_RAIL : "none",
-                        // Non-today columns get the visible divider line
-                        ...(!isToday && {
-                          borderTop: "1px solid var(--border-subtle)",
-                          marginTop: "4px",
-                        }),
-                      }}
-                    />
-                  );
-                })}
-              </>
-            )}
-
-            {/* Row label */}
-            <div
-              className="flex items-center"
-              style={{ paddingTop: typeIndex === 0 ? "6px" : "0" }}
-            >
-              <span
-                className="text-[10px] font-semibold uppercase tracking-[0.12em]"
-                style={{ color: "var(--text-faint)" }}
-              >
+            {/* Row label cell */}
+            <div style={{
+              padding: "20px 14px",
+              borderBottom: typeIndex === lastTypeIndex ? "none" : "1px solid var(--rule)",
+              borderRight: "1px solid var(--rule)",
+              background: "var(--paper-2)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              minWidth: 0,
+              overflow: "hidden",
+            }}>
+              <div style={{
+                fontFamily: "var(--font-fraunces, Georgia, serif)",
+                fontSize: 17,
+                fontWeight: 500,
+                fontStyle: "italic",
+                letterSpacing: "-0.01em",
+                lineHeight: 1.15,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                color: "var(--ink)",
+              }}>
                 {MEAL_TYPE_LABELS[mealType]}
-              </span>
+              </div>
+              <div style={{
+                fontFamily: "var(--font-jetbrains, monospace)",
+                fontSize: 10,
+                color: "var(--ink-3)",
+                letterSpacing: ".1em",
+                marginTop: 4,
+                textTransform: "uppercase",
+              }}>
+                {mealType === "breakfast" ? "morning"
+                  : mealType === "lunch" ? "midday"
+                  : mealType === "dinner" ? "evening"
+                  : "anytime"}
+              </div>
             </div>
 
             {/* Day slots */}
             {DAYS.map((day) => {
-              const isToday   = day === todayIndex;
+              const isToday = day === todayIndex;
               const isLastRow = typeIndex === lastTypeIndex;
               const slot = plan.plannedMeals.find(
                 (pm) => pm.dayOfWeek === day && pm.mealType === mealType
@@ -151,21 +158,10 @@ export function WeeklyPlanGrid({ plan, todayIndex, weekStart }: WeeklyPlanGridPr
                   style={
                     {
                       "--col-delay": `${day * 30}ms`,
-                      height: "110px",
-                      padding: "3px",
-                      marginTop: "6px",
-                      // Today: side rails persist through every row; last row closes the column
-                      ...(isToday
-                        ? {
-                            background: TODAY_BG,
-                            borderLeft:  TODAY_RAIL,
-                            borderRight: TODAY_RAIL,
-                            ...(isLastRow && {
-                              borderBottom: TODAY_CAP_BTM,
-                              borderRadius: "0 0 6px 6px",
-                            }),
-                          }
-                        : {}),
+                      borderRight: day === 6 ? "none" : "1px solid var(--rule)",
+                      borderBottom: isLastRow ? "none" : "1px solid var(--rule)",
+                      background: isToday ? "rgba(166,58,31,0.04)" : "var(--paper)",
+                      minWidth: 0,
                     } as React.CSSProperties
                   }
                 >
@@ -175,12 +171,25 @@ export function WeeklyPlanGrid({ plan, todayIndex, weekStart }: WeeklyPlanGridPr
                       planId={plan.id}
                       dayOfWeek={day}
                       mealType={mealType}
+                      ornament={SLOT_ORNAMENT[mealType] ?? "·"}
                     />
                   ) : (
-                    <div
-                      className="h-full w-full rounded-lg"
-                      style={{ border: "1.5px dashed var(--border-subtle)" }}
-                    />
+                    <div style={{
+                      height: "100%",
+                      minHeight: 130,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}>
+                      <span style={{
+                        fontFamily: "var(--font-fraunces, Georgia, serif)",
+                        fontStyle: "italic",
+                        color: "var(--rule)",
+                        fontSize: 15,
+                      }}>
+                        — empty —
+                      </span>
+                    </div>
                   )}
                 </div>
               );

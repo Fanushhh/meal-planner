@@ -100,17 +100,19 @@ Quantities added via `IngredientsPanel` are always **scaled** (`numPeople / meal
 **`getPlanIngredients()`** in `src/server/actions/meal-plan.ts` counts how many times each meal appears in the weekly plan and multiplies quantities by that occurrence count (on top of the `numPeople / servings` scale), so a recipe appearing 3 times across the week contributes 3× its ingredients to the list.
 
 ### Design System
-Dark "Midnight Pantry" theme. CSS custom properties defined in `src/app/globals.css`. Fonts: `DM Serif Display` (display/headings, `--font-dm-serif`) + `DM Sans` (body, `--font-dm-sans`).
+"La Cucina" editorial/cream theme. CSS custom properties defined in `src/app/globals.css`. Fonts: `Fraunces` (display/headings, `--font-fraunces`) + `Newsreader` (body, `--font-newsreader`) + `JetBrains Mono` (labels/meta, `--font-jetbrains`).
 
-**Color contrast:** `--text-faint` (`#727D92`) passes WCAG AA on `--bg` only. On `--surface` backgrounds (e.g. inside meal cards), use `--text-muted` instead — the lighter surface raises the minimum passing value above what `--text-faint` provides.
+**Palette** — cream paper background (`--paper: #f2e9d8`), dark ink text (`--ink: #2a2620`), terracotta accent (`--accent: #a63a1f`). Old variable names (`--bg`, `--surface`, `--text`, etc.) are kept as legacy aliases in `:root` so existing components continue to work without mass-rewrites.
 
-All `(app)` pages follow the same header pattern: eyebrow breadcrumb (`text-[11px] uppercase tracking-[0.14em]` in `--text-faint` / `--accent`), serif italic `text-[40px]` `h1`, gradient rule (`linear-gradient(to right, var(--border), transparent 70%)`), then content in `max-w-[1400px] px-6`.
+**Design language** — cookbook/editorial aesthetic. Pages use a chapter structure: "Chapter I / The Week Ahead", "Chapter III / The Pantry of Recipes", etc. Ornaments: `✦`, `☉`, `☼`, `☾`. Utility classes: `.btn`, `.btn-primary`, `.btn-ghost`, `.small-caps`, `.flourish`, `.rule`, `.rule-dashed`, `.slot-surface`, `.nav-link`, `.meal-name-link`.
 
-Auth pages (`/login`, `/verify`) and the onboarding page now match the same Midnight Pantry dark theme — centered card with accent top bar, wordmark, and italic serif heading.
+**Buttons** — `.btn` uses JetBrains Mono 11px uppercase with `letter-spacing: .16em`, 1px solid ink border, no border-radius. `.btn-primary` fills with `--accent` and `color: #fff4e2`. `.btn-ghost` uses `--rule` border and `--ink-2` text. The "Add to plan" trigger, "Write a new recipe", and form save buttons all use this class.
 
-**Header** — `src/components/layout/Header.tsx` no longer shows the user's email or the sign-out form. "Settings" text replaced with an SVG gear icon (`aria-label="Settings"`). Email and sign-out live on the Settings page instead.
+**Form style** — recipe editor (`RecipeEditor.tsx`) uses flat `FormSection` sections: Fraunces italic 20px label + small-caps hint + `.rule` divider, then content. Inputs have bottom-border only (`border: 0; border-bottom: 1px solid var(--rule)`), no background box. Unit field is a `<select>` dropdown. Ingredient rows use a 5-column grid (`28px 90px 110px 1fr 30px`) with sequential 01/02 numbering in JetBrains Mono. Cooking steps use Roman numeral prefixes in Fraunces italic accent color. Save button is in the top header row (left: back link, right: save), not at the bottom.
 
-**Settings page** — `src/app/(app)/settings/page.tsx` has a prominent account identity card: monogram avatar with radial gradient + terracotta border, "Signed in as" eyebrow, email, and sign-out button. This sits above the preferences section.
+**Header** — `src/components/layout/Header.tsx` shows "La Cucina — EST. MCMXCII" wordmark and nav links (Recipes / Market List / gear icon). Uses `.nav-link` CSS class for hover styling — no inline event handlers (Server Component).
+
+**Settings page** — `src/app/(app)/settings/page.tsx` has a prominent account identity card: monogram avatar, "Signed in as" eyebrow, email, and sign-out button. This sits above the preferences section.
 
 ### Dashboard Grid
 `WeeklyPlanGrid` uses CSS Grid with `gridTemplateColumns: "80px repeat(7, minmax(140px, 1fr))"` — an 80px label column followed by 7 day columns. Rows are grouped by meal type (Mic dejun / Prânz / Cină / Gustare); only types that have at least one planned slot are rendered. Separators between groups are per-column cells (not a single spanning div) so the today-column highlight can run through them unbroken.

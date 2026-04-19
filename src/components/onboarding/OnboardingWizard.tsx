@@ -35,7 +35,7 @@ export function OnboardingWizard() {
         </span>
         <span
           className="text-[17px] leading-none"
-          style={{ fontFamily: "var(--font-dm-serif)", color: "var(--text)" }}
+          style={{ fontFamily: "var(--font-fraunces, Georgia, serif)", color: "var(--text)" }}
         >
           Meal Planner
         </span>
@@ -69,7 +69,7 @@ export function OnboardingWizard() {
             <h1
               className="text-[32px] leading-none"
               style={{
-                fontFamily: "var(--font-dm-serif)",
+                fontFamily: "var(--font-fraunces, Georgia, serif)",
                 fontStyle: "italic",
                 color: "var(--text)",
               }}
@@ -106,7 +106,7 @@ export function OnboardingWizard() {
               <span
                 className="block text-[42px] leading-none"
                 style={{
-                  fontFamily: "var(--font-dm-serif)",
+                  fontFamily: "var(--font-fraunces, Georgia, serif)",
                   color: "var(--text)",
                 }}
               >

@@ -12,6 +12,9 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
+const ROMAN = ["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV"];
+function toRoman(n: number) { return ROMAN[n - 1] ?? String(n); }
+
 export default async function RecipePage({ params }: Props) {
   const { id } = await params;
 
@@ -45,20 +48,26 @@ export default async function RecipePage({ params }: Props) {
   }));
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg)" }}>
-      <div className="mx-auto max-w-4xl px-6 py-10">
+    <div style={{ minHeight: "100vh", background: "var(--paper)" }}>
+      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "48px 56px 100px" }}>
 
-        {/* Back link + add to plan row */}
-        <div className="mb-8 flex items-center justify-between gap-4">
+        {/* Back link + action row */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-sm transition-colors hover:opacity-100"
-            style={{ color: "var(--text-faint)", textDecoration: "none", opacity: 0.7 }}
+            style={{
+              fontFamily: "var(--font-jetbrains, monospace)",
+              fontSize: 11,
+              letterSpacing: ".18em",
+              textTransform: "uppercase",
+              color: "var(--ink-2)",
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+            }}
           >
-            <svg className="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M10 12L6 8l4-4" />
-            </svg>
-            Back to plan
+            ← back to the week
           </Link>
 
           {session && (
@@ -74,149 +83,217 @@ export default async function RecipePage({ params }: Props) {
           )}
         </div>
 
-        {/* Header */}
-        <div className="mb-8">
-          <h1
-            className="text-5xl leading-tight"
-            style={{
-              fontFamily: "var(--font-dm-serif)",
-              fontStyle: "italic",
-              color: "var(--text)",
-            }}
-          >
-            {meal.name}
-          </h1>
-
-          {meal.description && (
-            <p
-              className="mt-3 max-w-2xl text-base leading-relaxed"
-              style={{ color: "var(--text-muted)" }}
-            >
-              {meal.description}
-            </p>
-          )}
+        {/* Title block */}
+        <div style={{ textAlign: "center", marginBottom: 4 }}>
+          <span style={{
+            fontFamily: "var(--font-fraunces, Georgia, serif)",
+            fontStyle: "italic",
+            fontWeight: 400,
+            color: "var(--ink-3)",
+            fontSize: 14,
+            letterSpacing: ".06em",
+          }}>
+            Recipe № {meal.id.toUpperCase()}
+          </span>
         </div>
 
-        {/* Time + servings row */}
-        <div
-          className="mb-8 flex flex-wrap items-center gap-4 rounded-2xl px-5 py-4"
-          style={{
-            background: "var(--surface)",
-            border: "1px solid var(--border-subtle)",
-          }}
-        >
-          {meal.prepTimeMin != null && (
-            <TimeBlock label="Prep" minutes={meal.prepTimeMin} />
-          )}
-          {meal.cookTimeMin != null && meal.cookTimeMin > 0 && (
-            <TimeBlock label="Cook" minutes={meal.cookTimeMin} />
-          )}
-          {totalTime > 0 && (
-            <TimeBlock label="Total" minutes={totalTime} bold />
-          )}
+        <h1 style={{
+          fontFamily: "var(--font-fraunces, Georgia, serif)",
+          textAlign: "center",
+          fontSize: "clamp(40px, 6vw, 72px)",
+          fontWeight: 500,
+          margin: "8px 0 6px",
+          letterSpacing: "-0.02em",
+          fontStyle: "italic",
+          lineHeight: 1,
+          color: "var(--ink)",
+        }}>
+          {meal.name}
+        </h1>
 
-          {totalTime > 0 && (
-            <span
-              className="hidden h-8 w-px sm:block"
-              style={{ background: "var(--border)" }}
-            />
-          )}
-          <div className="flex flex-col">
-            <span
-              className="text-[9px] font-semibold uppercase tracking-[0.14em]"
-              style={{ color: "var(--text-faint)" }}
-            >
-              Serves
-            </span>
-            <span
-              className="text-lg leading-tight"
-              style={{
-                fontFamily: "var(--font-dm-serif)",
+        {meal.description && (
+          <p style={{
+            textAlign: "center",
+            color: "var(--ink-2)",
+            fontSize: 15,
+            fontStyle: "italic",
+            marginBottom: 10,
+          }}>
+            {meal.description}
+          </p>
+        )}
+
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <span className="flourish">✦ ❖ ✦</span>
+        </div>
+
+        {/* Meta strip */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          borderTop: "1px solid var(--rule)",
+          borderBottom: "1px solid var(--rule)",
+          padding: "18px 0",
+          marginBottom: 52,
+        }}>
+          {[
+            { k: "Time",        v: totalTime > 0 ? `${totalTime} min` : "—" },
+            { k: "Course",      v: (meal.mealType ?? "lunch")[0].toUpperCase() + (meal.mealType ?? "lunch").slice(1) },
+            { k: "Ingredients", v: String(meal.ingredients.length).padStart(2, "0") },
+            { k: "Serves",      v: servingsLabel },
+          ].map((row) => (
+            <div key={row.k} style={{
+              textAlign: "center",
+              borderLeft: "1px solid var(--rule-2)",
+              padding: "0 12px",
+            }}>
+              <div style={{
+                fontFamily: "var(--font-jetbrains, monospace)",
+                letterSpacing: ".18em",
+                textTransform: "uppercase",
+                fontSize: 11,
+                color: "var(--ink-3)",
+                marginBottom: 4,
+              }}>
+                {row.k}
+              </div>
+              <div style={{
+                fontFamily: "var(--font-fraunces, Georgia, serif)",
+                fontSize: 24,
                 fontStyle: "italic",
-                color: "var(--accent)",
-              }}
-            >
-              {servingsLabel}
-            </span>
-          </div>
+                fontWeight: 500,
+                color: "var(--ink)",
+              }}>
+                {row.v}
+              </div>
+            </div>
+          ))}
         </div>
-
-        {/* Gradient rule */}
-        <div
-          className="mb-8 h-px"
-          style={{ background: "linear-gradient(to right, var(--border), transparent 60%)" }}
-        />
 
         {/* Two-column: ingredients + instructions */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_1.6fr]">
+        <div style={{ display: "grid", gridTemplateColumns: "0.9fr 1.4fr", gap: 72 }}>
 
-          <IngredientsPanel ingredients={scaledIngredients} />
+          {/* Ingredients */}
+          <div>
+            <div style={{
+              fontFamily: "var(--font-fraunces, Georgia, serif)",
+              fontStyle: "italic",
+              fontWeight: 400,
+              color: "var(--ink-3)",
+              fontSize: 14,
+              letterSpacing: ".06em",
+              marginBottom: 4,
+            }}>
+              I.
+            </div>
+            <h2 style={{
+              fontFamily: "var(--font-fraunces, Georgia, serif)",
+              fontSize: 30,
+              fontWeight: 500,
+              fontStyle: "italic",
+              margin: "0 0 16px",
+              letterSpacing: "-0.01em",
+              color: "var(--ink)",
+            }}>
+              What you need
+            </h2>
+            <div style={{ height: 1, background: "var(--rule)", marginBottom: 16 }} />
+            <IngredientsPanel ingredients={scaledIngredients} />
+          </div>
 
           {/* Instructions */}
           <div>
-            <h2
-              className="mb-5 text-xs font-semibold uppercase tracking-[0.14em]"
-              style={{ color: "var(--text-faint)" }}
-            >
-              Instructions
+            <div style={{
+              fontFamily: "var(--font-fraunces, Georgia, serif)",
+              fontStyle: "italic",
+              fontWeight: 400,
+              color: "var(--ink-3)",
+              fontSize: 14,
+              letterSpacing: ".06em",
+              marginBottom: 4,
+            }}>
+              II.
+            </div>
+            <h2 style={{
+              fontFamily: "var(--font-fraunces, Georgia, serif)",
+              fontSize: 30,
+              fontWeight: 500,
+              fontStyle: "italic",
+              margin: "0 0 16px",
+              letterSpacing: "-0.01em",
+              color: "var(--ink)",
+            }}>
+              The method
             </h2>
-            <ol className="space-y-4">
+            <div style={{ height: 1, background: "var(--rule)", marginBottom: 20 }} />
+            <ol style={{ padding: 0, margin: 0, listStyle: "none" }}>
               {meal.instructions.map((step, i) => (
-                <li key={i} className="flex items-start gap-4">
-                  <span
-                    className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-bold"
-                    style={{
-                      background: "var(--accent-light)",
-                      color: "var(--accent)",
-                      border: "1px solid rgba(212, 120, 67, 0.25)",
-                    }}
-                  >
-                    {i + 1}
-                  </span>
-                  <p
-                    className="pt-0.5 text-sm leading-relaxed"
-                    style={{ color: "var(--text-muted)" }}
-                  >
+                <li key={i} style={{
+                  display: "flex",
+                  gap: 20,
+                  padding: "14px 0",
+                  borderBottom: i === meal.instructions.length - 1 ? "none" : "1px solid var(--rule-2)",
+                }}>
+                  <div style={{
+                    fontFamily: "var(--font-fraunces, Georgia, serif)",
+                    fontSize: 36,
+                    fontStyle: "italic",
+                    fontWeight: 400,
+                    color: "var(--accent)",
+                    lineHeight: 1,
+                    minWidth: 44,
+                  }}>
+                    {toRoman(i + 1)}.
+                  </div>
+                  <p style={{
+                    fontSize: 16,
+                    lineHeight: 1.55,
+                    color: "var(--ink)",
+                    flex: 1,
+                    margin: 0,
+                  }}>
                     {step}
                   </p>
                 </li>
               ))}
             </ol>
+
+            {/* Pull quote */}
+            <div style={{
+              marginTop: 40,
+              padding: "24px 0",
+              borderTop: "1px solid var(--rule)",
+              borderBottom: "1px solid var(--rule)",
+              textAlign: "center",
+            }}>
+              <div style={{
+                fontFamily: "var(--font-fraunces, Georgia, serif)",
+                fontSize: 20,
+                fontStyle: "italic",
+                color: "var(--ink-2)",
+              }}>
+                "Cook with care, taste as you go, and season more generously than you think."
+              </div>
+              <div style={{
+                fontFamily: "var(--font-jetbrains, monospace)",
+                fontSize: 10,
+                color: "var(--ink-3)",
+                letterSpacing: ".2em",
+                textTransform: "uppercase",
+                marginTop: 10,
+              }}>
+                — From the house kitchen
+              </div>
+            </div>
           </div>
 
         </div>
+
+        <div style={{ textAlign: "center", marginTop: 64 }}>
+          <span className="flourish">— fin —</span>
+        </div>
+
       </div>
-    </div>
-  );
-}
-
-function TimeBlock({ label, minutes, bold = false }: {
-  label: string;
-  minutes: number;
-  bold?: boolean;
-}) {
-  const display = minutes >= 60
-    ? `${Math.floor(minutes / 60)}h${minutes % 60 > 0 ? ` ${minutes % 60}m` : ""}`
-    : `${minutes}m`;
-
-  return (
-    <div className="flex flex-col">
-      <span
-        className="text-[9px] font-semibold uppercase tracking-[0.14em]"
-        style={{ color: "var(--text-faint)" }}
-      >
-        {label}
-      </span>
-      <span
-        className="text-lg leading-tight"
-        style={{
-          fontFamily: "var(--font-dm-serif)",
-          fontStyle: "italic",
-          color: bold ? "var(--accent)" : "var(--text)",
-        }}
-      >
-        {display}
-      </span>
     </div>
   );
 }

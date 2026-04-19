@@ -21,20 +21,21 @@ function CopyButton({ text }: { text: string }) {
     <button
       type="button"
       onClick={handleCopy}
-      className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all"
-      style={
-        state === "copied"
-          ? {
-              background: "rgba(45, 212, 191, 0.1)",
-              border: "1px solid rgba(45, 212, 191, 0.35)",
-              color: "#2DD4BF",
-            }
-          : {
-              background: "var(--surface-raised)",
-              border: "1px solid var(--border-bright)",
-              color: "var(--text-muted)",
-            }
-      }
+      style={{
+        fontFamily: "var(--font-jetbrains, monospace)",
+        fontSize: 10,
+        letterSpacing: ".14em",
+        textTransform: "uppercase",
+        background: state === "copied" ? "rgba(79,92,42,0.12)" : "transparent",
+        border: "1px solid " + (state === "copied" ? "#4f5c2a" : "var(--rule)"),
+        color: state === "copied" ? "#4f5c2a" : "var(--ink-2)",
+        padding: "6px 12px",
+        cursor: "pointer",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        transition: "all .15s",
+      }}
     >
       {state === "copied" ? (
         <>
@@ -194,12 +195,12 @@ export function ShoppingListClient() {
 
   if (!hydrated) {
     return (
-      <div className="space-y-4">
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         {[1, 2, 3].map((n) => (
           <div
             key={n}
-            className="h-32 animate-pulse rounded-2xl"
-            style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+            className="animate-pulse"
+            style={{ height: 80, background: "var(--paper-2)", border: "1px solid var(--rule)" }}
           />
         ))}
       </div>
@@ -208,22 +209,21 @@ export function ShoppingListClient() {
 
   if (totalItems === 0) {
     return (
-      <div
-        className="rounded-2xl p-16 text-center"
-        style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
-      >
-        <p className="mb-3 text-3xl" aria-hidden>🛒</p>
-        <p
-          className="mb-2 text-lg"
-          style={{
-            fontFamily: "var(--font-dm-serif)",
-            fontStyle: "italic",
-            color: "var(--text)",
-          }}
-        >
-          Your list is empty
+      <div style={{
+        padding: "64px 40px",
+        textAlign: "center",
+        border: "1px solid var(--rule)",
+      }}>
+        <p style={{
+          fontFamily: "var(--font-fraunces, Georgia, serif)",
+          fontStyle: "italic",
+          fontSize: 22,
+          color: "var(--ink-2)",
+          marginBottom: 8,
+        }}>
+          Your market list is empty
         </p>
-        <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+        <p style={{ fontSize: 15, color: "var(--ink-3)" }}>
           Add ingredients from any recipe page.
         </p>
       </div>
@@ -233,91 +233,99 @@ export function ShoppingListClient() {
   return (
     <div>
       {/* Toolbar */}
-      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          {/* Count + progress */}
-          <div className="flex flex-col gap-1.5">
-            <span className="text-sm" style={{ color: "var(--text-muted)" }}>
-              <span style={{ color: "var(--text)", fontWeight: 600 }}>{checkedCount}</span>
-              {" / "}
-              {visibleItems.length}
-              {hiddenStaplesCount > 0 && (
-                <span className="text-[11px]" style={{ color: "var(--text-faint)" }}>
-                  {" "}+{hiddenStaplesCount} hidden
-                </span>
-              )}
-              {" "}
-              <span
-                className="text-[11px] uppercase tracking-[0.08em]"
-                style={{ color: "var(--text-faint)" }}
-              >
-                items across {categories.length} {categories.length === 1 ? "category" : "categories"}
-              </span>
-            </span>
-            <div
-              className="h-1 w-48 overflow-hidden rounded-full"
-              style={{ background: "var(--border)" }}
-            >
-              <div
-                className="h-full rounded-full transition-all duration-300"
-                style={{
-                  width: `${progress}%`,
-                  background: progress === 100 ? "rgba(45,212,191,0.7)" : "var(--accent)",
-                }}
-              />
-            </div>
-          </div>
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        flexWrap: "wrap",
+        gap: 16,
+        padding: "14px 0",
+        borderTop: "1px solid var(--rule)",
+        borderBottom: "1px solid var(--rule)",
+        marginBottom: 32,
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+          {/* Count */}
+          <span style={{
+            fontFamily: "var(--font-jetbrains, monospace)",
+            fontSize: 11,
+            letterSpacing: ".18em",
+            textTransform: "uppercase",
+            color: "var(--ink-3)",
+          }}>
+            {visibleItems.length} ingredients · {checkedCount} gathered
+            {hiddenStaplesCount > 0 && ` · ${hiddenStaplesCount} hidden`}
+          </span>
 
-          {/* Clear actions */}
-          <div className="flex items-center gap-3">
-            {checkedCount > 0 && (
-              <button
-                type="button"
-                onClick={clearChecked}
-                className="text-xs transition-opacity hover:opacity-100"
-                style={{ color: "var(--text-faint)", opacity: 0.7 }}
-              >
-                Remove ticked
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={clearAll}
-              className="text-xs transition-opacity hover:opacity-100"
-              style={{ color: "var(--text-faint)", opacity: 0.5 }}
-            >
-              Clear all
-            </button>
+          {/* Progress bar */}
+          <div style={{ width: 120, height: 2, background: "var(--rule)", overflow: "hidden" }}>
+            <div style={{
+              width: `${progress}%`,
+              height: "100%",
+              background: progress === 100 ? "var(--leaf)" : "var(--accent)",
+              transition: "width .3s",
+            }} />
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          {/* Clear actions */}
+          {checkedCount > 0 && (
+            <button
+              type="button"
+              onClick={clearChecked}
+              style={{
+                fontFamily: "var(--font-jetbrains, monospace)",
+                fontSize: 10,
+                letterSpacing: ".14em",
+                textTransform: "uppercase",
+                color: "var(--ink-3)",
+                background: "none",
+                border: "1px solid var(--rule)",
+                padding: "6px 12px",
+                cursor: "pointer",
+              }}
+            >
+              Remove ticked
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={clearAll}
+            style={{
+              fontFamily: "var(--font-jetbrains, monospace)",
+              fontSize: 10,
+              letterSpacing: ".14em",
+              textTransform: "uppercase",
+              color: "var(--ink-3)",
+              background: "none",
+              border: "1px solid var(--rule)",
+              padding: "6px 12px",
+              cursor: "pointer",
+            }}
+          >
+            Clear all
+          </button>
+
           {/* Hide pantry staples toggle */}
           <button
             type="button"
             onClick={toggleHideStaples}
-            className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all"
-            style={
-              hideStaples
-                ? {
-                    background: "rgba(212,120,67,0.1)",
-                    border: "1px solid rgba(212,120,67,0.35)",
-                    color: "var(--accent)",
-                  }
-                : {
-                    background: "var(--surface-raised)",
-                    border: "1px solid var(--border-bright)",
-                    color: "var(--text-muted)",
-                  }
-            }
+            style={{
+              fontFamily: "var(--font-jetbrains, monospace)",
+              fontSize: 10,
+              letterSpacing: ".14em",
+              textTransform: "uppercase",
+              background: hideStaples ? "rgba(166,58,31,0.1)" : "transparent",
+              border: "1px solid " + (hideStaples ? "var(--accent)" : "var(--rule)"),
+              color: hideStaples ? "var(--accent)" : "var(--ink-2)",
+              padding: "6px 12px",
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+            }}
           >
-            <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-              {hideStaples ? (
-                <path d="M13 2H3a1 1 0 0 0-1 1v1.5l5 5V14l2-1v-4.5l5-5V3a1 1 0 0 0-1-1Z" />
-              ) : (
-                <path d="M13 2H3a1 1 0 0 0-1 1v1.5l5 5V14l2-1v-4.5l5-5V3a1 1 0 0 0-1-1ZM2 2l12 12" />
-              )}
-            </svg>
             {hideStaples ? "Staples hidden" : "Hide staples"}
           </button>
           <CopyButton text={copyText} />
@@ -325,7 +333,7 @@ export function ShoppingListClient() {
       </div>
 
       {/* Category sections */}
-      <div className="space-y-5">
+      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
         {categories.map((cat) => {
           const catChecked = cat.items.filter((i) => i.checked).length;
           const allDone = catChecked === cat.items.length;
@@ -333,28 +341,45 @@ export function ShoppingListClient() {
           return (
             <section
               key={cat.name}
-              className="overflow-hidden rounded-2xl transition-opacity duration-300"
               style={{
-                background: "var(--surface)",
-                border: "1px solid var(--border)",
+                overflow: "hidden",
+                transition: "opacity .3s",
+                background: "var(--paper-2)",
+                border: "1px solid var(--rule)",
                 opacity: allDone ? 0.45 : 1,
               }}
             >
               {/* Category header */}
               <div
-                className="flex items-center justify-between px-5 py-3"
-                style={{ borderBottom: "1px solid var(--border-subtle)" }}
+                style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", borderBottom: "1px solid var(--rule-2)" }}
               >
-                <div className="flex items-center gap-2.5">
-                  <span className="text-base" aria-hidden>{cat.icon}</span>
-                  <h2
-                    className="text-[11px] font-semibold uppercase tracking-[0.13em]"
-                    style={{ color: "var(--text-faint)" }}
-                  >
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 15 }} aria-hidden>{cat.icon}</span>
+                  <h2 style={{
+                    fontFamily: "var(--font-fraunces, Georgia, serif)",
+                    fontStyle: "italic",
+                    fontWeight: 500,
+                    fontSize: 18,
+                    color: "var(--ink)",
+                    margin: 0,
+                  }}>
                     {cat.name}
                   </h2>
+                  <span style={{
+                    fontFamily: "var(--font-jetbrains, monospace)",
+                    fontSize: 11,
+                    color: "var(--ink-3)",
+                    letterSpacing: ".1em",
+                  }}>
+                    {String(cat.items.length).padStart(2, "0")}
+                  </span>
                 </div>
-                <span className="tabular-nums text-xs" style={{ color: "var(--text-faint)" }}>
+                <span style={{
+                  fontFamily: "var(--font-jetbrains, monospace)",
+                  fontSize: 11,
+                  color: "var(--ink-3)",
+                  letterSpacing: ".08em",
+                }}>
                   {catChecked}/{cat.items.length}
                 </span>
               </div>
@@ -368,10 +393,17 @@ export function ShoppingListClient() {
                   return (
                     <li
                       key={idx}
-                      className="group flex items-center gap-3 px-5 py-3.5 transition-colors hover:bg-white/[0.02]"
+                      className="group"
                       style={{
-                        borderTop: idx > 0 ? "1px solid var(--border-subtle)" : undefined,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 12,
+                        padding: "12px 20px",
+                        borderTop: idx > 0 ? "1px solid var(--rule-2)" : undefined,
+                        transition: "background .15s",
                       }}
+                      onMouseEnter={(e) => { (e.currentTarget as HTMLLIElement).style.background = "rgba(0,0,0,0.025)"; }}
+                      onMouseLeave={(e) => { (e.currentTarget as HTMLLIElement).style.background = ""; }}
                     >
                       {/* Checkbox — hidden while editing */}
                       {!isEditing && (
@@ -483,18 +515,20 @@ export function ShoppingListClient() {
 
       {/* Completion banner */}
       {progress === 100 && totalItems > 0 && (
-        <div
-          className="mt-8 rounded-2xl px-6 py-5 text-center"
-          style={{
-            background: "rgba(45, 212, 191, 0.06)",
-            border: "1px solid rgba(45, 212, 191, 0.2)",
-          }}
-        >
-          <p
-            className="text-lg"
-            style={{ fontFamily: "var(--font-dm-serif)", fontStyle: "italic", color: "#2DD4BF" }}
-          >
-            All done — enjoy your meal!
+        <div style={{
+          marginTop: 32,
+          padding: "24px 0",
+          textAlign: "center",
+          borderTop: "1px solid var(--rule)",
+          borderBottom: "1px solid var(--rule)",
+        }}>
+          <p style={{
+            fontFamily: "var(--font-fraunces, Georgia, serif)",
+            fontStyle: "italic",
+            fontSize: 22,
+            color: "var(--leaf)",
+          }}>
+            All gathered — enjoy your meal!
           </p>
         </div>
       )}

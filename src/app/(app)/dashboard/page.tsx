@@ -10,13 +10,12 @@ import { getWeekStart, offsetWeek } from "@/server/lib/date";
 import Link from "next/link";
 
 function getTodayDayIndex(): number {
-  const day = new Date().getUTCDay(); // 0=Sun
-  return day === 0 ? 6 : day - 1; // 0=Mon … 6=Sun
+  const day = new Date().getUTCDay();
+  return day === 0 ? 6 : day - 1;
 }
 
 function parseWeekParam(param: string | undefined): string {
   if (!param || !/^\d{4}-\d{2}-\d{2}$/.test(param)) return getWeekStart();
-  // Snap to the Monday of whatever week the param falls in
   return getWeekStart(new Date(param + "T00:00:00Z"));
 }
 
@@ -43,144 +42,185 @@ export default async function DashboardPage({
   const weekEnd = new Date(weekDate);
   weekEnd.setUTCDate(weekEnd.getUTCDate() + 6);
 
-  const fmt = (d: Date) =>
-    d.toLocaleDateString("en-GB", { day: "numeric", month: "long", timeZone: "UTC" });
+  const fmtShort = (d: Date) =>
+    d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+  const fmtLong = (d: Date) =>
+    d.toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
 
-  const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const todayName = dayNames[getTodayDayIndex()] ?? "Today";
+  const weekLabel =
+    isCurrentWeek ? "This week"
+    : weekStart === offsetWeek(currentWeekStart, 1) ? "Next week"
+    : weekStart === offsetWeek(currentWeekStart, -1) ? "Last week"
+    : fmtShort(weekDate) + " – " + fmtShort(weekEnd);
 
   const prevWeek = offsetWeek(weekStart, -1);
   const nextWeek = offsetWeek(weekStart, 1);
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg)" }}>
+    <div style={{ minHeight: "100vh", background: "var(--paper)" }}>
       <Suspense>
         <WeekViewPersist weekStart={weekStart} currentWeekStart={currentWeekStart} />
       </Suspense>
-      {/* Page header */}
-      <div className="mx-auto max-w-[1400px] px-6 pb-8 pt-10">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <div className="mb-3 flex items-center gap-2">
-              <span
-                className="text-[11px] font-semibold uppercase tracking-[0.14em]"
-                style={{ color: "var(--text-faint)" }}
-              >
-                Weekly Plan
-              </span>
-              <span
-                className="h-px flex-1"
-                style={{ background: "var(--border-subtle)", display: "inline-block", width: "32px" }}
-              />
-              {isCurrentWeek ? (
-                <span
-                  className="text-[11px] font-medium uppercase tracking-[0.1em]"
-                  style={{ color: "var(--accent)", opacity: 0.85 }}
-                >
-                  {todayName} · Today
-                </span>
-              ) : (
-                <Link
-                  href="/dashboard"
-                  className="text-[11px] font-medium uppercase tracking-[0.1em] hover:opacity-100 transition-opacity"
-                  style={{ color: "var(--text-faint)", opacity: 0.7 }}
-                >
-                  ← This week
-                </Link>
-              )}
-            </div>
 
-            {/* Date range + prev/next navigation */}
-            <div className="flex items-center gap-3">
-              <Link
-                href={`/dashboard?week=${prevWeek}`}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all hover:bg-white/5"
-                style={{ border: "1px solid var(--border-bright)", color: "var(--text-muted)" }}
-                aria-label="Previous week"
-              >
-                <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 1L1 6l5 5" />
-                </svg>
-              </Link>
-
-              <h1
-                className="text-[40px] leading-none"
-                style={{
-                  fontFamily: "var(--font-dm-serif)",
-                  fontStyle: "italic",
-                  color: "var(--text)",
-                }}
-              >
-                {fmt(weekDate)}
-                <span style={{ color: "var(--text-faint)", margin: "0 10px", fontStyle: "normal" }}>–</span>
-                {fmt(weekEnd)}
-              </h1>
-
-              <Link
-                href={`/dashboard?week=${nextWeek}`}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all hover:bg-white/5"
-                style={{ border: "1px solid var(--border-bright)", color: "var(--text-muted)" }}
-                aria-label="Next week"
-              >
-                <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M1 1l5 5-5 5" />
-                </svg>
-              </Link>
-            </div>
-          </div>
-
-          {plan && <DashboardActions weekStart={weekStart} />}
+      {/* ── Cookbook header banner ── */}
+      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "52px 40px 0" }}>
+        {/* Chapter label */}
+        <div style={{ textAlign: "center", marginBottom: 6 }}>
+          <span style={{
+            fontFamily: "var(--font-fraunces, Georgia, serif)",
+            fontStyle: "italic",
+            fontWeight: 400,
+            color: "var(--ink-3)",
+            fontSize: 14,
+            letterSpacing: ".06em",
+          }}>
+            Chapter I
+          </span>
         </div>
 
-        {/* Gradient rule */}
-        <div
-          className="mt-8 h-px"
-          style={{
-            background: "linear-gradient(to right, var(--border), transparent 70%)",
-          }}
-        />
-      </div>
+        {/* Main title */}
+        <h1 style={{
+          fontFamily: "var(--font-fraunces, Georgia, serif)",
+          textAlign: "center",
+          fontSize: "clamp(56px, 8vw, 96px)",
+          fontWeight: 500,
+          margin: "0 0 6px",
+          letterSpacing: "-0.03em",
+          fontStyle: "italic",
+          lineHeight: 0.95,
+          color: "var(--ink)",
+        }}>
+          The Week Ahead
+        </h1>
 
-      {/* Grid */}
-      <div className="mx-auto max-w-[1400px] px-6 pb-12">
-        {plan ? (
-          <WeeklyPlanGrid
-            plan={plan}
-            todayIndex={todayIndex}
-            weekStart={weekStart}
-          />
-        ) : (
-          <div
-            className="rounded-2xl p-16 text-center"
-            style={{
-              background: "var(--surface)",
-              border: "1px solid var(--border)",
-            }}
-          >
-            <p className="text-3xl mb-3" aria-hidden>🥗</p>
-            <p
-              className="mb-2 text-lg"
+        {/* Flourish */}
+        <div style={{ textAlign: "center", marginBottom: 28 }}>
+          <span className="flourish">— carefully chosen —</span>
+        </div>
+
+        {/* Week nav + actions row */}
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          borderTop: "1px solid var(--rule)",
+          borderBottom: "1px solid var(--rule)",
+          padding: "14px 4px",
+          marginBottom: 32,
+        }}>
+          {/* Week navigation */}
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <Link
+              href={`/dashboard?week=${prevWeek}`}
               style={{
-                fontFamily: "var(--font-dm-serif)",
-                fontStyle: "italic",
-                color: "var(--text)",
+                fontFamily: "var(--font-jetbrains, monospace)",
+                fontSize: 11,
+                letterSpacing: ".14em",
+                textTransform: "uppercase",
+                color: "var(--ink-2)",
+                textDecoration: "none",
               }}
             >
+              ← Prev
+            </Link>
+
+            <div style={{ minWidth: 240, textAlign: "center" }}>
+              <div style={{
+                fontFamily: "var(--font-fraunces, Georgia, serif)",
+                fontSize: 20,
+                fontStyle: "italic",
+                fontWeight: 500,
+                color: "var(--ink)",
+              }}>
+                {fmtLong(weekDate)} – {fmtLong(weekEnd)}
+              </div>
+              <div style={{
+                fontFamily: "var(--font-jetbrains, monospace)",
+                fontSize: 9,
+                letterSpacing: ".22em",
+                textTransform: "uppercase",
+                color: "var(--ink-3)",
+                marginTop: 2,
+              }}>
+                {weekLabel}
+              </div>
+            </div>
+
+            <Link
+              href={`/dashboard?week=${nextWeek}`}
+              style={{
+                fontFamily: "var(--font-jetbrains, monospace)",
+                fontSize: 11,
+                letterSpacing: ".14em",
+                textTransform: "uppercase",
+                color: "var(--ink-2)",
+                textDecoration: "none",
+              }}
+            >
+              Next →
+            </Link>
+          </div>
+
+          {/* Action buttons */}
+          {plan && <DashboardActions weekStart={weekStart} />}
+        </div>
+      </div>
+
+      {/* ── Grid ── */}
+      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px 80px" }}>
+        {plan ? (
+          <div style={{
+            border: "1px solid var(--rule)",
+            boxShadow: "var(--shadow)",
+            background: "var(--paper)",
+          }}>
+            <WeeklyPlanGrid plan={plan} todayIndex={todayIndex} weekStart={weekStart} />
+          </div>
+        ) : (
+          <div style={{
+            padding: "64px 40px",
+            textAlign: "center",
+            border: "1px solid var(--rule)",
+          }}>
+            <p style={{
+              fontFamily: "var(--font-fraunces, Georgia, serif)",
+              fontStyle: "italic",
+              fontSize: 24,
+              color: "var(--ink-2)",
+              marginBottom: 8,
+            }}>
               No meals planned yet
             </p>
-            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+            <p style={{ fontSize: 15, color: "var(--ink-3)" }}>
               Add recipes from{" "}
-              <Link
-                href="/my-recipes"
-                style={{ color: "var(--accent)" }}
-                className="hover:underline"
-              >
+              <Link href="/my-recipes" style={{ color: "var(--accent)" }}>
                 My Recipes
               </Link>{" "}
               to fill your week.
             </p>
           </div>
         )}
+
+        {/* Footer note */}
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "18px 4px 0",
+          color: "var(--ink-3)",
+          fontSize: 13,
+          fontStyle: "italic",
+        }}>
+          <span>Hover a meal to reroll or remove it.</span>
+          <span style={{
+            fontFamily: "var(--font-jetbrains, monospace)",
+            fontSize: 10,
+            letterSpacing: ".18em",
+            textTransform: "uppercase",
+            fontStyle: "normal",
+          }}>
+            pg. I
+          </span>
+        </div>
       </div>
     </div>
   );

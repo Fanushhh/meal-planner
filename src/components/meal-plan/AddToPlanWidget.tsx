@@ -348,21 +348,9 @@ export function AddToPlanWidget({
         ref={buttonRef}
         type="button"
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all hover:opacity-90"
-        style={{ background: "var(--accent)", color: "#0D0E11" }}
+        className="btn btn-primary"
       >
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        >
-          <path d="M6 1v10M1 6h10" />
-        </svg>
-        Add to plan
+        + ADD TO PLAN
       </button>
 
       {mounted && panel && createPortal(panel, document.body)}

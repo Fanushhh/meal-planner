@@ -5,58 +5,92 @@ import { useRouter } from "next/navigation";
 import { createRecipeAction, updateRecipeAction } from "@/server/actions/userRecipes";
 import type { ParsedUserRecipe } from "@/server/queries/userRecipes";
 import type { Ingredient } from "@/server/queries/meals";
-import { MEAL_TYPES, MEAL_TYPE_LABELS, MEAL_TYPE_COLORS } from "@/server/db/schema";
+import { MEAL_TYPES, MEAL_TYPE_LABELS } from "@/server/db/schema";
 import type { MealType } from "@/server/db/schema";
+
+const ROMAN = ["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV"];
+function toRoman(n: number) { return ROMAN[n - 1] ?? String(n); }
 
 interface RecipeEditorProps {
   mode: "create" | "edit";
   initialData?: ParsedUserRecipe;
 }
 
-function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
+function emptyIngredient(): Ingredient {
+  return { quantity: null, unit: null, name: "" };
+}
+
+const inputBase: React.CSSProperties = {
+  width: "100%",
+  padding: "6px 0",
+  border: 0,
+  borderBottom: "1px solid var(--rule)",
+  background: "transparent",
+  color: "var(--ink)",
+  fontFamily: "var(--font-newsreader, Georgia, serif)",
+  fontSize: 17,
+  outline: "none",
+};
+
+function FormSection({
+  label,
+  hint,
+  children,
+  flush,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+  flush?: boolean;
+}) {
   return (
-    <section
-      className="rounded-2xl p-6"
-      style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
-    >
-      <h2
-        className="mb-5 text-[11px] font-semibold uppercase tracking-[0.13em]"
-        style={{ color: "var(--text-faint)" }}
-      >
-        {title}
-      </h2>
+    <div style={{ marginBottom: flush ? 0 : 36 }}>
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "baseline",
+        marginBottom: 10,
+      }}>
+        <div style={{
+          fontFamily: "var(--font-fraunces, Georgia, serif)",
+          fontSize: 20,
+          fontStyle: "italic",
+          fontWeight: 500,
+          color: "var(--ink)",
+        }}>
+          {label}
+        </div>
+        {hint && (
+          <div className="small-caps">{hint}</div>
+        )}
+      </div>
+      <div className="rule" style={{ marginBottom: 14 }} />
       {children}
-    </section>
+    </div>
   );
 }
 
-function inputStyle(): React.CSSProperties {
-  return {
-    background: "var(--surface-raised)",
-    border: "1px solid var(--border)",
-    color: "var(--text)",
-    borderRadius: "0.625rem",
-    padding: "0.5rem 0.75rem",
-    fontSize: "0.875rem",
-    width: "100%",
-    outline: "none",
-  };
-}
-
-function labelStyle(): React.CSSProperties {
-  return {
-    display: "block",
-    fontSize: "0.6875rem",
-    fontWeight: 600,
-    textTransform: "uppercase",
-    letterSpacing: "0.1em",
-    color: "var(--text-faint)",
-    marginBottom: "0.375rem",
-  };
-}
-
-function emptyIngredient(): Ingredient {
-  return { quantity: null, unit: null, name: "" };
+function FilterChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        padding: "6px 12px",
+        border: "1px solid " + (active ? "var(--ink)" : "var(--rule)"),
+        background: active ? "var(--ink)" : "transparent",
+        color: active ? "var(--paper)" : "var(--ink-2)",
+        fontFamily: "var(--font-jetbrains, monospace)",
+        fontSize: 10,
+        letterSpacing: ".12em",
+        textTransform: "uppercase",
+        cursor: "pointer",
+        transition: "all .15s",
+      }}
+    >
+      {children}
+    </button>
+  );
 }
 
 export function RecipeEditor({ mode, initialData }: RecipeEditorProps) {
@@ -77,11 +111,13 @@ export function RecipeEditor({ mode, initialData }: RecipeEditorProps) {
     (initialData?.mealType as MealType) ?? "lunch"
   );
   const [ingredients, setIngredients] = useState<Ingredient[]>(
-    initialData?.ingredients.length ? initialData.ingredients : [emptyIngredient()]
+    initialData?.ingredients.length ? initialData.ingredients : [emptyIngredient(), emptyIngredient()]
   );
   const [instructions, setInstructions] = useState<string[]>(
     initialData?.instructions.length ? initialData.instructions : [""]
   );
+
+  const canSave = name.trim() !== "" && ingredients.some((ing) => ing.name.trim() !== "");
 
   function updateIngredient(index: number, field: keyof Ingredient, value: string) {
     setIngredients((prev) => {
@@ -99,27 +135,8 @@ export function RecipeEditor({ mode, initialData }: RecipeEditorProps) {
     });
   }
 
-  function removeIngredient(index: number) {
-    setIngredients((prev) => prev.filter((_, i) => i !== index));
-  }
-
-  function updateInstruction(index: number, value: string) {
-    setInstructions((prev) => {
-      const next = [...prev];
-      next[index] = value;
-      return next;
-    });
-  }
-
-  function removeInstruction(index: number) {
-    setInstructions((prev) => prev.filter((_, i) => i !== index));
-  }
-
   function handleSubmit() {
-    if (!name.trim()) {
-      setError("Recipe name is required.");
-      return;
-    }
+    if (!name.trim()) { setError("Recipe name is required."); return; }
     setError(null);
 
     const data = {
@@ -148,281 +165,410 @@ export function RecipeEditor({ mode, initialData }: RecipeEditorProps) {
   }
 
   return (
-    <div className="space-y-5">
-      {/* Basic info */}
-      <SectionCard title="Basic Info">
-        <div className="space-y-4">
-          <div>
-            <label style={labelStyle()}>Recipe name</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Spaghetti Carbonara"
-              style={inputStyle()}
-            />
-          </div>
+    <div>
+      {/* Top row: back link + save button */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
+        <button
+          type="button"
+          onClick={() => router.push("/my-recipes")}
+          style={{
+            background: "none",
+            border: "none",
+            fontFamily: "var(--font-jetbrains, monospace)",
+            fontSize: 11,
+            letterSpacing: ".18em",
+            textTransform: "uppercase",
+            color: "var(--ink-2)",
+            cursor: "pointer",
+            padding: 0,
+          }}
+        >
+          ← back to the pantry
+        </button>
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={isPending || !canSave}
+          className="btn btn-primary"
+          style={{ opacity: canSave ? 1 : 0.4 }}
+        >
+          {isPending ? "Saving…" : mode === "create" ? "Save recipe" : "Save changes"}
+        </button>
+      </div>
 
-          <div>
-            <label style={labelStyle()}>Description</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="A short description of the recipe..."
-              rows={3}
-              style={{ ...inputStyle(), resize: "vertical" }}
-            />
-          </div>
+      {/* Cookbook header */}
+      <div style={{ textAlign: "center", marginBottom: 4 }}>
+        <span style={{
+          fontFamily: "var(--font-fraunces, Georgia, serif)",
+          fontStyle: "italic",
+          fontWeight: 400,
+          color: "var(--ink-3)",
+          fontSize: 14,
+          letterSpacing: ".06em",
+        }}>
+          {mode === "create" ? "A new page" : "Revising"}
+        </span>
+      </div>
+      <h1 style={{
+        fontFamily: "var(--font-fraunces, Georgia, serif)",
+        textAlign: "center",
+        fontSize: "clamp(40px, 5vw, 64px)",
+        fontWeight: 500,
+        margin: "8px 0 6px",
+        letterSpacing: "-0.02em",
+        fontStyle: "italic",
+        color: "var(--ink)",
+      }}>
+        {mode === "create" ? "Write a Recipe" : (initialData?.name ?? "Edit Recipe")}
+      </h1>
+      <div style={{ textAlign: "center", marginBottom: 40 }}>
+        <span className="flourish">✦</span>
+      </div>
 
-          <div>
-            <label style={labelStyle()}>Meal type</label>
-            <div className="flex gap-2">
-              {MEAL_TYPES.map((type) => {
-                const active = mealType === type;
-                const colors = MEAL_TYPE_COLORS[type];
-                return (
-                  <button
-                    key={type}
-                    type="button"
-                    onClick={() => setMealType(type)}
-                    className="rounded-lg px-3 py-1.5 text-sm font-medium transition-all"
-                    style={{
-                      background: active ? colors.bg : "var(--surface-raised)",
-                      border: `1px solid ${active ? colors.border : "var(--border)"}`,
-                      color: active ? colors.text : "var(--text-muted)",
-                    }}
-                  >
-                    {MEAL_TYPE_LABELS[type]}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </SectionCard>
+      {/* Name */}
+      <FormSection label="Name of the dish" hint="What will you call it?">
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="e.g. Sunday Night Ragù"
+          style={{
+            ...inputBase,
+            fontFamily: "var(--font-fraunces, Georgia, serif)",
+            fontSize: 28,
+            fontStyle: name ? "normal" : "italic",
+            fontWeight: 500,
+          }}
+        />
+      </FormSection>
 
-      {/* Timing & servings */}
-      <SectionCard title="Timing & Servings">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-          <div>
-            <label style={labelStyle()}>Servings</label>
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setServings((v) => Math.max(1, v - 1))}
-                className="flex h-9 w-9 items-center justify-center rounded-full text-lg font-medium transition-colors"
-                style={{
-                  background: "var(--surface-raised)",
-                  border: "1px solid var(--border)",
-                  color: "var(--text-muted)",
-                }}
+      {/* Description */}
+      <FormSection label="A few words" hint="Optional — shown on the recipe card">
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="A short note about this dish…"
+          rows={2}
+          style={{
+            ...inputBase,
+            resize: "vertical",
+            fontStyle: "italic",
+            lineHeight: 1.5,
+          }}
+        />
+      </FormSection>
+
+      {/* Meal type + time */}
+      <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 40, marginBottom: 36 }}>
+        <FormSection label="Meal type" hint="When is it best enjoyed?" flush>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+            {MEAL_TYPES.map((type) => (
+              <FilterChip
+                key={type}
+                active={mealType === type}
+                onClick={() => setMealType(type)}
               >
-                −
-              </button>
-              <span
-                className="w-8 text-center text-2xl font-semibold"
-                style={{ fontFamily: "var(--font-dm-serif)", color: "var(--text)" }}
-              >
-                {servings}
-              </span>
-              <button
-                type="button"
-                onClick={() => setServings((v) => Math.min(100, v + 1))}
-                className="flex h-9 w-9 items-center justify-center rounded-full text-lg font-medium transition-colors"
-                style={{
-                  background: "var(--surface-raised)",
-                  border: "1px solid var(--border)",
-                  color: "var(--text-muted)",
-                }}
-              >
-                +
-              </button>
-            </div>
+                {MEAL_TYPE_LABELS[type]}
+              </FilterChip>
+            ))}
           </div>
+        </FormSection>
 
-          <div>
-            <label style={labelStyle()}>Prep time (min)</label>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+          <FormSection label="Prep time" hint="minutes" flush>
             <input
               type="number"
               min="0"
               value={prepTimeMin}
               onChange={(e) => setPrepTimeMin(e.target.value)}
               placeholder="0"
-              style={inputStyle()}
+              style={{
+                ...inputBase,
+                fontFamily: "var(--font-fraunces, Georgia, serif)",
+                fontSize: 28,
+                fontWeight: 500,
+              }}
             />
-          </div>
-
-          <div>
-            <label style={labelStyle()}>Cook time (min)</label>
+          </FormSection>
+          <FormSection label="Cook time" hint="minutes" flush>
             <input
               type="number"
               min="0"
               value={cookTimeMin}
               onChange={(e) => setCookTimeMin(e.target.value)}
               placeholder="0"
-              style={inputStyle()}
+              style={{
+                ...inputBase,
+                fontFamily: "var(--font-fraunces, Georgia, serif)",
+                fontSize: 28,
+                fontWeight: 500,
+              }}
             />
-          </div>
+          </FormSection>
         </div>
-      </SectionCard>
+      </div>
+
+      {/* Servings */}
+      <FormSection label="Servings" hint="Base portion count for scaling">
+        <div style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
+          <button
+            type="button"
+            onClick={() => setServings((v) => Math.max(1, v - 1))}
+            style={{
+              background: "none",
+              border: "none",
+              fontFamily: "var(--font-jetbrains, monospace)",
+              fontSize: 18,
+              color: "var(--ink-3)",
+              cursor: "pointer",
+              padding: "0 4px",
+            }}
+          >−</button>
+          <span style={{
+            fontFamily: "var(--font-fraunces, Georgia, serif)",
+            fontSize: 28,
+            fontWeight: 500,
+            color: "var(--ink)",
+            minWidth: 32,
+            textAlign: "center",
+          }}>
+            {servings}
+          </span>
+          <button
+            type="button"
+            onClick={() => setServings((v) => Math.min(100, v + 1))}
+            style={{
+              background: "none",
+              border: "none",
+              fontFamily: "var(--font-jetbrains, monospace)",
+              fontSize: 18,
+              color: "var(--ink-3)",
+              cursor: "pointer",
+              padding: "0 4px",
+            }}
+          >+</button>
+          <span className="small-caps">people</span>
+        </div>
+      </FormSection>
 
       {/* Ingredients */}
-      <SectionCard title="Ingredients">
-        <div className="space-y-2">
-          {ingredients.map((ing, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <input
-                type="number"
-                min="0"
-                step="any"
-                value={ing.quantity ?? ""}
-                onChange={(e) => updateIngredient(i, "quantity", e.target.value)}
-                placeholder="Qty"
-                style={{ ...inputStyle(), width: "5rem", flexShrink: 0 }}
-              />
-              <input
-                type="text"
-                value={ing.unit ?? ""}
-                onChange={(e) => updateIngredient(i, "unit", e.target.value)}
-                placeholder="Unit"
-                style={{ ...inputStyle(), width: "5rem", flexShrink: 0 }}
-              />
-              <input
-                type="text"
-                value={ing.name}
-                onChange={(e) => updateIngredient(i, "name", e.target.value)}
-                placeholder="Ingredient name"
-                style={{ ...inputStyle(), flex: 1 }}
-              />
-              <input
-                type="text"
-                value={ing.note ?? ""}
-                onChange={(e) => updateIngredient(i, "note", e.target.value)}
-                placeholder="Note"
-                style={{ ...inputStyle(), width: "6rem", flexShrink: 0 }}
-              />
-              <button
-                type="button"
-                onClick={() => removeIngredient(i)}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors hover:bg-red-500/10"
-                style={{ color: "var(--text-faint)" }}
-                aria-label="Remove ingredient"
-              >
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-                  <path d="M1 1l10 10M11 1L1 11" />
-                </svg>
-              </button>
-            </div>
-          ))}
+      <FormSection label="Ingredients" hint="Quantity · unit · what it is.">
+        {/* Column headers */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "28px 90px 110px 1fr 30px",
+          gap: 12,
+          padding: "4px 0 8px",
+          borderBottom: "1px solid var(--rule)",
+        }}>
+          <span />
+          <span className="small-caps">Qty</span>
+          <span className="small-caps">Unit</span>
+          <span className="small-caps">Ingredient</span>
+          <span />
         </div>
+
+        {ingredients.map((ing, i) => (
+          <div
+            key={i}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "28px 90px 110px 1fr 30px",
+              gap: 12,
+              alignItems: "baseline",
+              padding: "10px 0",
+              borderBottom: "1px dashed var(--rule-2)",
+            }}
+          >
+            <span style={{
+              fontFamily: "var(--font-jetbrains, monospace)",
+              fontSize: 10,
+              color: "var(--ink-3)",
+              letterSpacing: ".12em",
+            }}>
+              {(i + 1).toString().padStart(2, "0")}
+            </span>
+            <input
+              type="number"
+              min="0"
+              step="any"
+              value={ing.quantity ?? ""}
+              onChange={(e) => updateIngredient(i, "quantity", e.target.value)}
+              placeholder={["2", "1", "400", "½"][i] ?? "—"}
+              style={{
+                ...inputBase,
+                border: 0,
+                padding: 0,
+                fontFamily: "var(--font-fraunces, Georgia, serif)",
+                fontSize: 19,
+                fontStyle: "italic",
+              }}
+            />
+            <select
+              value={ing.unit ?? ""}
+              onChange={(e) => updateIngredient(i, "unit", e.target.value)}
+              style={{
+                ...inputBase,
+                border: 0,
+                padding: 0,
+                fontFamily: "var(--font-jetbrains, monospace)",
+                fontSize: 13,
+                color: ing.unit ? "var(--ink)" : "var(--ink-3)",
+                letterSpacing: ".08em",
+                appearance: "none",
+                WebkitAppearance: "none",
+                background: "transparent",
+                cursor: "pointer",
+              }}
+            >
+              <option value="">— none —</option>
+              <optgroup label="volume">
+                <option value="tsp">tsp</option>
+                <option value="tbsp">tbsp</option>
+                <option value="cup">cup</option>
+                <option value="ml">ml</option>
+                <option value="l">l</option>
+              </optgroup>
+              <optgroup label="weight">
+                <option value="g">g</option>
+                <option value="kg">kg</option>
+                <option value="oz">oz</option>
+                <option value="lb">lb</option>
+              </optgroup>
+              <optgroup label="count">
+                <option value="piece">piece</option>
+                <option value="clove">clove</option>
+                <option value="slice">slice</option>
+                <option value="bunch">bunch</option>
+                <option value="pinch">pinch</option>
+                <option value="lingură">lingură</option>
+                <option value="linguriță">linguriță</option>
+                <option value="cană">cană</option>
+              </optgroup>
+            </select>
+            <input
+              type="text"
+              value={ing.name}
+              onChange={(e) => updateIngredient(i, "name", e.target.value)}
+              placeholder={["olive oil", "onion, diced", "pasta", "lemon"][i] ?? "what it is…"}
+              style={{ ...inputBase, border: 0, padding: 0 }}
+            />
+            <button
+              type="button"
+              onClick={() => setIngredients((prev) => prev.filter((_, idx) => idx !== i))}
+              disabled={ingredients.length <= 1}
+              style={{
+                background: "none",
+                border: 0,
+                color: "var(--ink-3)",
+                cursor: "pointer",
+                fontSize: 18,
+                padding: 0,
+              }}
+              aria-label="Remove ingredient"
+            >
+              ×
+            </button>
+          </div>
+        ))}
+
         <button
           type="button"
           onClick={() => setIngredients((prev) => [...prev, emptyIngredient()])}
-          className="mt-3 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors"
-          style={{
-            background: "var(--surface-raised)",
-            border: "1px solid var(--border)",
-            color: "var(--text-muted)",
-          }}
+          className="btn btn-ghost"
+          style={{ marginTop: 14 }}
         >
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-            <path d="M5 1v8M1 5h8" />
-          </svg>
-          Add ingredient
+          + Add ingredient
         </button>
-      </SectionCard>
+      </FormSection>
 
-      {/* Instructions */}
-      <SectionCard title="Instructions">
-        <div className="space-y-3">
-          {instructions.map((step, i) => (
-            <div key={i} className="flex items-start gap-3">
-              <span
-                className="mt-2.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-bold"
-                style={{
-                  background: "var(--surface-raised)",
-                  border: "1px solid var(--border)",
-                  color: "var(--text-faint)",
-                }}
-              >
-                {i + 1}
-              </span>
-              <textarea
-                value={step}
-                onChange={(e) => updateInstruction(i, e.target.value)}
-                placeholder={`Step ${i + 1}...`}
-                rows={2}
-                style={{ ...inputStyle(), flex: 1, resize: "vertical" }}
-              />
-              <button
-                type="button"
-                onClick={() => removeInstruction(i)}
-                className="mt-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors hover:bg-red-500/10"
-                style={{ color: "var(--text-faint)" }}
-                aria-label="Remove step"
-              >
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-                  <path d="M1 1l10 10M11 1L1 11" />
-                </svg>
-              </button>
-            </div>
-          ))}
-        </div>
+      {/* Steps */}
+      <FormSection label="Cooking steps" hint="Walk us through the method.">
+        {instructions.map((step, i) => (
+          <div
+            key={i}
+            style={{
+              display: "flex",
+              gap: 16,
+              alignItems: "flex-start",
+              padding: "12px 0",
+              borderBottom: "1px solid var(--rule-2)",
+            }}
+          >
+            <span style={{
+              fontFamily: "var(--font-fraunces, Georgia, serif)",
+              fontSize: 28,
+              fontStyle: "italic",
+              color: "var(--accent)",
+              lineHeight: 1,
+              minWidth: 36,
+            }}>
+              {toRoman(i + 1)}.
+            </span>
+            <textarea
+              value={step}
+              onChange={(e) => setInstructions((prev) => {
+                const next = [...prev];
+                next[i] = e.target.value;
+                return next;
+              })}
+              placeholder="Describe what to do…"
+              rows={2}
+              style={{
+                flex: 1,
+                background: "transparent",
+                border: 0,
+                resize: "vertical",
+                fontFamily: "var(--font-newsreader, Georgia, serif)",
+                fontSize: 16,
+                color: "var(--ink)",
+                outline: "none",
+                padding: 0,
+                lineHeight: 1.5,
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => setInstructions((prev) => prev.filter((_, idx) => idx !== i))}
+              disabled={instructions.length <= 1}
+              style={{
+                background: "none",
+                border: 0,
+                color: "var(--ink-3)",
+                cursor: "pointer",
+                fontSize: 18,
+                padding: "0 4px",
+              }}
+              aria-label="Remove step"
+            >
+              ×
+            </button>
+          </div>
+        ))}
         <button
           type="button"
           onClick={() => setInstructions((prev) => [...prev, ""])}
-          className="mt-3 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors"
-          style={{
-            background: "var(--surface-raised)",
-            border: "1px solid var(--border)",
-            color: "var(--text-muted)",
-          }}
+          className="btn btn-ghost"
+          style={{ marginTop: 14 }}
         >
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-            <path d="M5 1v8M1 5h8" />
-          </svg>
-          Add step
+          + Add step
         </button>
-      </SectionCard>
+      </FormSection>
 
       {error && (
-        <div
-          className="rounded-xl px-4 py-3 text-sm"
-          style={{
-            background: "rgba(239, 68, 68, 0.08)",
-            border: "1px solid rgba(239, 68, 68, 0.25)",
-            color: "#f87171",
-          }}
-        >
+        <div style={{
+          padding: "12px 16px",
+          border: "1px solid rgba(166,58,31,0.35)",
+          background: "rgba(166,58,31,0.06)",
+          color: "var(--accent)",
+          fontFamily: "var(--font-jetbrains, monospace)",
+          fontSize: 11,
+          letterSpacing: ".1em",
+          marginBottom: 24,
+        }}>
           {error}
         </div>
       )}
-
-      <button
-        type="button"
-        onClick={handleSubmit}
-        disabled={isPending}
-        className="flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-60"
-        style={{
-          background: "var(--accent)",
-          border: "1px solid transparent",
-          color: "#0D0E11",
-        }}
-      >
-        {isPending ? (
-          <>
-            <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
-            Saving…
-          </>
-        ) : mode === "create" ? (
-          "Save recipe"
-        ) : (
-          "Save changes"
-        )}
-      </button>
     </div>
   );
 }

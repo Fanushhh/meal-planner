@@ -37,30 +37,35 @@ export function MealCardMenu({ planId, dayOfWeek, mealType, mealId }: MealCardMe
   }
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} style={{ position: "relative" }}>
       <button
         onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen((v) => !v); }}
         disabled={isPending}
         title="Meal options"
-        className="flex h-6 w-6 items-center justify-center rounded-full transition-all opacity-0 group-hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-30"
         style={{
-          color: "var(--text)",
-          background: open ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)",
+          width: 22,
+          height: 22,
+          border: "1px solid var(--rule)",
+          borderRadius: "50%",
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "var(--ink-2)",
+          background: "rgba(251, 245, 231, 0.92)",
+          cursor: "pointer",
+          opacity: 0,
+          transition: "opacity .15s, border-color .15s",
+          flexShrink: 0,
         }}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.15)";
-        }}
-        onMouseLeave={(e) => {
-          if (!open) (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.08)";
-        }}
+        className="group-hover:opacity-100"
       >
         {isPending ? (
-          <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
-            <circle className="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
-            <path className="opacity-80" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          <svg style={{ width: 11, height: 11, animation: "spin .6s linear infinite" }} viewBox="0 0 24 24" fill="none">
+            <circle style={{ opacity: .2 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+            <path style={{ opacity: .8 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
         ) : (
-          <svg className="h-3.5 w-3.5" viewBox="0 0 16 16" fill="currentColor">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor">
             <circle cx="8" cy="3" r="1.2" />
             <circle cx="8" cy="8" r="1.2" />
             <circle cx="8" cy="13" r="1.2" />
@@ -70,26 +75,70 @@ export function MealCardMenu({ planId, dayOfWeek, mealType, mealId }: MealCardMe
 
       {open && (
         <div
-          className="absolute right-0 top-7 z-30 w-32 overflow-hidden rounded-xl py-1 shadow-xl"
-          style={{ background: "var(--surface-raised)", border: "1px solid var(--border)" }}
+          style={{
+            position: "absolute",
+            right: 0,
+            top: 28,
+            zIndex: 30,
+            minWidth: 130,
+            background: "var(--paper)",
+            border: "1px solid var(--ink)",
+            boxShadow: "0 8px 24px -8px rgba(42,38,32,.22)",
+            padding: "4px 0",
+          }}
         >
           <button
             onClick={handleRandomize}
-            className="flex w-full items-center gap-2 px-3 py-2 text-xs transition-colors hover:bg-white/5"
-            style={{ color: "var(--text-muted)" }}
+            style={{
+              display: "flex",
+              width: "100%",
+              alignItems: "center",
+              gap: 8,
+              padding: "8px 12px",
+              fontFamily: "var(--font-jetbrains, monospace)",
+              fontSize: 10,
+              letterSpacing: ".14em",
+              textTransform: "uppercase",
+              color: "var(--ink-2)",
+              background: "none",
+              border: 0,
+              cursor: "pointer",
+              transition: "background .1s",
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(0,0,0,0.04)"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "none"; }}
           >
-            <svg className="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5" />
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+              <path d="M3 12a9 9 0 0115-6.7L21 8" />
+              <path d="M21 3v5h-5" />
+              <path d="M21 12a9 9 0 01-15 6.7L3 16" />
+              <path d="M3 21v-5h5" />
             </svg>
             Randomize
           </button>
           <button
             onClick={handleRemove}
-            className="flex w-full items-center gap-2 px-3 py-2 text-xs transition-colors hover:bg-white/5"
-            style={{ color: "var(--text-muted)" }}
+            style={{
+              display: "flex",
+              width: "100%",
+              alignItems: "center",
+              gap: 8,
+              padding: "8px 12px",
+              fontFamily: "var(--font-jetbrains, monospace)",
+              fontSize: 10,
+              letterSpacing: ".14em",
+              textTransform: "uppercase",
+              color: "var(--ink-2)",
+              background: "none",
+              border: 0,
+              cursor: "pointer",
+              transition: "background .1s",
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(0,0,0,0.04)"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "none"; }}
           >
-            <svg className="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 6 6 18M6 6l12 12" />
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+              <path d="M5 12h14" />
             </svg>
             Remove
           </button>

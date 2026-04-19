@@ -2,73 +2,84 @@ import Link from "next/link";
 import { MealCardMenu } from "./MealCardMenu";
 import type { PlanMealDisplay } from "@/server/queries/plans";
 
-const MEAL_TYPE_COLORS: Record<string, string> = {
-  breakfast: "#F5A623",
-  lunch: "var(--accent)",
-  dinner: "#7B95C4",
-};
-
 interface MealCardProps {
   meal: PlanMealDisplay;
   planId: string;
   dayOfWeek: number;
   mealType: string;
+  ornament?: string;
 }
 
-export function MealCard({ meal, planId, dayOfWeek, mealType }: MealCardProps) {
-  const barColor = MEAL_TYPE_COLORS[mealType] ?? "var(--accent)";
+export function MealCard({ meal, planId, dayOfWeek, mealType, ornament = "·" }: MealCardProps) {
+  const totalTime = meal.prepTimeMin ?? 0;
 
   return (
     <div
-      className="meal-card-animate group relative h-full w-full rounded-lg"
+      className="meal-card-animate group slot-surface"
       style={{
-        background: "var(--surface)",
-        border: "1px solid var(--border)",
+        minHeight: 130,
+        display: "flex",
+        flexDirection: "column",
+        padding: "18px 18px 14px",
+        position: "relative",
       }}
     >
-      {/* Left colour bar */}
-      <div
-        className="absolute inset-y-0 left-0 w-[3px] rounded-l-lg"
-        style={{ background: barColor, opacity: 0.65 }}
-      />
+      {/* Ornament + menu row */}
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        marginBottom: 6,
+      }}>
+        <span style={{
+          fontFamily: "var(--font-fraunces, Georgia, serif)",
+          fontSize: 13,
+          color: "var(--ink-3)",
+        }}>
+          {ornament}
+        </span>
 
-      <Link
-        href={meal.detailUrl}
-        className="block h-full overflow-hidden py-2 pl-3.5 pr-8 cursor-pointer"
-        style={{ textDecoration: "none" }}
-      >
-        <p
-          className="mt-1 min-w-0 leading-snug line-clamp-3 font-medium"
+        {/* Slot tools — visible on hover */}
+        <div className="slot-tools" style={{ position: "absolute", top: 8, right: 8, zIndex: 2 }}>
+          <MealCardMenu
+            planId={planId}
+            dayOfWeek={dayOfWeek}
+            mealType={mealType}
+            mealId={meal.id}
+          />
+        </div>
+      </div>
+
+      {/* Meal name */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+        <Link
+          href={meal.detailUrl}
+          className="meal-name-link"
           style={{
-            fontFamily: "var(--font-dm-sans)",
-            color: "var(--text)",
-            fontSize: "13px",
+            fontFamily: "var(--font-fraunces, Georgia, serif)",
+            fontWeight: 500,
+            fontSize: 17,
+            lineHeight: 1.2,
+            letterSpacing: "-0.005em",
             wordBreak: "break-word",
+            overflowWrap: "break-word",
+            display: "block",
           }}
         >
           {meal.name}
-        </p>
+        </Link>
 
-        {meal.prepTimeMin && (
-          <div className="mt-1.5 flex items-center gap-0.5">
-            <svg className="h-2.5 w-2.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: "var(--text-muted)" }}>
-              <circle cx="8" cy="8" r="6.5" />
-              <path strokeLinecap="round" d="M8 4.5V8l2.5 1.5" />
-            </svg>
-            <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>
-              {meal.prepTimeMin}m
-            </span>
+        {totalTime > 0 && (
+          <div style={{
+            marginTop: 8,
+            fontFamily: "var(--font-jetbrains, monospace)",
+            fontSize: 10,
+            color: "var(--ink-3)",
+            letterSpacing: ".08em",
+          }}>
+            {totalTime} min
           </div>
         )}
-      </Link>
-
-      <div className="absolute right-1 top-1.5 z-10">
-        <MealCardMenu
-          planId={planId}
-          dayOfWeek={dayOfWeek}
-          mealType={mealType}
-          mealId={meal.id}
-        />
       </div>
     </div>
   );

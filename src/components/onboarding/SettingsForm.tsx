@@ -71,7 +71,7 @@ export function SettingsForm({ initialNumPeople }: SettingsFormProps) {
           <span
             className="w-10 text-center text-4xl font-semibold"
             style={{
-              fontFamily: "var(--font-dm-serif)",
+              fontFamily: "var(--font-fraunces, Georgia, serif)",
               color: "var(--text)",
             }}
           >

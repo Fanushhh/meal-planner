@@ -18,66 +18,64 @@ export default async function MyRecipesPage() {
   if (!prefs) redirect("/onboarding");
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg)" }}>
-      {/* Page header */}
-      <div className="mx-auto max-w-[1400px] px-6 pb-8 pt-10">
-        <div className="flex flex-wrap items-end justify-between gap-6">
+    <div style={{ minHeight: "100vh", background: "var(--paper)" }}>
+      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "52px 40px 0" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 32 }}>
           <div>
-            <div className="mb-3 flex items-center gap-2">
-              <span
-                className="text-[11px] font-semibold uppercase tracking-[0.14em]"
-                style={{ color: "var(--text-faint)" }}
-              >
-                Recipes
-              </span>
-              <span
-                className="inline-block h-px w-8"
-                style={{ background: "var(--border-subtle)" }}
-              />
-              <span
-                className="text-[11px] font-medium uppercase tracking-[0.1em]"
-                style={{ color: "var(--accent)", opacity: 0.85 }}
-              >
-                Your collection
+            <div style={{ textAlign: "left", marginBottom: 4 }}>
+              <span style={{
+                fontFamily: "var(--font-fraunces, Georgia, serif)",
+                fontStyle: "italic",
+                fontWeight: 400,
+                color: "var(--ink-3)",
+                fontSize: 14,
+                letterSpacing: ".06em",
+              }}>
+                Chapter III
               </span>
             </div>
-
-            <h1
-              className="text-[40px] leading-none"
-              style={{
-                fontFamily: "var(--font-dm-serif)",
-                fontStyle: "italic",
-                color: "var(--text)",
-              }}
-            >
-              My Recipes
+            <h1 style={{
+              fontFamily: "var(--font-fraunces, Georgia, serif)",
+              fontSize: "clamp(36px, 5vw, 64px)",
+              fontWeight: 500,
+              margin: "4px 0 0",
+              letterSpacing: "-0.02em",
+              fontStyle: "italic",
+              color: "var(--ink)",
+            }}>
+              The Pantry of Recipes
             </h1>
-            <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>
-              Recipes you&apos;ve added to your collection.
-            </p>
           </div>
 
           <Link
             href="/my-recipes/new"
-            className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all hover:opacity-90"
-            style={{ background: "var(--accent)", color: "#0D0E11" }}
+            style={{
+              border: "1px solid var(--accent)",
+              padding: "9px 16px",
+              fontFamily: "var(--font-jetbrains, monospace)",
+              fontSize: 11,
+              letterSpacing: ".16em",
+              textTransform: "uppercase",
+              background: "var(--accent)",
+              color: "#fff4e2",
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              transition: "all .15s",
+              flexShrink: 0,
+              marginTop: 16,
+            }}
           >
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <path d="M6 1v10M1 6h10" />
-            </svg>
-            Add recipe
+            + Write a new recipe
           </Link>
         </div>
 
-        {/* Gradient rule */}
-        <div
-          className="mt-8 h-px"
-          style={{ background: "linear-gradient(to right, var(--border), transparent 70%)" }}
-        />
+        {/* Rule */}
+        <div style={{ height: 1, background: "var(--rule)", marginBottom: 32 }} />
       </div>
 
-      {/* Content */}
-      <div className="mx-auto max-w-[1400px] px-6 pb-16">
+      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 40px 80px" }}>
         <MyRecipesClient recipes={recipes} meals={meals} />
       </div>
     </div>

@@ -20,70 +20,79 @@ export function IngredientsPanel({ ingredients }: IngredientsPanelProps) {
 
   return (
     <div>
-      {/* Section header */}
-      <div className="mb-5 flex items-center justify-between">
-        <h2
-          className="text-xs font-semibold uppercase tracking-[0.14em]"
-          style={{ color: "var(--text-faint)" }}
-        >
-          Ingredients
-        </h2>
-
+      {/* "Add all" button */}
+      <div style={{ marginBottom: 16 }}>
         <button
           type="button"
           onClick={handleAddAll}
           disabled={allInList}
-          className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-medium transition-all disabled:cursor-default"
-          style={
-            allInList
-              ? {
-                  background: "rgba(212, 120, 67, 0.1)",
-                  border: "1px solid rgba(212, 120, 67, 0.3)",
-                  color: "var(--accent)",
-                }
-              : {
-                  background: "var(--surface-raised)",
-                  border: "1px solid var(--border-bright)",
-                  color: "var(--text-muted)",
-                }
-          }
+          style={{
+            border: "1px solid " + (allInList ? "var(--leaf)" : "var(--ink)"),
+            padding: "8px 14px",
+            fontFamily: "var(--font-jetbrains, monospace)",
+            fontSize: 10,
+            letterSpacing: ".16em",
+            textTransform: "uppercase",
+            background: allInList ? "rgba(79,92,42,0.1)" : "transparent",
+            color: allInList ? "#4f5c2a" : "var(--ink)",
+            cursor: allInList ? "default" : "pointer",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            transition: "all .15s",
+          }}
         >
           {allInList ? (
             <>
               <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
                 <path d="M1 4L3.5 6.5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              Added all
+              All added to list
             </>
           ) : (
             <>
-              <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                <path d="M5 1v8M1 5h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-              Add all to list
+              + Add all to list
             </>
           )}
         </button>
       </div>
 
       {/* Ingredient rows */}
-      <ul className="space-y-1.5">
+      <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
         {ingredients.map((item, i) => {
           const inList = hydrated && isInList(item.name, item.unit);
 
           return (
-            <li key={i} className="group flex items-start gap-3 px-2 -mx-2">
-              {/* Dot */}
-              <span
-                className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full"
-                style={{ background: "var(--accent)", opacity: 0.7 }}
-              />
+            <li
+              key={i}
+              className="ingredient-flash"
+              style={{
+                display: "flex",
+                gap: 14,
+                padding: "10px 0",
+                borderBottom: i === ingredients.length - 1 ? "none" : "1px dashed var(--rule-2)",
+                alignItems: "baseline",
+              }}
+            >
+              {/* Index number */}
+              <span style={{
+                fontFamily: "var(--font-jetbrains, monospace)",
+                fontSize: 10,
+                color: "var(--ink-3)",
+                letterSpacing: ".12em",
+                minWidth: 22,
+                flexShrink: 0,
+              }}>
+                {String(i + 1).padStart(2, "0")}
+              </span>
 
               {/* Text */}
-              <span
-                className="flex-1 text-sm leading-relaxed"
-                style={{ color: "var(--text-muted)" }}
-              >
+              <span style={{
+                flex: 1,
+                fontSize: 16,
+                color: "var(--ink)",
+                lineHeight: 1.4,
+              }}>
                 {formatItem(item)}
               </span>
 
@@ -92,16 +101,20 @@ export function IngredientsPanel({ ingredients }: IngredientsPanelProps) {
                 type="button"
                 onClick={() => addItem(item)}
                 disabled={inList}
-                title={inList ? "Already in list" : "Add to shopping list"}
-                className="shrink-0 flex items-center justify-center rounded-md transition-all disabled:cursor-default"
+                title={inList ? "Already in list" : "Add to market list"}
                 style={{
-                  width: "1.625rem",
-                  height: "1.625rem",
-                  background: inList ? "rgba(212, 120, 67, 0.1)" : "transparent",
-                  border: inList
-                    ? "1px solid rgba(212, 120, 67, 0.3)"
-                    : "1px solid transparent",
-                  color: inList ? "var(--accent)" : "var(--text-faint)",
+                  width: 22,
+                  height: 22,
+                  border: "1px solid " + (inList ? "var(--accent)" : "var(--rule)"),
+                  borderRadius: "50%",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: inList ? "var(--accent)" : "var(--ink-2)",
+                  background: inList ? "rgba(166,58,31,0.1)" : "var(--paper-3)",
+                  cursor: inList ? "default" : "pointer",
+                  transition: "all .15s",
+                  flexShrink: 0,
                   opacity: !hydrated ? 0 : 1,
                 }}
               >
