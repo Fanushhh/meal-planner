@@ -1,9 +1,11 @@
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import { getSession } from "@/server/lib/auth";
 import { getUserPreferences } from "@/server/queries/users";
 import { getOrGeneratePlan } from "@/server/actions/meal-plan";
 import { WeeklyPlanGrid } from "@/components/meal-plan/WeeklyPlanGrid";
 import { DashboardActions } from "@/components/meal-plan/DashboardActions";
+import { WeekViewPersist } from "@/components/meal-plan/WeekViewPersist";
 import { getWeekStart, offsetWeek } from "@/server/lib/date";
 import Link from "next/link";
 
@@ -52,6 +54,9 @@ export default async function DashboardPage({
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg)" }}>
+      <Suspense>
+        <WeekViewPersist weekStart={weekStart} currentWeekStart={currentWeekStart} />
+      </Suspense>
       {/* Page header */}
       <div className="mx-auto max-w-[1400px] px-6 pb-8 pt-10">
         <div className="flex flex-wrap items-end justify-between gap-6">
