@@ -187,81 +187,113 @@ export function AddToPlanWidget({
       {/* Backdrop */}
       <div
         className="fixed inset-0"
-        style={{ zIndex: 49, background: "rgba(0,0,0,0.6)" }}
+        style={{ zIndex: 49, background: "rgba(42,38,32,0.55)" }}
         onClick={() => setOpen(false)}
       />
 
-      {/* Centered modal panel */}
+      {/* Modal panel */}
       <div
-        className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl p-5"
+        className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
         style={{
           width: Math.min(860, window.innerWidth - 32),
           maxHeight: "calc(100vh - 64px)",
           overflowY: "auto",
           zIndex: 50,
-          background: "var(--surface)",
-          border: "1px solid var(--border)",
-          boxShadow: "0 24px 64px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.05) inset",
+          background: "var(--paper-2)",
+          borderTop: "3px solid var(--accent)",
+          borderLeft: "1px solid var(--rule)",
+          borderRight: "1px solid var(--rule)",
+          borderBottom: "1px solid var(--rule)",
+          boxShadow: "0 20px 60px rgba(42,38,32,0.22), 0 4px 16px rgba(42,38,32,0.1)",
+          padding: "28px 28px 24px",
         }}
       >
-        {/* Header row */}
-        <div className="mb-4 flex items-center justify-between gap-4">
-          {/* Week tabs */}
-          <div
-            className="flex items-center rounded-lg p-0.5"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--border-subtle)" }}
-          >
-            <button
-              type="button"
-              onClick={handleSelectThisWeek}
-              className="rounded-md px-3 py-1 text-[11px] font-semibold transition-all"
-              style={
-                selectedWeek === "this"
-                  ? { background: "var(--surface-raised)", color: "var(--text)", boxShadow: "0 1px 3px rgba(0,0,0,0.3)" }
-                  : { color: "var(--text-faint)" }
-              }
+        {/* Header */}
+        <div className="mb-5 flex items-start justify-between gap-4">
+          <div>
+            <p
+              className="small-caps"
+              style={{ color: "var(--ink-3)", marginBottom: 2 }}
             >
-              This week
-            </button>
-            <button
-              type="button"
-              onClick={handleSelectNextWeek}
-              className="rounded-md px-3 py-1 text-[11px] font-semibold transition-all"
-              style={
-                selectedWeek === "next"
-                  ? { background: "var(--surface-raised)", color: "var(--text)", boxShadow: "0 1px 3px rgba(0,0,0,0.3)" }
-                  : { color: "var(--text-faint)" }
-              }
+              Schedule
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--font-fraunces, Georgia, serif)",
+                fontStyle: "italic",
+                fontSize: 22,
+                color: "var(--ink)",
+                lineHeight: 1,
+              }}
             >
-              Next week
-            </button>
+              Add to plan
+            </h2>
           </div>
 
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="rounded-lg p-1 transition-colors hover:bg-white/5"
-            style={{ color: "var(--text-faint)" }}
             aria-label="Close"
+            style={{
+              color: "var(--ink-3)",
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              padding: 4,
+              marginTop: 2,
+              lineHeight: 1,
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--ink)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "var(--ink-3)"; }}
           >
-            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-              <path d="M1 1l9 9M10 1 1 10" />
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+              <path d="M1 1l10 10M11 1 1 11" />
             </svg>
           </button>
+        </div>
+
+        {/* Week tabs */}
+        <div
+          className="mb-5 flex gap-0"
+          style={{ borderBottom: "1px solid var(--rule)" }}
+        >
+          {(["this", "next"] as const).map((w) => (
+            <button
+              key={w}
+              type="button"
+              onClick={w === "this" ? handleSelectThisWeek : handleSelectNextWeek}
+              className="small-caps"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: selectedWeek === w ? "2px solid var(--accent)" : "2px solid transparent",
+                marginBottom: -1,
+                padding: "0 4px 10px",
+                marginRight: 20,
+                color: selectedWeek === w ? "var(--ink)" : "var(--ink-3)",
+                cursor: "pointer",
+                transition: "color .15s, border-color .15s",
+              }}
+            >
+              {w === "this" ? "This week" : "Next week"}
+            </button>
+          ))}
         </div>
 
         {/* Grid */}
         <div className="overflow-x-auto">
           {loadingNextWeek && selectedWeek === "next" ? (
-            <div className="flex h-32 items-center justify-center">
+            <div
+              style={{
+                height: 128,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <svg
-                width="16"
-                height="16"
-                viewBox="0 0 10 10"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
+                width="16" height="16" viewBox="0 0 10 10"
+                fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"
                 className="animate-spin"
                 style={{ color: "var(--accent)" }}
               >
@@ -279,16 +311,21 @@ export function AddToPlanWidget({
                     return (
                       <th
                         key={i}
-                        className={`pb-3 text-center text-xs font-semibold ${isPast ? "w-[32px]" : "w-[82px]"}`}
+                        className={`pb-3 text-center ${isPast ? "w-[32px]" : "w-[82px]"}`}
                         style={{
-                          color: isToday ? "var(--accent)" : "var(--text-muted)",
-                          opacity: isPast ? 0.35 : 1,
+                          fontFamily: "var(--font-jetbrains, monospace)",
+                          fontSize: 10,
+                          letterSpacing: "0.12em",
+                          textTransform: "uppercase",
+                          color: isToday ? "var(--accent)" : "var(--ink-3)",
+                          opacity: isPast ? 0.4 : 1,
+                          fontWeight: isToday ? 600 : 400,
                         }}
                       >
                         {isPast ? null : label}
                         {isToday && (
                           <span
-                            className="mx-auto mt-1 block h-1 w-1 rounded-full"
+                            className="mx-auto mt-1 block h-0.5 w-4 rounded-full"
                             style={{ background: "var(--accent)" }}
                           />
                         )}
@@ -303,12 +340,12 @@ export function AddToPlanWidget({
                     <td className="py-1.5 pr-3">
                       <div className="flex items-center gap-2">
                         <span
-                          className="h-3.5 w-0.5 rounded-full"
-                          style={{ background: ROW_BAR_COLORS[type] ?? "var(--border)" }}
+                          className="h-3.5 w-0.5"
+                          style={{ background: ROW_BAR_COLORS[type] ?? "var(--rule)" }}
                         />
                         <span
-                          className="text-xs font-medium"
-                          style={{ color: "var(--text-faint)" }}
+                          className="small-caps"
+                          style={{ color: "var(--ink-3)" }}
                         >
                           {MEAL_TYPE_LABELS[type]}
                         </span>
@@ -382,11 +419,11 @@ function Cell({
   if (state.kind === "past") {
     return (
       <div
-        className={`${CELL_H} w-full rounded-lg`}
+        className={`${CELL_H} w-full`}
         style={{
-          background: "repeating-linear-gradient(135deg, transparent, transparent 3px, rgba(255,255,255,0.02) 3px, rgba(255,255,255,0.02) 6px)",
-          border: "1px solid var(--border-subtle)",
-          opacity: 0.3,
+          background: `repeating-linear-gradient(135deg, transparent, transparent 3px, var(--rule-2) 3px, var(--rule-2) 4px)`,
+          border: "1px solid var(--rule-2)",
+          opacity: 0.5,
           cursor: "default",
         }}
       />
@@ -396,18 +433,28 @@ function Cell({
   if (state.kind === "self") {
     return (
       <div
-        className={`${CELL_H} flex w-full flex-col items-center justify-center gap-1 rounded-lg`}
+        className={`${CELL_H} flex w-full flex-col items-center justify-center gap-1`}
         style={{
-          background: "rgba(45,212,191,0.1)",
-          border: "1px solid rgba(45,212,191,0.35)",
-          color: "#2DD4BF",
+          background: "rgba(166,58,31,0.06)",
+          border: "1px solid rgba(166,58,31,0.3)",
+          color: "var(--accent)",
           cursor: "default",
         }}
       >
         <svg width="14" height="12" viewBox="0 0 14 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M1 6L5 10L13 2" />
         </svg>
-        <span className="text-[10px] font-medium opacity-70">Added</span>
+        <span
+          style={{
+            fontFamily: "var(--font-jetbrains, monospace)",
+            fontSize: 9,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            opacity: 0.8,
+          }}
+        >
+          Added
+        </span>
       </div>
     );
   }
@@ -415,15 +462,23 @@ function Cell({
   if (isConfirming && state.kind === "other") {
     return (
       <div
-        className={`${CELL_H} flex w-full overflow-hidden rounded-lg`}
-        style={{ border: "1px solid rgba(212,120,67,0.35)" }}
+        className={`${CELL_H} flex w-full overflow-hidden`}
+        style={{ border: "1px solid var(--rule)" }}
       >
         <button
           type="button"
           onClick={onConfirm}
           disabled={isPending}
-          className="flex flex-1 flex-col items-center justify-center gap-1 transition-colors disabled:opacity-50 hover:brightness-110"
-          style={{ background: "rgba(45,212,191,0.13)", color: "#2DD4BF" }}
+          className="flex flex-1 flex-col items-center justify-center gap-1 disabled:opacity-50"
+          style={{
+            background: "rgba(166,58,31,0.08)",
+            color: "var(--accent)",
+            border: "none",
+            cursor: "pointer",
+            transition: "background .15s",
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(166,58,31,0.14)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(166,58,31,0.08)"; }}
           aria-label="Confirm replace"
         >
           {isPending ? <Spinner /> : (
@@ -431,25 +486,51 @@ function Cell({
               <svg width="13" height="11" viewBox="0 0 13 11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M1 5.5L4.5 9L12 1.5" />
               </svg>
-              <span className="text-[10px] font-semibold">Yes</span>
+              <span
+                style={{
+                  fontFamily: "var(--font-jetbrains, monospace)",
+                  fontSize: 9,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Yes
+              </span>
             </>
           )}
         </button>
 
-        <div className="w-px" style={{ background: "rgba(212,120,67,0.25)" }} />
+        <div style={{ width: 1, background: "var(--rule)" }} />
 
         <button
           type="button"
           onClick={onCancelConfirm}
           disabled={isPending}
-          className="flex flex-1 flex-col items-center justify-center gap-1 transition-colors disabled:opacity-50 hover:brightness-110"
-          style={{ background: "rgba(212,120,67,0.07)", color: "var(--text-faint)" }}
+          className="flex flex-1 flex-col items-center justify-center gap-1 disabled:opacity-50"
+          style={{
+            background: "var(--paper)",
+            color: "var(--ink-3)",
+            border: "none",
+            cursor: "pointer",
+            transition: "background .15s",
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = "var(--paper-3)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = "var(--paper)"; }}
           aria-label="Cancel"
         >
           <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
             <path d="M1 1l9 9M10 1 1 10" />
           </svg>
-          <span className="text-[10px] font-semibold">No</span>
+          <span
+            style={{
+              fontFamily: "var(--font-jetbrains, monospace)",
+              fontSize: 9,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+            }}
+          >
+            No
+          </span>
         </button>
       </div>
     );
@@ -460,16 +541,32 @@ function Cell({
       <button
         type="button"
         onClick={onCellClick}
-        className={`${CELL_H} group flex w-full cursor-pointer flex-col items-start justify-center rounded-lg p-2 text-left transition-all`}
+        className={`${CELL_H} group flex w-full cursor-pointer flex-col items-start justify-center p-2 text-left`}
         style={{
-          background: "rgba(212,120,67,0.05)",
-          border: "1px solid rgba(212,120,67,0.18)",
-          color: "var(--text-muted)",
+          background: "var(--paper-3)",
+          border: "1px solid var(--rule)",
+          color: "var(--ink-2)",
+          transition: "background .15s, border-color .15s",
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(212,120,67,0.1)"; e.currentTarget.style.borderColor = "rgba(212,120,67,0.3)"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(212,120,67,0.05)"; e.currentTarget.style.borderColor = "rgba(212,120,67,0.18)"; }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = "rgba(166,58,31,0.06)";
+          e.currentTarget.style.borderColor = "rgba(166,58,31,0.3)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = "var(--paper-3)";
+          e.currentTarget.style.borderColor = "var(--rule)";
+        }}
       >
-        <span className="line-clamp-3 text-[11px] leading-snug">{state.name}</span>
+        <span
+          className="line-clamp-3"
+          style={{
+            fontFamily: "var(--font-newsreader, Georgia, serif)",
+            fontSize: 11,
+            lineHeight: 1.4,
+          }}
+        >
+          {state.name}
+        </span>
       </button>
     );
   }
@@ -479,25 +576,27 @@ function Cell({
       type="button"
       onClick={onCellClick}
       disabled={isPending}
-      className={`${CELL_H} group flex w-full cursor-pointer items-center justify-center rounded-lg transition-all disabled:opacity-40`}
+      className={`${CELL_H} group flex w-full cursor-pointer items-center justify-center disabled:opacity-40`}
       style={{
         background: "transparent",
-        border: "1px solid var(--border-subtle)",
-        color: "var(--text-faint)",
+        border: "1px solid var(--rule-2)",
+        color: "var(--ink-3)",
+        transition: "background .15s, border-color .15s",
       }}
-      onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.background = "var(--surface-raised)"; }}
-      onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--border-subtle)"; e.currentTarget.style.background = "transparent"; }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = "var(--rule)";
+        e.currentTarget.style.background = "var(--paper)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = "var(--rule-2)";
+        e.currentTarget.style.background = "transparent";
+      }}
     >
       {isPending ? <Spinner /> : (
         <svg
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          className="opacity-0 transition-opacity group-hover:opacity-50"
+          width="12" height="12" viewBox="0 0 12 12"
+          fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"
+          className="opacity-0 transition-opacity group-hover:opacity-40"
         >
           <path d="M6 1v10M1 6h10" />
         </svg>
@@ -509,15 +608,10 @@ function Cell({
 function Spinner() {
   return (
     <svg
-      width="10"
-      height="10"
-      viewBox="0 0 10 10"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      className="animate-spin opacity-60"
-      style={{ color: "var(--accent)" }}
+      width="10" height="10" viewBox="0 0 10 10"
+      fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"
+      className="animate-spin"
+      style={{ color: "var(--accent)", opacity: 0.7 }}
     >
       <path d="M5 1a4 4 0 1 1-4 4" />
     </svg>

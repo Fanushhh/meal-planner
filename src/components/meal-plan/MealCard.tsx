@@ -17,11 +17,13 @@ export function MealCard({ meal, planId, dayOfWeek, mealType, ornament = "·" }:
     <div
       className="meal-card-animate group slot-surface"
       style={{
+        flex: 1,
         minHeight: 130,
         display: "flex",
         flexDirection: "column",
         padding: "18px 18px 14px",
         position: "relative",
+        cursor: "pointer",
       }}
     >
       {/* Ornament + menu row */}

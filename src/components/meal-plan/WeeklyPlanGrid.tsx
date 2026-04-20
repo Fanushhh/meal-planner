@@ -179,6 +179,8 @@ export function WeeklyPlanGrid({ plan, todayIndex, weekStart }: WeeklyPlanGridPr
                       borderBottom: isLastRow ? "none" : "1px solid var(--rule)",
                       background: isToday ? "rgba(166,58,31,0.04)" : "var(--paper)",
                       minWidth: 0,
+                      display: "flex",
+                      flexDirection: "column",
                     } as React.CSSProperties
                   }
                 >

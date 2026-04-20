@@ -3,68 +3,97 @@ import { LoginForm } from "@/components/auth/LoginForm";
 export default function LoginPage() {
   return (
     <div
-      className="flex min-h-screen flex-col items-center justify-center px-4 py-16"
-      style={{ background: "var(--bg)" }}
+      style={{
+        background: "var(--paper)",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "64px 16px",
+      }}
     >
       {/* Wordmark */}
-      <div className="mb-10 flex items-center gap-2.5">
-        <span
-          className="flex h-8 w-8 items-center justify-center rounded-xl text-base"
+      <div style={{ textAlign: "center", marginBottom: 36 }}>
+        <div
           style={{
-            background: "var(--accent-light)",
-            border: "1px solid rgba(212,120,67,0.22)",
+            fontFamily: "var(--font-fraunces, Georgia, serif)",
+            fontStyle: "italic",
+            fontSize: 30,
+            color: "var(--ink)",
+            letterSpacing: "0.01em",
           }}
         >
-          🍽
-        </span>
-        <span
-          className="text-[17px] leading-none"
-          style={{ fontFamily: "var(--font-fraunces, Georgia, serif)", color: "var(--text)" }}
+          La Cucina
+        </div>
+        <div
+          style={{
+            fontFamily: "var(--font-jetbrains, monospace)",
+            fontSize: 9,
+            letterSpacing: "0.22em",
+            textTransform: "uppercase",
+            color: "var(--ink-3)",
+            marginTop: 5,
+          }}
         >
-          Meal Planner
-        </span>
+          EST. MCMXCII
+        </div>
+      </div>
+
+      {/* Ornament */}
+      <div
+        style={{
+          color: "var(--rule)",
+          fontSize: 12,
+          marginBottom: 32,
+          letterSpacing: "0.4em",
+        }}
+      >
+        ✦
       </div>
 
       {/* Card */}
       <div
-        className="w-full max-w-sm overflow-hidden rounded-2xl"
         style={{
-          background: "var(--surface)",
-          border: "1px solid var(--border)",
+          width: "100%",
+          maxWidth: 400,
+          background: "var(--paper-2)",
+          borderTop: "3px solid var(--accent)",
+          borderLeft: "1px solid var(--rule)",
+          borderRight: "1px solid var(--rule)",
+          borderBottom: "1px solid var(--rule)",
         }}
       >
-        {/* Accent top bar */}
-        <div
-          className="h-px w-full"
-          style={{
-            background: "linear-gradient(to right, var(--accent), rgba(212,120,67,0.15) 60%, transparent)",
-          }}
-        />
-
-        <div className="px-8 py-8">
-          {/* Heading */}
-          <div className="mb-7">
-            <p
-              className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.14em]"
-              style={{ color: "var(--accent)", opacity: 0.9 }}
-            >
-              Welcome back
-            </p>
-            <h1
-              className="text-[32px] leading-none"
-              style={{
-                fontFamily: "var(--font-fraunces, Georgia, serif)",
-                fontStyle: "italic",
-                color: "var(--text)",
-              }}
-            >
-              Sign in
-            </h1>
-            <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>
-              Enter your email to receive a sign-in code.
-            </p>
-          </div>
-
+        <div style={{ padding: "36px 40px" }}>
+          <p
+            className="small-caps"
+            style={{ color: "var(--ink-3)", marginBottom: 6 }}
+          >
+            Welcome back
+          </p>
+          <h1
+            style={{
+              fontFamily: "var(--font-fraunces, Georgia, serif)",
+              fontStyle: "italic",
+              fontSize: 34,
+              color: "var(--ink)",
+              lineHeight: 1,
+              marginBottom: 10,
+            }}
+          >
+            Sign in
+          </h1>
+          <p
+            style={{
+              fontSize: 15,
+              color: "var(--ink-2)",
+              marginBottom: 28,
+              fontFamily: "var(--font-newsreader, Georgia, serif)",
+            }}
+          >
+            Enter your email to receive a sign-in code.
+          </p>
+          <div className="rule" style={{ marginBottom: 28 }} />
           <LoginForm />
         </div>
       </div>

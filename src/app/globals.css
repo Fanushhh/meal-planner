@@ -270,7 +270,7 @@ body {
 
 /* ─── Slot hover surface ─── */
 .slot-surface { background: var(--paper); transition: background-color .2s ease; }
-.slot-surface:hover { background: rgba(255, 250, 235, .55); }
+.slot-surface:hover { background: var(--paper-2); }
 .slot-surface .slot-tools { opacity: 0; transition: opacity .15s ease; }
 .slot-surface:hover .slot-tools,
 .slot-surface:focus-within .slot-tools { opacity: 1; }
